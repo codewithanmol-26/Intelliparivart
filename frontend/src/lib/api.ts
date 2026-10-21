@@ -7,18 +7,34 @@ import {
   ParentReport,
   OwnerDashboardData,
   ConsentRecord,
+  AuthUser,
+  DemoUserPersona,
+  InstituteInfo,
 } from './types';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api';
 
+function getStoredToken(): string | null {
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem('datamoat_auth_token');
+  }
+  return null;
+}
+
 async function request<T>(
   endpoint: string,
   options: RequestInit = {},
-  tenantId: string = 'INST001'
+  tenantId: string = 'INST_PATNA_01'
 ): Promise<T> {
   const url = `${API_BASE}${endpoint}`;
   const headers = new Headers(options.headers || {});
   headers.set('X-Tenant-ID', tenantId);
+
+  const token = getStoredToken();
+  if (token && !headers.has('Authorization')) {
+    headers.set('Authorization', `Bearer ${token}`);
+  }
+
   if (!headers.has('Content-Type') && !(options.body instanceof FormData)) {
     headers.set('Content-Type', 'application/json');
   }
@@ -37,10 +53,32 @@ async function request<T>(
 }
 
 export const api = {
+  // Authentication
+  async login(email: string, password: string): Promise<{ access_token: string; user: AuthUser }> {
+    return request<{ access_token: string; user: AuthUser }>('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+    });
+  },
+
+  async getMe(): Promise<AuthUser> {
+    return request<AuthUser>('/auth/me');
+  },
+
+  async getDemoUsers(): Promise<DemoUserPersona[]> {
+    return request<DemoUserPersona[]>('/auth/demo-users');
+  },
+
+  // Institutes
+  async getInstitutes(): Promise<InstituteInfo[]> {
+    return request<InstituteInfo[]>('/institutes');
+  },
+
   // Ingest & OMR
   async uploadCsv(file: File, tenantId: string): Promise<IngestionResult> {
     const formData = new FormData();
     formData.append('file', file);
+    formData.append('tenant_id', tenantId);
     return request<IngestionResult>('/ingest/upload-csv', {
       method: 'POST',
       body: formData,
@@ -51,6 +89,7 @@ export const api = {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('test_id', testId);
+    formData.append('tenant_id', tenantId);
     return request<any>('/ingest/omr-scan', {
       method: 'POST',
       body: formData,
@@ -64,7 +103,7 @@ export const api = {
   async resolveQuarantine(id: string, correctedData: Record<string, any>, tenantId: string): Promise<any> {
     return request<any>(`/ingest/quarantine/${id}/resolve`, {
       method: 'POST',
-      body: JSON.stringify({ corrected_data: correctedData }),
+      body: JSON.stringify({ action: 'APPROVE', corrected_payload: correctedData }),
     }, tenantId);
   },
 
@@ -114,9 +153,11 @@ export const api = {
     return request<any>('/owner/roi-calculator', {
       method: 'POST',
       body: JSON.stringify({
-        base_students: baseStudents,
-        annual_fee: annualFee,
-        saved_rate: savedRate,
+        student_count: baseStudents,
+        annual_fee_per_student: annualFee,
+        baseline_dropout_pct: 12.0,
+        prevention_efficiency_pct: savedRate * 10.0,
+        monthly_subscription_price: 12960.0,
       }),
     }, tenantId);
   },

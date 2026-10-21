@@ -246,8 +246,8 @@ export default function UploadPage() {
             </p>
 
             <form onSubmit={handleOmrSubmit} className="mt-4 space-y-4">
-              <div className="flex space-x-3">
-                <div className="w-1/2">
+              <div className="flex flex-col sm:flex-row gap-3">
+                <div className="w-full sm:w-1/2">
                   <label className="text-[11px] font-semibold text-slate-600 block mb-1">
                     Select Test ID:
                   </label>
@@ -261,13 +261,14 @@ export default function UploadPage() {
                     <option value="TEST003">TEST003 — Electrostatics & Magnetism</option>
                   </select>
                 </div>
-                <div className="w-1/2">
+                <div className="w-full sm:w-1/2">
                   <label className="text-[11px] font-semibold text-slate-600 block mb-1">
-                    Select OMR Photo:
+                    Select OMR Photo (or Camera):
                   </label>
                   <input
                     type="file"
                     accept="image/*"
+                    capture="environment"
                     onChange={handleOmrFileChange}
                     className="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100"
                   />

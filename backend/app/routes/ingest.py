@@ -16,6 +16,7 @@ from backend.app.services.omr_service import process_omr_sheet
 
 router = APIRouter(prefix="/ingest", tags=["Ingestion & Review Queue"])
 
+@router.post("/upload-csv")
 @router.post("/csv")
 async def ingest_csv(
     file: UploadFile = File(...),
@@ -101,6 +102,7 @@ async def ingest_csv(
         "review_queue_url": "/review-queue"
     }
 
+@router.post("/omr-scan")
 @router.post("/omr", response_model=OMRScanResult)
 async def ingest_omr(
     file: UploadFile = File(...),
@@ -137,6 +139,7 @@ async def ingest_omr(
         "questions": result["questions"]
     }
 
+@router.get("/quarantine")
 @router.get("/review-queue", response_model=List[ReviewQueueItemOut])
 def get_review_queue(
     tenant_id: str = "INST_PATNA_01",
@@ -148,6 +151,7 @@ def get_review_queue(
         ReviewQueueItem.status == "PENDING"
     ).all()
 
+@router.post("/quarantine/{item_id}/resolve")
 @router.post("/review-queue/{item_id}/resolve")
 def resolve_review_item(
     item_id: int,

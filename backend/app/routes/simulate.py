@@ -13,6 +13,7 @@ from backend.app.schemas import CurveballScenarioRequest
 
 router = APIRouter(prefix="/simulate", tags=["Curveball Simulation Engine"])
 
+@router.post("/curveball")
 @router.post("")
 def trigger_curveball_scenario(req: CurveballScenarioRequest) -> Dict[str, Any]:
     """

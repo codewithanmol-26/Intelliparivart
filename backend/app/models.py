@@ -211,3 +211,16 @@ class AuditLog(Base):
     resource_id = Column(String(100), nullable=False)
     timestamp = Column(DateTime, default=datetime.datetime.utcnow)
     details_json = Column(Text, nullable=True)
+
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(String(50), primary_key=True, index=True)
+    email = Column(String(150), unique=True, index=True, nullable=False)
+    hashed_password = Column(String(200), nullable=False)
+    full_name = Column(String(150), nullable=False)
+    role = Column(String(50), nullable=False) # owner, teacher, student, parent, admin
+    tenant_id = Column(String(50), nullable=False, index=True)
+    student_id = Column(String(50), nullable=True) # Linked student for student/parent roles
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)

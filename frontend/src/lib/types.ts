@@ -138,3 +138,33 @@ export interface ConsentRecord {
   is_granted: boolean;
   timestamp: string;
 }
+
+export interface AuthUser {
+  id: string;
+  email: string;
+  full_name: string;
+  role: UserRole;
+  tenant_id: string;
+  institute_name?: string;
+  student_id?: string;
+}
+
+export interface DemoUserPersona {
+  id: string;
+  email: string;
+  password: string;
+  full_name: string;
+  role: UserRole;
+  tenant_id: string;
+  institute_name: string;
+  description: string;
+}
+
+export interface InstituteInfo {
+  id: string;
+  name: string;
+  city: string;
+  city_tier?: string;
+  exam_focus?: string;
+  annual_fee_per_student?: number;
+}

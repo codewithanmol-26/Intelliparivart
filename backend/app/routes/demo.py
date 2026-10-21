@@ -100,6 +100,7 @@ def change_input_live(
         }
     }
 
+@router.post("/reset")
 @router.post("/seed")
 def seed_database_from_csv(db: Session = Depends(get_db)):
     """

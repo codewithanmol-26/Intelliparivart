@@ -9,7 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from backend.app.config import settings
 from backend.app.database import engine, Base
 from backend.app.routes import (
-    ingest, mastery, risk, predictions, reports,
+    auth, ingest, mastery, risk, predictions, reports,
     owner, consent, audit, model_report, simulate, demo
 )
 
@@ -32,6 +32,7 @@ app.add_middleware(
 )
 
 # Mount all feature routers
+app.include_router(auth.router)
 app.include_router(ingest.router)
 app.include_router(mastery.router)
 app.include_router(risk.router)
@@ -43,6 +44,28 @@ app.include_router(audit.router)
 app.include_router(model_report.router)
 app.include_router(simulate.router)
 app.include_router(demo.router)
+
+from backend.app.models import Institute
+from backend.app.database import get_db
+from sqlalchemy.orm import Session
+from fastapi import Depends
+
+@app.get("/api/institutes")
+@app.get("/institutes")
+def list_institutes(db: Session = Depends(get_db)):
+    """Returns active institute tenants stored directly in the database."""
+    insts = db.query(Institute).all()
+    return [
+        {
+            "id": i.id,
+            "name": i.name,
+            "city": i.city,
+            "city_tier": i.city_tier,
+            "exam_focus": i.exam_focus,
+            "annual_fee_per_student": i.annual_fee_per_student
+        }
+        for i in insts
+    ]
 
 @app.get("/")
 def root():

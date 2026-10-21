@@ -43,25 +43,25 @@ export default function HomePage() {
   return (
     <div className="space-y-8">
       {/* Hero Banner */}
-      <div className="relative overflow-hidden rounded-2xl bg-[#0B1F3A] text-white p-8 sm:p-10 shadow-lg border border-blue-900/40">
+      <div className="relative overflow-hidden rounded-2xl bg-[#0B1F3A] text-white p-5 sm:p-8 md:p-10 shadow-lg border border-blue-900/40">
         <div className="relative z-10 max-w-3xl">
-          <div className="inline-flex items-center space-x-2 bg-teal-500/20 text-teal-300 border border-teal-500/30 px-3 py-1 rounded-full text-xs font-medium mb-4">
+          <div className="inline-flex items-center space-x-2 bg-teal-500/20 text-teal-300 border border-teal-500/30 px-3 py-1 rounded-full text-[11px] sm:text-xs font-medium mb-3 sm:mb-4">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Nextute EdTech × Finance Club, IIT Patna | Case B Round 2</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight leading-tight">
             The AI-Powered Intelligence & Retention Moat for JEE/NEET Institutes
           </h1>
-          <p className="mt-3 text-sm sm:text-base text-slate-300 leading-relaxed">
+          <p className="mt-2.5 sm:mt-3 text-xs sm:text-sm md:text-base text-slate-300 leading-relaxed">
             Transforming messy OMRs, CSV registers, and fee logs into psychometric mastery models (2PL IRT + BKT),
             zero-leakage dropout early warnings, split-conformal percentile predictions, and automated bilingual parent digests.
           </p>
 
-          <div className="mt-6 flex flex-wrap gap-3">
+          <div className="mt-5 sm:mt-6 flex flex-wrap gap-2.5 sm:gap-3">
             <Link
               href="/owner"
               onClick={() => setRole('owner')}
-              className="inline-flex items-center px-4 py-2.5 rounded-lg bg-teal-500 text-white font-semibold text-sm hover:bg-teal-600 transition shadow-sm"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-teal-500 text-white font-semibold text-xs sm:text-sm hover:bg-teal-600 transition shadow-sm"
             >
               <span>Explore Owner Executive ROI</span>
               <ArrowRight className="w-4 h-4 ml-2" />
@@ -69,15 +69,22 @@ export default function HomePage() {
             <Link
               href="/upload"
               onClick={() => setRole('teacher')}
-              className="inline-flex items-center px-4 py-2.5 rounded-lg bg-blue-900/60 text-blue-100 font-medium text-sm hover:bg-blue-800/80 transition border border-blue-700/50"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-blue-900/60 text-blue-100 font-medium text-xs sm:text-sm hover:bg-blue-800/80 transition border border-blue-700/50"
             >
               <span>Ingestion & OMR Scanner</span>
             </Link>
             <Link
-              href="/demo-tools"
-              className="inline-flex items-center px-4 py-2.5 rounded-lg bg-amber-500/20 text-amber-300 font-medium text-sm hover:bg-amber-500/30 transition border border-amber-500/30"
+              href="/login"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-teal-600/30 text-teal-300 font-medium text-xs sm:text-sm hover:bg-teal-600/40 transition border border-teal-500/30"
             >
-              <Sparkles className="w-4 h-4 mr-2" />
+              <Users className="w-4 h-4 mr-1.5" />
+              <span>Sign In / Switch Persona</span>
+            </Link>
+            <Link
+              href="/demo-tools"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-amber-500/20 text-amber-300 font-medium text-xs sm:text-sm hover:bg-amber-500/30 transition border border-amber-500/30"
+            >
+              <Sparkles className="w-4 h-4 mr-1.5" />
               <span>Judge Curveball Sandbox</span>
             </Link>
           </div>

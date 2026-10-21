@@ -1,8 +1,9 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { UserRole } from '../lib/types';
+import { UserRole, InstituteInfo } from '../lib/types';
 import { getPendingOfflineActions } from '../lib/offlineQueue';
+import { api } from '../lib/api';
 
 interface AppContextType {
   tenantId: string;
@@ -16,23 +17,25 @@ interface AppContextType {
   isOnline: boolean;
   offlineQueueCount: number;
   refreshOfflineCount: () => void;
+  institutes: InstituteInfo[];
 }
 
-export const INSTITUTES = [
-  { id: 'INST001', name: 'Apex Academy, Patna', city: 'Patna, Bihar' },
-  { id: 'INST002', name: 'Nucleus Classes, Lucknow', city: 'Lucknow, UP' },
-  { id: 'INST003', name: 'Pinnacle Institute, Jaipur', city: 'Jaipur, Rajasthan' },
+export const INITIAL_INSTITUTES: InstituteInfo[] = [
+  { id: 'INST_PATNA_01', name: 'Apex JEE & Medical Academy, Patna', city: 'Patna, Bihar' },
+  { id: 'INST_KOTA_02', name: 'Chaitanya Science Forum, Kota', city: 'Kota, Rajasthan' },
+  { id: 'INST_LUCKNOW_03', name: 'Drona Medical Institute, Lucknow', city: 'Lucknow, UP' },
 ];
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
-  const [tenantId, setTenantId] = useState<string>('INST001');
+  const [tenantId, setTenantId] = useState<string>('INST_PATNA_01');
   const [role, setRole] = useState<UserRole>('owner');
-  const [selectedStudentId, setSelectedStudentId] = useState<string>('STU00001');
+  const [selectedStudentId, setSelectedStudentId] = useState<string>('STD_NA_01_001');
   const [selectedBatchId, setSelectedBatchId] = useState<string>('all');
   const [isOnline, setIsOnline] = useState<boolean>(true);
   const [offlineQueueCount, setOfflineQueueCount] = useState<number>(0);
+  const [institutes, setInstitutes] = useState<InstituteInfo[]>(INITIAL_INSTITUTES);
 
   const refreshOfflineCount = async () => {
     try {
@@ -52,6 +55,18 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       window.addEventListener('online', handleOnline);
       window.addEventListener('offline', handleOffline);
       refreshOfflineCount();
+
+      // Query database directly for live institute tenants
+      api
+        .getInstitutes()
+        .then((data) => {
+          if (data && data.length > 0) {
+            setInstitutes(data);
+          }
+        })
+        .catch(() => {
+          // Fallback to static list if offline
+        });
 
       return () => {
         window.removeEventListener('online', handleOnline);
@@ -74,6 +89,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         isOnline,
         offlineQueueCount,
         refreshOfflineCount,
+        institutes,
       }}
     >
       {children}
