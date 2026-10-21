@@ -158,6 +158,7 @@ export interface DemoUserPersona {
   tenant_id: string;
   institute_name: string;
   description: string;
+  student_id?: string;
 }
 
 export interface InstituteInfo {

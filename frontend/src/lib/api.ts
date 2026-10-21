@@ -12,7 +12,8 @@ import {
   InstituteInfo,
 } from './types';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api';
+const RAW_API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api';
+const API_BASE = RAW_API_BASE.replace(/\/+$/, '');
 
 function getStoredToken(): string | null {
   if (typeof window !== 'undefined') {
@@ -26,7 +27,8 @@ async function request<T>(
   options: RequestInit = {},
   tenantId: string = 'INST_PATNA_01'
 ): Promise<T> {
-  const url = `${API_BASE}${endpoint}`;
+  const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  const url = `${API_BASE}${cleanEndpoint}`;
   const headers = new Headers(options.headers || {});
   headers.set('X-Tenant-ID', tenantId);
 
