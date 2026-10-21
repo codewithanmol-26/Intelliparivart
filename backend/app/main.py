@@ -50,9 +50,14 @@ def root():
         "platform": settings.PROJECT_NAME,
         "version": settings.PROJECT_VERSION,
         "docs_url": "/docs",
-        "health_check": "/demo/health",
+        "health_check": "/api/health",
         "rubric_focus": "70% Technology & Architecture | 30% EdTech Market & GTM"
     }
+
+@app.get("/api/health")
+@app.get("/health")
+def health():
+    return {"status": "online", "platform": settings.PROJECT_NAME, "version": settings.PROJECT_VERSION}
 
 if __name__ == "__main__":
     import uvicorn
