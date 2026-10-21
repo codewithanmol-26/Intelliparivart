@@ -44,6 +44,7 @@ def get_mastery_matrix(
     if resp_count == 0:
         return {
             "status": "insufficient_data",
+            "tenant_id": effective_tenant,
             "needs": ["test_responses"],
             "message": "No test responses found for this tenant. Upload a responses file to view topic mastery.",
             "lineage": None,
@@ -80,6 +81,7 @@ def get_mastery_matrix(
     if not mastery_rows:
         return {
             "status": "insufficient_data",
+            "tenant_id": effective_tenant,
             "needs": ["test_responses"],
             "message": "No test responses found for the selected batch.",
             "lineage": {
@@ -144,6 +146,7 @@ def get_mastery_matrix(
 
     return {
         "status": "ready",
+        "tenant_id": effective_tenant,
         "topics": topic_summary,
         "students": list(pivot.index),
         "topic_names": list(pivot.columns),

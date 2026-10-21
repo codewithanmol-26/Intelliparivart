@@ -59,7 +59,6 @@ class Student(Base):
     class_level = Column(String(50), nullable=False)
     join_date = Column(Date, nullable=False)
     parent_contact_consent = Column(Boolean, default=True) # DPDP Act Section 9
-    latent_ability_theta = Column(Float, default=0.0) # IRT Ground Truth
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
     institute = relationship("Institute", back_populates="students")

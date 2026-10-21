@@ -92,11 +92,20 @@ Every student's learning journey follows its own pace. Our guidance focuses on t
     # Execute automated factual guardrail check
     audit_res = audit_parent_report(report_text, verified_data)
 
+    salutation = "नमस्ते अभिभावक जी" if language.lower() in ["hi", "hindi"] else "Dear Parent / Guardian"
+    supportive = (
+        f"मेंटर {mentor_name.split()[0]} के साथ 15 मिनट का व्यक्तिगत सत्र एवं 15 प्रश्नों की वर्कशीट आवंटित।"
+        if language.lower() in ["hi", "hindi"]
+        else f"A 15-minute review with Mentor {mentor_name.split()[0]} and 15 curated practice questions assigned."
+    )
+
     return {
         "student_id": student_id,
         "name": name,
         "language": language,
         "report_text": report_text,
+        "guardian_salutation": salutation,
+        "supportive_action": supportive,
         "verification_status": audit_res["status"],
         "violations": audit_res["violations"],
         "cost_estimate_inr": 0.08 # Local template execution is essentially free

@@ -26,7 +26,7 @@ def assess_image_quality(image: np.ndarray) -> Dict[str, Any]:
     # Blur threshold
     is_blurry = laplacian_var < 80.0
     is_too_dark = mean_brightness < 40.0
-    is_too_bright = mean_brightness > 245.0
+    is_too_bright = mean_brightness > 252.0
 
     if is_blurry:
         return {"status": "BLURRY_RECAPTURE", "laplacian_var": round(laplacian_var, 1), "reason": "Photo is blurry or out of focus. Please hold camera steady."}

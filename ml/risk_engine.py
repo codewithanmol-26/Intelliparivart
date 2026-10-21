@@ -80,7 +80,7 @@ def engineer_3m_features(
         # 4. Fee delays in first 3 months
         s_fee = fees_pre[fees_pre["student_id"] == sid]
         has_default = (s_fee["payment_status"] == "DEFAULTED").any()
-        fee_delay = 14.0 if has_default else float(random_fee_delay(s_fee))
+        fee_delay = 14.0 if has_default else float(compute_fee_delay_days(s_fee))
 
         # 5. Outcome label
         y_row = df_outcomes[df_outcomes["student_id"] == sid]
@@ -104,7 +104,7 @@ def engineer_3m_features(
 
     return pd.DataFrame(rows)
 
-def random_fee_delay(s_fee: pd.DataFrame) -> float:
+def compute_fee_delay_days(s_fee: pd.DataFrame) -> float:
     paid = s_fee[s_fee["paid_date"].notna()]
     if paid.empty:
         return 0.0

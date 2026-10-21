@@ -133,8 +133,8 @@ def generate_parent_report_endpoint(
         "predicted_band": pred_band,
         "strong_topic": strong_topic,
         "weak_topic": weak_topic,
-        "report_text": report_dict["report_text"],
-        "guardian_salutation": report_dict["guardian_salutation"],
-        "supportive_action": report_dict["supportive_action"],
+        "report_text": report_dict.get("report_text", ""),
+        "guardian_salutation": report_dict.get("guardian_salutation", "Dear Parent / Guardian"),
+        "supportive_action": report_dict.get("supportive_action", "Focused foundational revision assigned."),
         "audit_check": audit_res
     }
