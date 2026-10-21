@@ -44,3 +44,14 @@ generated_reports/*.pdf
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Node / Frontend Artifacts
+node_modules/
+frontend/node_modules/
+.next/
+frontend/.next/
+frontend/.turbo/
+.turbo/
+dist/
+build/
+data/*.csv
