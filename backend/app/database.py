@@ -10,10 +10,14 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base, Session
 from backend.app.config import settings
 
-# 1. Normalize connection URL (Supabase and Render often use postgres:// which SQLAlchemy 2.0 requires as postgresql://)
+# 1. Normalize connection URL
+# SQLAlchemy 2.0 defaults to psycopg3 if postgresql:// is used without driver.
+# Normalizing to postgresql+psycopg2:// ensures maximum compatibility with psycopg2-binary.
 raw_db_url = settings.DATABASE_URL
 if raw_db_url.startswith("postgres://"):
-    raw_db_url = raw_db_url.replace("postgres://", "postgresql://", 1)
+    raw_db_url = raw_db_url.replace("postgres://", "postgresql+psycopg2://", 1)
+elif raw_db_url.startswith("postgresql://") and not raw_db_url.startswith("postgresql+"):
+    raw_db_url = raw_db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
 
 # 2. Connection arguments & pooling parameters
 connect_args = {}

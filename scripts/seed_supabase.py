@@ -21,26 +21,45 @@ from pathlib import Path
 ROOT_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT_DIR))
 
-from backend.app.database import engine, Base, SessionLocal
-from backend.app.models import (
-    Institute, Batch, Student, SyllabusTopic, Question, User
-)
-from backend.app.routes.auth import DEMO_PERSONAS
-from backend.app.auth import hash_password
-
 def seed_supabase(db_url: str = None):
-    if db_url:
-        os.environ["DATABASE_URL"] = db_url
+    target_url = db_url or os.getenv("DATABASE_URL")
+    if not target_url:
+        print("ERROR: No DATABASE_URL provided. Pass your Supabase connection string as an argument or set DATABASE_URL.")
+        sys.exit(1)
+
+    if target_url.startswith("postgres://"):
+        target_url = target_url.replace("postgres://", "postgresql+psycopg2://", 1)
+    elif target_url.startswith("postgresql://") and not target_url.startswith("postgresql+"):
+        target_url = target_url.replace("postgresql://", "postgresql+psycopg2://", 1)
+
+    os.environ["DATABASE_URL"] = target_url
+
+    from sqlalchemy import create_engine
+    from sqlalchemy.orm import sessionmaker
+    from backend.app.database import Base
+    from backend.app.models import (
+        Institute, Batch, Student, SyllabusTopic, Question, User
+    )
+    from backend.app.routes.auth import DEMO_PERSONAS
+    from backend.app.auth import hash_password
 
     print("=================================================================")
     print("Intelliprivart — Supabase Database Migration & Seeding")
     print("=================================================================")
     
+    engine = create_engine(
+        target_url,
+        pool_size=10,
+        max_overflow=20,
+        pool_pre_ping=True
+    )
+    Session = sessionmaker(bind=engine)
+
     print("[1/5] Creating all relational schema tables in Supabase...")
     Base.metadata.create_all(bind=engine)
     print("✓ All tables created successfully.")
 
-    db = SessionLocal()
+    db = Session()
     data_dir = ROOT_DIR / "data"
 
     try:
