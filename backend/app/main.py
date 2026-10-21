@@ -13,14 +13,21 @@ from backend.app.routes import (
     owner, consent, audit, model_report, simulate, demo
 )
 
-# Initialize database schema tables on startup
-Base.metadata.create_all(bind=engine)
-
 app = FastAPI(
     title=settings.PROJECT_NAME,
     version=settings.PROJECT_VERSION,
     description="Intelliprivart AI-Powered Coaching Institute Intelligence Platform (Round 2 Prototype API)"
 )
+
+@app.on_event("startup")
+def startup_db_init():
+    """Initializes database schema tables gracefully without failing process startup if database is temporarily unreachable."""
+    try:
+        Base.metadata.create_all(bind=engine)
+        print("✓ Database tables verified and initialized successfully.")
+    except Exception as exc:
+        print(f"⚠️ Notice: Database initialization could not connect immediately ({exc}).")
+        print("The server will remain online and serve requests; database will reconnect when reachable.")
 
 # CORS Configuration allowing local Next.js frontend, PWA and external clients
 app.add_middleware(
@@ -84,4 +91,6 @@ def health():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("backend.app.main:app", host="127.0.0.1", port=8000, reload=True)
+    import os
+    port = int(os.getenv("PORT", 8000))
+    uvicorn.run("backend.app.main:app", host="0.0.0.0", port=port, reload=False)

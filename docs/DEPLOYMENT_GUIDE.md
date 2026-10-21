@@ -78,7 +78,7 @@ python scripts/seed_supabase.py "postgresql://postgres:[PASSWORD]@db.[PROJECT-RE
    - **Build Command**: `pip install -r requirements.txt`
    - **Start Command**:
      ```bash
-     gunicorn -w 2 -k uvicorn.workers.UvicornWorker backend.app.main:app --bind 0.0.0.0:$PORT
+     uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT
      ```
    - **Plan**: `Free`
 5. Under **Environment Variables**, add the following:

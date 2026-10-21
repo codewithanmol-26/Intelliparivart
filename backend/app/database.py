@@ -13,7 +13,11 @@ from backend.app.config import settings
 # 1. Normalize connection URL
 # SQLAlchemy 2.0 defaults to psycopg3 if postgresql:// is used without driver.
 # Normalizing to postgresql+psycopg2:// ensures maximum compatibility with psycopg2-binary.
-raw_db_url = settings.DATABASE_URL
+raw_db_url = (settings.DATABASE_URL or "").strip().strip('"').strip("'")
+if not raw_db_url:
+    from backend.app.config import BASE_DIR
+    raw_db_url = f"sqlite:///{BASE_DIR / 'data' / 'intelliprivart.db'}"
+
 if raw_db_url.startswith("postgres://"):
     raw_db_url = raw_db_url.replace("postgres://", "postgresql+psycopg2://", 1)
 elif raw_db_url.startswith("postgresql://") and not raw_db_url.startswith("postgresql+"):
@@ -28,17 +32,26 @@ if raw_db_url.startswith("sqlite"):
 else:
     # PostgreSQL / Supabase connection pooling & health checks
     engine_kwargs.update({
-        "pool_size": 10,
-        "max_overflow": 20,
+        "pool_size": 5,
+        "max_overflow": 10,
         "pool_pre_ping": True, # Automatically reconnect dropped connections
         "pool_recycle": 300,
     })
+    # Ensure SSL for managed PostgreSQL (Supabase requires SSL)
+    if "sslmode" not in raw_db_url.lower():
+        connect_args["sslmode"] = "require"
 
-engine = create_engine(
-    raw_db_url,
-    connect_args=connect_args,
-    **engine_kwargs
-)
+try:
+    engine = create_engine(
+        raw_db_url,
+        connect_args=connect_args,
+        **engine_kwargs
+    )
+except Exception as e:
+    from backend.app.config import BASE_DIR
+    fallback_url = f"sqlite:///{BASE_DIR / 'data' / 'intelliprivart.db'}"
+    print(f"⚠️ Engine initialization warning for {raw_db_url}: {e}. Falling back to SQLite.")
+    engine = create_engine(fallback_url, connect_args={"check_same_thread": False})
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
