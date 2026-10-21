@@ -1,23 +1,39 @@
 """
-Intelliprivart Backend - Database Connection & Tenant Scoping Layer
-SQLite by default with complete Postgres compatibility.
-Enforces multi-tenant query isolation via tenant_id on all operational entities.
-Maps directly to PostgreSQL Row-Level Security (RLS) policies:
-CREATE POLICY tenant_isolation_policy ON <table> USING (tenant_id = current_setting('app.current_tenant'));
+Intelliprivart Backend - Database Connection Layer
+Seamlessly connects to Supabase (PostgreSQL), Render-managed Postgres, or local SQLite.
+Supports multi-tenant isolation, SSL pooling, and auto-table initialization.
 """
 
 from typing import Generator, Any
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base, Session
 from backend.app.config import settings
 
-# SQLite connection args for multi-threaded FastAPI
-connect_args = {"check_same_thread": False} if settings.DATABASE_URL.startswith("sqlite") else {}
+# 1. Normalize connection URL (Supabase and Render often use postgres:// which SQLAlchemy 2.0 requires as postgresql://)
+raw_db_url = settings.DATABASE_URL
+if raw_db_url.startswith("postgres://"):
+    raw_db_url = raw_db_url.replace("postgres://", "postgresql://", 1)
+
+# 2. Connection arguments & pooling parameters
+connect_args = {}
+engine_kwargs = {"echo": False}
+
+if raw_db_url.startswith("sqlite"):
+    connect_args = {"check_same_thread": False}
+else:
+    # PostgreSQL / Supabase connection pooling & health checks
+    engine_kwargs.update({
+        "pool_size": 10,
+        "max_overflow": 20,
+        "pool_pre_ping": True, # Automatically reconnect dropped connections
+        "pool_recycle": 300,
+    })
 
 engine = create_engine(
-    settings.DATABASE_URL,
+    raw_db_url,
     connect_args=connect_args,
-    echo=False
+    **engine_kwargs
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -30,6 +46,10 @@ def get_db() -> Generator[Session, None, None]:
         yield db
     finally:
         db.close()
+
+def init_db():
+    """Initializes schema and tables in the target database (Supabase or SQLite)."""
+    Base.metadata.create_all(bind=engine)
 
 class TenantScopedQuery:
     """

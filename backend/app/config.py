@@ -1,5 +1,6 @@
 """
 Intelliprivart Backend Configuration
+Supports Render (FastAPI), Supabase (PostgreSQL), and Local SQLite fallback.
 """
 import os
 from pathlib import Path
@@ -12,15 +13,18 @@ class Settings(BaseSettings):
     PROJECT_VERSION: str = "2.0.0"
     ENVIRONMENT: str = os.getenv("ENVIRONMENT", "development")
     
-    # SQLite default (zero-setup), Postgres compatible
-    DATABASE_URL: str = os.getenv("DATABASE_URL", f"sqlite:///{BASE_DIR / 'data' / 'intelliprivart.db'}")
+    # Supabase PostgreSQL or local SQLite fallback
+    DATABASE_URL: str = os.getenv(
+        "DATABASE_URL", 
+        f"sqlite:///{BASE_DIR / 'data' / 'intelliprivart.db'}"
+    )
     
-    # Pluggable LLM Provider (Works 100% offline with no key)
+    # Pluggable LLM Provider (Works 100% offline with zero external key)
     LLM_PROVIDER: str = os.getenv("LLM_PROVIDER", "DETERMINISTIC_FALLBACK")
     LLM_API_KEY: str = os.getenv("LLM_API_KEY", "")
 
-    # Multi-tenant security
-    JWT_SECRET: str = os.getenv("JWT_SECRET", "intelliprivart-competition-key-2026")
+    # Multi-tenant security & JWT
+    JWT_SECRET: str = os.getenv("JWT_SECRET_KEY", os.getenv("JWT_SECRET", "intelliprivart-competition-key-2026-secure"))
     DEFAULT_TENANT_ID: str = "INST_PATNA_01"
 
     # Directory Paths

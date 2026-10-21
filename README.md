@@ -39,18 +39,28 @@ Open **`http://localhost:3000`** in your browser.
 
 *(On Windows, you can also simply double-click `run.bat`)*
 
-### Option 2: Docker Containerized Deployment
+### Option 2: Production Cloud Deployment (Vercel + Render + Supabase)
+
+The platform is architected for zero-cost cloud deployment on modern serverless & edge infrastructure:
+
+* **Frontend**: **Vercel** (`frontend/`) — Next.js 14 App Router, auto SSL, Edge CDN.
+* **Backend**: **Render** (`render.yaml`) — FastAPI web service with Gunicorn/Uvicorn workers.
+* **Database**: **Supabase** (`docs/supabase_schema.sql`) — Managed PostgreSQL with connection pooling & RLS tenant isolation.
+
+👉 **Complete Step-by-Step Instructions**: [`docs/DEPLOYMENT_GUIDE.md`](file:///c:/Users/aryan/OneDrive/Desktop/Data%20Moat/docs/DEPLOYMENT_GUIDE.md)
+
+### Option 3: Docker Containerized Deployment
 
 ```bash
 docker compose up --build
 ```
 
-### Option 3: Automated API & ML Verification Tests
+### Option 4: Automated API & ML Verification Tests
 
 ```bash
-python -m pytest backend/tests/test_api.py -v
+python -m pytest backend/tests/ -v
 ```
-*All 8 integration test suites pass (100% green).*
+*All 12 integration and authentication test suites pass (100% green).*
 
 ---
 
