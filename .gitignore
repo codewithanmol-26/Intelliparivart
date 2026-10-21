@@ -3,18 +3,36 @@ __pycache__/
 *.py[cod]
 *$py.class
 *.pytest_cache/
+.mypy_cache/
+.ruff_cache/
 
-# Environments
+# Virtual Environments
 .env
 .venv/
 venv/
 ENV/
 env/
 
-# SQLite databases & temp WAL/SHM (preserve sample db if needed, ignore transient locks)
+# Databases & Lock Files (Initialize on boot via models/migrations, do not track in Git)
+*.db
+*.sqlite
+*.sqlite3
 *.db-journal
 *.db-wal
 *.db-shm
+
+# Large Synthetic Data Tables (Regenerable on demand via run_ml_pipeline.py)
+Intelliprivart_ML/data/synthetic/*.csv
+data/synthetic/*.csv
+
+# Local Duplicate Bundles (Root files are the authoritative submission copies)
+Final_Submission_Deliverables/
+Intelliprivart_DataMoat_Round1-2.pptx
+Nextute_Case_B_Financial_Model.xlsx
+
+# Generated Reports & Scratch
+generated_reports/*.pdf
+*.log
 
 # IDE & Editor files
 .vscode/
@@ -26,6 +44,3 @@ env/
 .DS_Store
 Thumbs.db
 desktop.ini
-
-# Intermediate log files
-*.log
