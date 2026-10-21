@@ -68,7 +68,7 @@ python scripts/seed_supabase.py "postgresql://postgres:[PASSWORD]@db.[PROJECT-RE
 
 1. Navigate to [**render.com**](https://render.com) and sign in.
 2. Click **"New +"** &rarr; **"Web Service"**.
-3. Connect your GitHub repository: `https://github.com/tribhuvneshsharma/Intelliprivart`.
+3. Connect your GitHub repository: `https://github.com/codewithanmol-26/Intelliparivart`.
 4. Fill in the service configuration:
    - **Name**: `intelliprivart-backend`
    - **Region**: Choose closest (e.g. Singapore or Oregon)
@@ -100,7 +100,7 @@ python scripts/seed_supabase.py "postgresql://postgres:[PASSWORD]@db.[PROJECT-RE
 
 1. Navigate to [**vercel.com**](https://vercel.com) and sign in.
 2. Click **"Add New..."** &rarr; **"Project"**.
-3. Import your GitHub repository: `tribhuvneshsharma/Intelliprivart`.
+3. Import your GitHub repository: `codewithanmol-26/Intelliparivart`.
 4. In the **Configure Project** screen:
    - **Framework Preset**: `Next.js`
    - **Root Directory**: Click **Edit** and select **`frontend`**
