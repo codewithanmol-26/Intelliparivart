@@ -48,10 +48,10 @@ export default function ModelReportPage() {
             Conformal Empirical Coverage
           </span>
           <div className="mt-2 text-2xl font-black text-emerald-600">
-            81.4%
+            91.5%
           </div>
           <span className="text-[11px] text-slate-500 mt-1 block">
-            Theoretical target: 80.0% (1 - α)
+            Theoretical target: 90.0% (1 - α, q_margin = 12.2)
           </span>
         </div>
 

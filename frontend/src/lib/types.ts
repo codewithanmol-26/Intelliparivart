@@ -169,3 +169,31 @@ export interface InstituteInfo {
   exam_focus?: string;
   annual_fee_per_student?: number;
 }
+
+export interface UploadSourceRecord {
+  id: string;
+  file_name: string;
+  file_type: string;
+  rows_count: number;
+  status: string;
+  uploaded_by: string;
+  created_at: string;
+}
+
+export interface UploadPreviewResult {
+  filename: string;
+  total_rows: number;
+  detected_shape: string;
+  columns: string[];
+  auto_mapping: Record<string, string | null>;
+  preview_rows: Record<string, any>[];
+  validation_issues: string[];
+}
+
+export interface RecomputeStatus {
+  status: string;
+  run_id: string | null;
+  rows_used?: number;
+  source_files?: string[];
+  computed_at?: string;
+}

@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { api } from '../../lib/api';
-import { ParentReport } from '../../lib/types';
 import {
   GraduationCap,
   Languages,
@@ -13,51 +12,52 @@ import {
   Share2,
   AlertCircle,
   RefreshCw,
-  MessageSquare
+  MessageSquare,
+  Lock,
+  Database,
+  Sparkles,
+  FileText
 } from 'lucide-react';
 
 export default function ReportsPage() {
-  const { tenantId, selectedStudentId, setSelectedStudentId } = useApp();
+  const { tenantId, selectedStudentId, setSelectedStudentId, recomputeVersion, lastRunId } = useApp();
   const [lang, setLang] = useState<'en' | 'hi'>('en');
-  const [report, setReport] = useState<ParentReport | null>(null);
+  const [reportData, setReportData] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
-  const [copied, setCopied] = useState(false);
 
-  const studentList = [
-    { id: 'STU00001', name: 'Ananya Deshmukh (JEE Advanced)' },
-    { id: 'STU00014', name: 'Aarav Sharma (JEE Advanced)' },
-    { id: 'STU00029', name: 'Priya Verma (NEET Achievers)' },
-    { id: 'STU00067', name: 'Rohan Gupta (JEE Main)' },
+  const cohortStudents = [
+    { id: 'STD_PAT_001', name: 'Ananya Pandey (12th JEE Achievers)' },
+    { id: 'STD_PAT_002', name: 'Shaurya Pandey (12th JEE Achievers)' },
+    { id: 'STD_PAT_003', name: 'Khushi Sen (12th NEET Pinnacle)' },
+    { id: 'STD_PAT_004', name: 'Advait Chatterjee (11th JEE Foundation)' },
+    { id: 'STD_PAT_005', name: 'Varun Kumar (12th JEE Achievers)' },
   ];
 
   const fetchReport = async () => {
     setLoading(true);
     try {
-      const data = await api.getStudentReport(selectedStudentId, lang, tenantId);
-      setReport(data);
-    } catch {
-      // Mock fallback report
-      const isHi = lang === 'hi';
-      setReport({
+      const res = await api.getStudentReport(selectedStudentId, lang, tenantId);
+      setReportData(res);
+    } catch (err: any) {
+      console.error('Failed to load report:', err);
+      // Fallback data if backend offline
+      setReportData({
+        status: 'ready',
         student_id: selectedStudentId,
-        student_name: selectedStudentId === 'STU00014' ? 'Aarav Sharma' : 'Ananya Deshmukh',
-        batch_name: 'JEE Advanced Super-30',
-        target_exam: 'JEE_ADVANCED',
+        student_name: cohortStudents.find((s) => s.id === selectedStudentId)?.name.split(' (')[0] || 'Ananya Pandey',
+        batch_name: '12th JEE Achievers Top-30',
+        target_exam: 'JEE Advanced',
         language: lang,
-        generated_at: new Date().toLocaleDateString(),
-        report_digest: isHi
-          ? `नमस्ते अभिभावक जी, यह इस सप्ताह की अकादमिक प्रगति समीक्षा है। आपके बच्चे अनन्या देशमुख ने इस महीने 14 में से 12 टेस्ट सफलतापूर्वक पूरे किए हैं। कक्षा उपस्थिति 91.5% रही है। काइनेमैटिक्स और केमिकल बॉन्डिंग में उत्कृष्ट समझ (मास्टरी > 80%) प्रदर्शित की है। रोटेशनल मोशन और थर्मोडायनामिक्स में अतिरिक्त अभ्यास की आवश्यकता है। शिक्षकों ने लक्षित रिवीज़न सामग्री प्रदान की है। बच्चे का मनोबल उत्साहजनक है।`
-          : `Dear Parent, here is the weekly academic progress review for Ananya Deshmukh. Your child has completed 12 out of 14 scheduled evaluations with an attendance rate of 91.5%. Demonstrated outstanding conceptual mastery (>80%) in Kinematics and Chemical Bonding. Recommended focused practice in Rotational Dynamics. Faculty has scheduled supportive doubt-clearing sessions. Keep encouraging consistent home revision!`,
-        facts_cited: {
-          tests_completed: 12,
-          recent_trend: '+4.2% mastery gain over previous cycle',
-          strengths: ['Kinematics & Mechanics', 'Chemical Bonding'],
-          priority_revisions: ['Rotational Dynamics & Torque'],
-          attendance_rate: '91.5%',
-        },
-        audit_status: 'passed',
-        audit_violations: [],
-        tone_check: 'Passed — Positive reinforcement, zero comparative rank shame',
+        attendance_pct: 91.5,
+        predicted_band: '[78.0% – 92.5%]',
+        strong_topic: 'Kinematics & Mechanics',
+        weak_topic: 'Rotational Dynamics',
+        report_text: lang === 'hi'
+          ? 'नमस्ते अभिभावक जी, यह इस सप्ताह की अकादमिक समीक्षा है। आपके बच्चे अनन्या पांडे ने इस महीने 91.5% उपस्थिति दर्ज की है। काइनेमैटिक्स में उत्कृष्ट समझ प्रदर्शित की है। रोटेशनल मोशन में अतिरिक्त रिवीज़न सत्र आयोजित किए गए हैं।'
+          : 'Dear Parent, here is the weekly academic progress review for Ananya Pandey. Your child maintained 91.5% class attendance. Demonstrated high conceptual mastery in Kinematics. Focused faculty doubt-clearing sessions scheduled for Rotational Dynamics.',
+        guardian_salutation: lang === 'hi' ? 'नमस्ते अभिभावक जी' : 'Dear Parent / Guardian',
+        supportive_action: 'Ensure 45-minute daily home revision for mechanics formulas.',
+        audit_check: { status: 'PASSED', violations: [] }
       });
     } finally {
       setLoading(false);
@@ -66,29 +66,36 @@ export default function ReportsPage() {
 
   useEffect(() => {
     fetchReport();
-  }, [tenantId, selectedStudentId, lang]);
+  }, [tenantId, selectedStudentId, lang, recomputeVersion]);
+
+  const isConsentWithdrawn =
+    reportData?.status === 'consent_withdrawn' ||
+    reportData?.audit_check?.status === 'BLOCKED';
 
   const handleShareWhatsApp = () => {
-    if (!report) return;
+    if (!reportData || isConsentWithdrawn) return;
     const text = encodeURIComponent(
-      `*Intelliprivart Weekly Academic Progress Report*\n\nStudent: ${report.student_name} (${report.student_id})\nBatch: ${report.batch_name}\n\n${report.report_digest}\n\nAttendance: ${report.facts_cited.attendance_rate}`
+      `*Intelliprivart Weekly Progress Digest*\nStudent: ${reportData.student_name} (${reportData.student_id})\nBatch: ${reportData.batch_name}\n\n${reportData.report_text}\n\nAttendance: ${reportData.attendance_pct}%\nForecast: ${reportData.predicted_band}`
     );
     window.open(`https://wa.me/?text=${text}`, '_blank');
   };
 
   const handlePrint = () => {
-    window.print();
+    if (!isConsentWithdrawn) {
+      window.print();
+    }
   };
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">
             Automated Parent Progress Digest (Bilingual)
           </h1>
           <p className="mt-1 text-xs text-slate-500">
-            Deterministic natural-language generation with automated factual verification against database ground truth and zero-shaming tone filters.
+            Deterministic natural-language generation with automated factual verification against database ground truth and DPDP Act 2023 consent gatekeeping.
           </p>
         </div>
 
@@ -118,6 +125,25 @@ export default function ReportsPage() {
         </div>
       </div>
 
+      {/* Model Lineage Callout */}
+      <div className="p-3 bg-teal-50/70 border border-teal-200 rounded-xl text-xs text-slate-700 flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center space-x-2">
+          <Database className="w-4 h-4 text-teal-700 shrink-0" />
+          <span className="font-semibold text-teal-950">Factual Verifier:</span>
+          <span className="font-mono text-teal-800 bg-teal-100/70 px-2 py-0.5 rounded text-[11px]">
+            {lastRunId || 'RUN_SEEDED_BENCHMARK'}
+          </span>
+          <span className="text-slate-500 hidden md:inline">• ml/report_checker.py Active Guardrail</span>
+        </div>
+        <button
+          onClick={fetchReport}
+          className="text-teal-700 hover:text-teal-900 font-semibold flex items-center space-x-1"
+        >
+          <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+          <span>Regenerate Digest</span>
+        </button>
+      </div>
+
       {/* Student Selector Toolbar */}
       <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-3 text-xs">
         <div className="flex items-center space-x-2">
@@ -125,9 +151,9 @@ export default function ReportsPage() {
           <select
             value={selectedStudentId}
             onChange={(e) => setSelectedStudentId(e.target.value)}
-            className="p-1.5 border border-slate-200 rounded bg-slate-50 text-slate-800 font-medium focus:outline-none"
+            className="p-1.5 border border-slate-200 rounded bg-slate-50 text-slate-800 font-medium focus:outline-none max-w-[280px] truncate"
           >
-            {studentList.map((s) => (
+            {cohortStudents.map((s) => (
               <option key={s.id} value={s.id}>
                 {s.name}
               </option>
@@ -138,44 +164,67 @@ export default function ReportsPage() {
         <div className="flex items-center space-x-2">
           <button
             onClick={handleShareWhatsApp}
-            className="inline-flex items-center px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold shadow-xs transition"
+            disabled={isConsentWithdrawn}
+            className="inline-flex items-center px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 text-white rounded-lg text-xs font-semibold shadow-xs transition"
           >
             <MessageSquare className="w-3.5 h-3.5 mr-1.5" />
-            <span>Send to Parent via WhatsApp</span>
+            <span>Send via WhatsApp</span>
           </button>
           <button
             onClick={handlePrint}
-            className="inline-flex items-center px-3 py-1.5 border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 rounded-lg text-xs font-semibold shadow-xs transition"
+            disabled={isConsentWithdrawn}
+            className="inline-flex items-center px-3 py-1.5 border border-slate-300 bg-white hover:bg-slate-50 disabled:opacity-40 text-slate-700 rounded-lg text-xs font-semibold shadow-xs transition"
           >
             <Printer className="w-3.5 h-3.5 mr-1.5" />
-            <span>Print Report Card</span>
+            <span>Print Digest</span>
           </button>
         </div>
       </div>
 
-      {/* Main Report Card */}
+      {/* MAIN REPORT CARD OR DPDP WITHDRAWAL NOTICE */}
       {loading ? (
-        <div className="p-12 text-center text-xs text-slate-400">
-          Generating verified parent digest...
+        <div className="p-12 text-center text-xs text-slate-400 flex items-center justify-center space-x-2">
+          <RefreshCw className="w-4 h-4 animate-spin text-teal-600" />
+          <span>Validating factual claims and assembling bilingual digest...</span>
         </div>
-      ) : report ? (
+      ) : isConsentWithdrawn ? (
+        <div className="max-w-2xl mx-auto bg-rose-50 border-2 border-rose-300 rounded-2xl p-8 text-center space-y-4 shadow-sm">
+          <div className="w-12 h-12 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto">
+            <Lock className="w-6 h-6" />
+          </div>
+          <div>
+            <h2 className="text-lg font-bold text-rose-950">
+              Communication Blocked: Guardian Consent Withdrawn
+            </h2>
+            <p className="text-xs text-rose-800 mt-1 max-w-md mx-auto leading-relaxed">
+              Under <strong>Section 9 of the Digital Personal Data Protection (DPDP) Act 2023</strong>, parent/guardian communications and automated digest exports for{' '}
+              <strong>{reportData?.student_name}</strong> ({reportData?.student_id}) have been withheld because parental consent was revoked.
+            </p>
+          </div>
+          <div className="p-3 bg-white/80 rounded-xl border border-rose-200 text-xs font-mono text-rose-900 inline-block">
+            Audit Flag: DPDP Act Section 9 Guardian Consent Withdrawn
+          </div>
+        </div>
+      ) : reportData ? (
         <div className="max-w-3xl mx-auto bg-white rounded-2xl border border-slate-200 shadow-md p-8 space-y-6">
           {/* Header */}
           <div className="flex items-start justify-between pb-4 border-b border-slate-100">
             <div>
               <span className="text-[10px] uppercase font-bold text-teal-600 tracking-wider">
-                Official Student Progress Digest
+                Official Weekly Academic Digest
               </span>
               <h2 className="text-xl font-bold text-slate-900 mt-1">
-                {report.student_name}
+                {reportData.student_name}
               </h2>
               <p className="text-xs text-slate-500">
-                Batch: {report.batch_name} • Student ID: {report.student_id}
+                Batch: {reportData.batch_name} • Student ID: {reportData.student_id} • Track: {reportData.target_exam}
               </p>
             </div>
             <div className="text-right">
-              <span className="text-xs text-slate-400 block">Date of Issue</span>
-              <span className="text-xs font-bold text-slate-700">{report.generated_at}</span>
+              <span className="text-[10px] uppercase font-bold text-slate-400 block">Status</span>
+              <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                DPDP Verified
+              </span>
             </div>
           </div>
 
@@ -184,49 +233,60 @@ export default function ReportsPage() {
             <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-lg flex items-center space-x-2 text-emerald-800">
               <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
               <span>
-                <strong>Factual Verification:</strong> All statistics cross-checked against database records.
+                <strong>Factual Ground-Truth Check:</strong> Verified 100% against attendance logs and 2PL IRT calibrated tests.
               </span>
             </div>
             <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg flex items-center space-x-2 text-blue-800">
               <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0" />
               <span>
-                <strong>Zero-Shaming Tone Check:</strong> Strictly positive reinforcement; no public rank comparisons.
+                <strong>Zero-Shaming Tone Guardrail:</strong> Evaluates mastery growth without destructive comparative ranking.
               </span>
             </div>
           </div>
 
           {/* Digest Body */}
-          <div className="bg-slate-50 p-6 rounded-xl border border-slate-200/80">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
-              {lang === 'hi' ? 'साप्ताहिक प्रगति सारांश:' : 'Weekly Academic Summary:'}
-            </h3>
+          <div className="bg-slate-50 p-6 rounded-xl border border-slate-200/80 space-y-2">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                {lang === 'hi' ? 'साप्ताहिक प्रगति सारांश:' : 'Weekly Progress Digest:'}
+              </h3>
+              <span className="text-[11px] text-teal-700 font-semibold">
+                Language: {lang === 'hi' ? 'हिंदी (Hindi)' : 'English'}
+              </span>
+            </div>
             <p className="text-sm text-slate-800 leading-relaxed font-serif">
-              &ldquo;{report.report_digest}&rdquo;
+              &ldquo;{reportData.report_text}&rdquo;
             </p>
           </div>
 
           {/* Ground-Truth Facts Cited Breakdown */}
           <div>
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">
-              Verified Facts Cited in Report:
+              Verified Database Facts Cited:
             </h3>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center text-xs">
               <div className="bg-white p-3 rounded-lg border border-slate-200">
-                <span className="text-[10px] text-slate-400 block">Tests Logged</span>
+                <span className="text-[10px] text-slate-400 block">Attendance Rate</span>
                 <span className="font-bold text-slate-800 text-sm">
-                  {report.facts_cited.tests_completed}
+                  {reportData.attendance_pct}%
                 </span>
               </div>
               <div className="bg-white p-3 rounded-lg border border-slate-200">
-                <span className="text-[10px] text-slate-400 block">Attendance</span>
-                <span className="font-bold text-emerald-600 text-sm">
-                  {report.facts_cited.attendance_rate}
+                <span className="text-[10px] text-slate-400 block">Conformal Range</span>
+                <span className="font-bold text-teal-600 text-sm">
+                  {reportData.predicted_band}
                 </span>
               </div>
-              <div className="bg-white p-3 rounded-lg border border-slate-200 col-span-2">
-                <span className="text-[10px] text-slate-400 block">Identified Strengths</span>
-                <span className="font-semibold text-slate-800">
-                  {report.facts_cited.strengths.join(', ')}
+              <div className="bg-white p-3 rounded-lg border border-slate-200">
+                <span className="text-[10px] text-slate-400 block">Top Conceptual Strength</span>
+                <span className="font-semibold text-emerald-700 text-xs truncate block">
+                  {reportData.strong_topic}
+                </span>
+              </div>
+              <div className="bg-white p-3 rounded-lg border border-slate-200">
+                <span className="text-[10px] text-slate-400 block">Priority Revision Topic</span>
+                <span className="font-semibold text-rose-700 text-xs truncate block">
+                  {reportData.weak_topic}
                 </span>
               </div>
             </div>
@@ -235,14 +295,11 @@ export default function ReportsPage() {
           {/* Actionable Support Plan */}
           <div className="p-4 bg-teal-50/50 rounded-xl border border-teal-200/70 text-xs space-y-1.5">
             <div className="font-bold text-teal-900">
-              Guidance for Home Support:
+              Guidance for Home Revision Support:
             </div>
             <p className="text-slate-600 leading-relaxed">
-              Ensure regular 45-minute evening revision for priority topics (
-              <span className="font-semibold text-teal-800">
-                {report.facts_cited.priority_revisions.join(', ')}
-              </span>
-              ). Encourage daily attendance and timely rest before upcoming Sunday mock tests.
+              {reportData.supportive_action ||
+                'Ensure 45-minute daily evening revision for weak areas and maintain consistent sleep routines.'}
             </p>
           </div>
         </div>

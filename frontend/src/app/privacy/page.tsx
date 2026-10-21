@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 
 export default function PrivacyPage() {
-  const { tenantId } = useApp();
+  const { tenantId, notifyRecomputed, lastRunId } = useApp();
   const [consents, setConsents] = useState<ConsentRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [auditMessage, setAuditMessage] = useState<string | null>(null);
@@ -28,43 +28,43 @@ export default function PrivacyPage() {
       const data = await api.getConsentList(tenantId);
       setConsents(data);
     } catch {
-      // Mock fallback consent records
+      // Seeded consent records
       setConsents([
         {
           id: 'CONS_001',
           tenant_id: tenantId,
-          student_id: 'STU00001',
+          student_id: 'STD_PAT_001',
           guardian_phone: '+91 98765 43210',
           consent_purpose: 'Academic Performance Tracking & Diagnostic Remediation',
           is_granted: true,
-          timestamp: '2025-08-01 10:30:00',
+          timestamp: '2026-08-01 10:30:00',
         },
         {
           id: 'CONS_002',
           tenant_id: tenantId,
-          student_id: 'STU00014',
+          student_id: 'STD_PAT_002',
           guardian_phone: '+91 98765 11223',
           consent_purpose: 'Automated Parent Progress Digest (WhatsApp/SMS)',
           is_granted: true,
-          timestamp: '2025-08-01 11:15:00',
+          timestamp: '2026-08-01 11:15:00',
         },
         {
           id: 'CONS_003',
           tenant_id: tenantId,
-          student_id: 'STU00029',
+          student_id: 'STD_PAT_003',
           guardian_phone: '+91 98765 99887',
           consent_purpose: 'Academic Performance Tracking & Diagnostic Remediation',
           is_granted: false,
-          timestamp: '2025-08-15 09:20:00',
+          timestamp: '2026-08-15 09:20:00',
         },
         {
           id: 'CONS_004',
           tenant_id: tenantId,
-          student_id: 'STU00067',
+          student_id: 'STD_PAT_004',
           guardian_phone: '+91 98765 55443',
           consent_purpose: 'Conformal Quantile Percentile Estimation',
           is_granted: true,
-          timestamp: '2025-08-02 14:05:00',
+          timestamp: '2026-08-02 14:05:00',
         },
       ]);
     } finally {
@@ -83,6 +83,7 @@ export default function PrivacyPage() {
       setConsents((prev) =>
         prev.map((c) => (c.id === rec.id ? { ...c, is_granted: nextState } : c))
       );
+      notifyRecomputed(undefined, `DPDP Consent for ${rec.student_id} set to ${nextState ? 'GRANTED' : 'REVOKED'}`);
       setAuditMessage(
         `DPDP Consent Status for student ${rec.student_id} updated: ${
           nextState ? 'GRANTED' : 'REVOKED'

@@ -10,6 +10,9 @@ import {
   AuthUser,
   DemoUserPersona,
   InstituteInfo,
+  UploadSourceRecord,
+  UploadPreviewResult,
+  RecomputeStatus,
 } from './types';
 
 const RAW_API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api';
@@ -77,6 +80,15 @@ export const api = {
   },
 
   // Ingest & OMR
+  async previewUpload(file: File, tenantId: string): Promise<UploadPreviewResult> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return request<UploadPreviewResult>('/ingest/preview', {
+      method: 'POST',
+      body: formData,
+    }, tenantId);
+  },
+
   async uploadCsv(file: File, tenantId: string): Promise<IngestionResult> {
     const formData = new FormData();
     formData.append('file', file);
@@ -84,6 +96,34 @@ export const api = {
     return request<IngestionResult>('/ingest/upload-csv', {
       method: 'POST',
       body: formData,
+    }, tenantId);
+  },
+
+  async getUploadSources(tenantId: string): Promise<UploadSourceRecord[]> {
+    return request<UploadSourceRecord[]>('/ingest/sources', {}, tenantId);
+  },
+
+  async triggerRecompute(tenantId: string): Promise<{ status: string; run_id: string }> {
+    return request<{ status: string; run_id: string }>('/ingest/recompute', {
+      method: 'POST',
+    }, tenantId);
+  },
+
+  async getRecomputeStatus(tenantId: string): Promise<RecomputeStatus> {
+    return request<RecomputeStatus>('/ingest/recompute-status', {}, tenantId);
+  },
+
+  async liveEdit(
+    studentId: string,
+    changes: { attendance_rate?: number; fee_delayed?: boolean; mock_score?: number },
+    tenantId: string
+  ): Promise<any> {
+    return request<any>('/simulate/live-edit', {
+      method: 'POST',
+      body: JSON.stringify({
+        student_id: studentId,
+        ...changes
+      }),
     }, tenantId);
   },
 

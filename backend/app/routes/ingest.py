@@ -18,7 +18,7 @@ import numpy as np
 from backend.app.database import get_db, Base
 from backend.app.models import (
     Student, Batch, Question, SyllabusTopic, TestResponse,
-    Attendance, Fee, Engagement, ReviewQueueItem, AuditLog, UploadSource
+    Attendance, Fee, Engagement, ReviewQueueItem, AuditLog, UploadSource, RecomputeRun
 )
 from backend.app.schemas import ReviewQueueItemOut, ReviewResolveRequest, OMRScanResult
 from backend.app.services.omr_service import process_omr_sheet
@@ -529,3 +529,103 @@ def get_upload_sources(
         }
         for s in sources
     ]
+
+@router.post("/preview")
+async def preview_upload(
+    file: UploadFile = File(...),
+    tenant_id: str = Header("INST_PATNA_01", alias="X-Tenant-ID")
+):
+    """
+    Parses uploaded file in-memory and returns:
+    - detected shape (ROSTER, ATTENDANCE, FEES, ANSWER_KEY, WIDE_MARKS, LONG_RESPONSES)
+    - auto-detected column mappings
+    - validation checks & row counts
+    - first 20 preview rows
+    """
+    contents = await file.read()
+    if not contents:
+        raise HTTPException(status_code=400, detail="Uploaded file is empty.")
+    
+    df = parse_tabular_file(file.filename, contents)
+    shape = detect_file_shape(df)
+    
+    # Clean column names
+    orig_cols = list(df.columns)
+    clean_cols = [str(c).strip().lower().replace(" ", "_").replace("-", "_") for c in orig_cols]
+    col_map = dict(zip(clean_cols, orig_cols))
+    
+    # Auto-detect canonical mappings
+    mapping: Dict[str, Optional[str]] = {}
+    
+    def find_match(targets: List[str]) -> Optional[str]:
+        for t in targets:
+            for c, orig in col_map.items():
+                if c == t or t in c:
+                    return orig
+        return None
+
+    mapping["student_id"] = find_match(["student_id", "roll_no", "student", "roll", "candidate_id"])
+    mapping["batch_id"] = find_match(["batch_id", "batch", "class_batch", "section"])
+    mapping["test_id"] = find_match(["test_id", "exam_id", "test", "mock_id"])
+    mapping["question_id"] = find_match(["question_id", "q_id", "item_id"])
+    mapping["is_correct"] = find_match(["is_correct", "correct", "marks", "score", "result"])
+    mapping["session_date"] = find_match(["session_date", "date", "attendance_date"])
+    mapping["present_flag"] = find_match(["present_flag", "present", "status", "attended", "is_present"])
+    mapping["amount"] = find_match(["amount", "fee_amount", "paid_amount", "due_amount"])
+    mapping["due_date"] = find_match(["due_date", "payment_date", "due"])
+    mapping["name"] = find_match(["name", "student_name", "full_name"])
+
+    # Prepare preview rows (replace NaN with None for clean JSON serialization)
+    preview_df = df.head(20).copy()
+    preview_rows = preview_df.replace({np.nan: None}).to_dict(orient="records")
+
+    # Preliminary validation
+    issues = []
+    if len(df) == 0:
+        issues.append("File contains 0 data rows.")
+    if shape in ["LONG_RESPONSES", "WIDE_MARKS", "ATTENDANCE", "FEES", "ROSTER"] and not mapping["student_id"]:
+        issues.append("Warning: Could not auto-detect student identifier column. Please verify column mapping.")
+
+    return {
+        "filename": file.filename,
+        "total_rows": len(df),
+        "detected_shape": shape,
+        "columns": orig_cols,
+        "auto_mapping": mapping,
+        "preview_rows": preview_rows,
+        "validation_issues": issues
+    }
+
+@router.post("/recompute")
+def trigger_manual_recompute(
+    tenant_id: str = Header("INST_PATNA_01", alias="X-Tenant-ID"),
+    db: Session = Depends(get_db)
+):
+    """Triggers manual execution of the asynchronous recompute engine."""
+    run_id = recompute(tenant_id=tenant_id, db=db, source_file="manual_user_trigger")
+    return {"status": "SUCCESS", "run_id": run_id}
+
+@router.get("/recompute-status")
+def get_recompute_status(
+    tenant_id: str = Header("INST_PATNA_01", alias="X-Tenant-ID"),
+    db: Session = Depends(get_db)
+):
+    """Returns the most recent recompute run summary and lineage info."""
+    run = db.query(RecomputeRun).filter(RecomputeRun.tenant_id == tenant_id).order_by(RecomputeRun.computed_at.desc()).first()
+    if not run:
+        return {"status": "NONE", "run_id": None}
+    
+    files = []
+    if run.source_files_json:
+        try:
+            files = json.loads(run.source_files_json)
+        except Exception:
+            files = [run.source_files_json]
+
+    return {
+        "status": run.status,
+        "run_id": run.id,
+        "rows_used": run.rows_used,
+        "source_files": files,
+        "computed_at": run.computed_at.isoformat() if run.computed_at else None
+    }

@@ -26,8 +26,8 @@ export default function StudentPage() {
     setLoading(true);
     setTimeout(() => {
       setData({
-        student_id: selectedStudentId || 'STU00001',
-        name: 'Ananya Deshmukh',
+        student_id: selectedStudentId || 'STD_PAT_001',
+        name: selectedStudentId === 'STD_PAT_002' ? 'Shaurya Pandey' : 'Ananya Pandey',
         exam: 'JEE Advanced 2026',
         streak_days: 14,
         topics_mastered: 8,

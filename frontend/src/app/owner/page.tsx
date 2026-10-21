@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 
 export default function OwnerPage() {
-  const { tenantId } = useApp();
+  const { tenantId, recomputeVersion, lastRunId } = useApp();
   const [data, setData] = useState<OwnerDashboardData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -103,7 +103,7 @@ export default function OwnerPage() {
 
   useEffect(() => {
     fetchDashboard();
-  }, [tenantId]);
+  }, [tenantId, recomputeVersion]);
 
   // Derived ROI calculations
   const studentsSaved = Math.round((cohortSize * retentionImprovementPct) / 100);
