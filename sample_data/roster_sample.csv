@@ -1,0 +1,11 @@
+student_id,name,batch_id,class_level,parent_contact_consent
+STD_NEW_001,Student Name 1,INST_PATNA_01_B1_JEE_12,12th,True
+STD_NEW_002,Student Name 2,INST_PATNA_01_B1_JEE_12,12th,True
+STD_NEW_003,Student Name 3,INST_PATNA_01_B1_JEE_12,12th,True
+STD_NEW_004,Student Name 4,INST_PATNA_01_B1_JEE_12,12th,True
+STD_NEW_005,Student Name 5,INST_PATNA_01_B1_JEE_12,12th,True
+STD_NEW_006,Student Name 6,INST_PATNA_01_B1_JEE_12,12th,True
+STD_NEW_007,Student Name 7,INST_PATNA_01_B1_JEE_12,12th,True
+STD_NEW_008,Student Name 8,INST_PATNA_01_B1_JEE_12,12th,True
+STD_NEW_009,Student Name 9,INST_PATNA_01_B1_JEE_12,12th,True
+STD_NEW_010,Student Name 10,INST_PATNA_01_B1_JEE_12,12th,True

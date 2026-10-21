@@ -8,6 +8,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from backend.app.config import settings
 from backend.app.database import engine, Base
+import backend.app.models
 from backend.app.routes import (
     auth, ingest, mastery, risk, predictions, reports,
     owner, consent, audit, model_report, simulate, demo

@@ -1,0 +1,6 @@
+test_id,question_id,topic_id,difficulty_b,discrimination_a
+TEST_MOCK_WIDE,Q_001,TOP_01,-0.2,1.1
+TEST_MOCK_WIDE,Q_002,TOP_01,0.4,1.0
+TEST_MOCK_WIDE,Q_003,TOP_02,0.8,1.3
+TEST_MOCK_WIDE,Q_004,TOP_02,0.5,1.2
+TEST_MOCK_WIDE,Q_005,TOP_03,-0.5,0.9

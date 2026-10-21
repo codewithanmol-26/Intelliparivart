@@ -81,6 +81,9 @@ def update_consent(
     db.add(audit)
     db.commit()
 
+    from backend.app.services.recompute_service import recompute
+    recompute(effective_tenant, db, source_file=f"consent_update_{req.student_id}")
+
     return {"status": "SUCCESS", "student_id": req.student_id, "is_granted": req.granted}
 
 @router.post("/{student_id}/withdraw")
@@ -93,6 +96,31 @@ def withdraw_parent_consent(
     """1-Click Parent Consent Withdrawal under DPDP Act 2023."""
     effective_tenant = tenant_id or x_tenant_id or "INST_PATNA_01"
     student = db.query(Student).filter(Student.id == student_id).first()
+    if not student:
+        raise HTTPException(status_code=404, detail="Student not found")
+
+    student.parent_contact_consent = False
+
+    audit = AuditLog(
+        tenant_id=effective_tenant,
+        actor_role="Guardian",
+        action="WITHDRAW_PARENTAL_CONSENT",
+        resource_type="STUDENT_CONSENT",
+        resource_id=student_id,
+        details_json=json.dumps({"action": "CONSENT_WITHDRAWN", "reason": "DPDP Act Section 9 Guardian Exercise"})
+    )
+    db.add(audit)
+    db.commit()
+
+    from backend.app.services.recompute_service import recompute
+    recompute(effective_tenant, db, source_file=f"consent_withdraw_{student_id}")
+
+    return {
+        "status": "SUCCESS",
+        "student_id": student_id,
+        "is_granted": False,
+        "message": f"Parental consent for student {student_id} successfully revoked. Behavioral processing halted."
+    }
     if not student:
         raise HTTPException(status_code=404, detail="Student not found")
 

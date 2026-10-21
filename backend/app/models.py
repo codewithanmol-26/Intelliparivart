@@ -224,3 +224,78 @@ class User(Base):
     tenant_id = Column(String(50), nullable=False, index=True)
     student_id = Column(String(50), nullable=True) # Linked student for student/parent roles
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+class RecomputeRun(Base):
+    __tablename__ = "recompute_runs"
+
+    id = Column(String(50), primary_key=True, index=True) # e.g. RUN_INST_PATNA_01_20261021_...
+    tenant_id = Column(String(50), nullable=False, index=True)
+    source_files_json = Column(Text, default="[]")
+    rows_used = Column(Integer, default=0)
+    status = Column(String(50), default="SUCCESS") # SUCCESS, FAILED
+    computed_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+class ComputedMastery(Base):
+    __tablename__ = "computed_mastery"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    run_id = Column(String(50), ForeignKey("recompute_runs.id"), nullable=False, index=True)
+    tenant_id = Column(String(50), nullable=False, index=True)
+    batch_id = Column(String(100), nullable=False, index=True)
+    student_id = Column(String(50), nullable=False, index=True)
+    topic_id = Column(String(50), nullable=False, index=True)
+    subject = Column(String(100), nullable=False)
+    topic = Column(String(150), nullable=False)
+    bkt_mastery = Column(Float, nullable=False)
+    raw_accuracy = Column(Float, nullable=False)
+    irt_theta = Column(Float, nullable=True)
+    standard_error = Column(Float, default=0.25)
+    n_responses = Column(Integer, default=0)
+    confidence = Column(String(20), default="MODERATE") # HIGH, MODERATE, LOW
+    computed_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+class ComputedRisk(Base):
+    __tablename__ = "computed_risk"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    run_id = Column(String(50), ForeignKey("recompute_runs.id"), nullable=False, index=True)
+    tenant_id = Column(String(50), nullable=False, index=True)
+    student_id = Column(String(50), nullable=False, index=True)
+    batch_id = Column(String(100), nullable=False, index=True)
+    student_name = Column(String(150), nullable=False)
+    risk_score = Column(Float, nullable=False) # Probability 0.0 - 1.0
+    risk_tier = Column(String(20), default="LOW") # HIGH, MODERATE, LOW
+    attendance_rate = Column(Float, nullable=True)
+    attendance_slope = Column(Float, nullable=True)
+    fee_delay_days = Column(Float, nullable=True)
+    mock_accuracy = Column(Float, nullable=True)
+    top_reasons_json = Column(Text, default="[]")
+    intervention_status = Column(String(50), default="UNASSIGNED") # UNASSIGNED, ASSIGNED, IN_PROGRESS, FOLLOW_UP
+    computed_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+class ComputedPercentile(Base):
+    __tablename__ = "computed_percentiles"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    run_id = Column(String(50), ForeignKey("recompute_runs.id"), nullable=False, index=True)
+    tenant_id = Column(String(50), nullable=False, index=True)
+    student_id = Column(String(50), nullable=False, index=True)
+    p10 = Column(Float, nullable=False)
+    p50 = Column(Float, nullable=False)
+    p90 = Column(Float, nullable=False)
+    interval_width = Column(Float, nullable=False)
+    coverage_stat = Column(Float, default=90.0)
+    up_to_month = Column(Integer, default=3)
+    computed_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+class UploadSource(Base):
+    __tablename__ = "upload_sources"
+
+    id = Column(String(50), primary_key=True, index=True) # e.g. UPL_01
+    tenant_id = Column(String(50), nullable=False, index=True)
+    file_name = Column(String(200), nullable=False)
+    file_type = Column(String(50), default="RESPONSES") # ROSTER, RESPONSES, ATTENDANCE, FEES, ENGAGEMENT, ANSWER_KEY
+    rows_count = Column(Integer, default=0)
+    status = Column(String(50), default="ACTIVE") # ACTIVE, REVERTED
+    uploaded_by = Column(String(100), default="Teacher")
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
