@@ -5,9 +5,10 @@
 **Evaluation Rubric:** 70% Technology & Architecture | 30% EdTech Market & Commercial Viability  
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
-[![Streamlit](https://img.shields.io/badge/Streamlit-1.30%2B-FF4B4B.svg)](https://streamlit.io/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.109%2B-009688.svg)](https://fastapi.tiangolo.com/)
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-tribhuvneshsharma%2FIntelliprivart-181717.svg?logo=github)](https://github.com/tribhuvneshsharma/Intelliprivart)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1UTJ0NDZTffQQ-if6o_TP_OBLeP15rkYi?usp=sharing)
+[![Google Slides](https://img.shields.io/badge/Google%20Slides-14--Slide%20Deck-FBBC04.svg?logo=googleslides)](https://docs.google.com/presentation/d/1-JMFZVQYazTDPJXLMlF96xofFSOSrFMkJRZYu1CCFuw/edit?usp=sharing)
+[![Excel Model](https://img.shields.io/badge/Excel-Financial%20Model-107C41.svg?logo=microsoftexcel)](https://1drv.ms/x/c/d60414ee7b60239b/IQDt8Tm9OCY0TrB-BuRbFUM4AeOaSTeDYpPUGq6YKj6_0ac?e=8M8Ja7)
 [![DPDP Act 2023](https://img.shields.io/badge/Privacy-DPDP%20Act%202023%20Compliant-emerald.svg)](https://www.meity.gov.in/)
 [![MoE 2024](https://img.shields.io/badge/Well--being-MoE%20Jan%202024%20Guidelines-teal.svg)](https://www.education.gov.in/)
 
@@ -15,14 +16,14 @@
 
 ## 📌 1. The Four Competition Submission Deliverables
 
-This repository contains the four complete, synchronized deliverables required for the Nextute EdTech × Finance Club, IIT Patna Case Competition 2026:
+This repository contains and links the four complete, synchronized deliverables required for the Nextute EdTech × Finance Club, IIT Patna Case Competition 2026:
 
-| # | Deliverable | Primary File Location | Description & Verification |
-| :-: | :--- | :--- | :--- |
-| **1** | **Google Colab Notebook** | [**`1_Colab_Intelliprivart_DataMoat_ML.ipynb`**](file:///c:/Users/aryan/OneDrive/Desktop/Data%20Moat/1_Colab_Intelliprivart_DataMoat_ML.ipynb) | Complete 20-cell standalone ML pipeline. Zero API keys, zero local dependencies, runs in ~90s on free CPU. |
-| **2** | **Excel Financial Model** | [**`2_Excel_Nextute_Case_B_Financial_Model.xlsx`**](file:///c:/Users/aryan/OneDrive/Desktop/Data%20Moat/2_Excel_Nextute_Case_B_Financial_Model.xlsx) | 5 linked sheets: Assumptions, Institute ROI, Platform Unit Economics, 3-Year Projections, and Sensitivity Matrix. |
-| **3** | **PowerPoint Pitch Deck** | [**`3_PPT_Intelliparivart_CaseB_Round1.pptx`**](file:///c:/Users/aryan/OneDrive/Desktop/Data%20Moat/3_PPT_Intelliparivart_CaseB_Round1.pptx)<br>*(and [PDF version](file:///c:/Users/aryan/OneDrive/Desktop/Data%20Moat/3_PPT_Intelliparivart_CaseB_Round1.pdf))* | Definitive 14-slide competition deck tailored to the 70% Tech / 30% Market rubric, with companion speaker notes. |
-| **4** | **GitHub Repository** | [**`4_GitHub_Repository_Submission.md`**](file:///c:/Users/aryan/OneDrive/Desktop/Data%20Moat/4_GitHub_Repository_Submission.md) | Full-stack production codebase: Streamlit SaaS UI, FastAPI REST API, PostgreSQL/SQLite ORM, Docker, and ML pipeline. |
+| # | Deliverable | Live Cloud Link | Local Project File | Description & Verification |
+| :-: | :--- | :--- | :--- | :--- |
+| **1** | **Google Colab Notebook** | [**Open in Google Colab**](https://colab.research.google.com/drive/1UTJ0NDZTffQQ-if6o_TP_OBLeP15rkYi?usp=sharing) | [**`1_Colab_Intelliprivart_DataMoat_ML.ipynb`**](file:///c:/Users/aryan/OneDrive/Desktop/Data%20Moat/1_Colab_Intelliprivart_DataMoat_ML.ipynb) | Complete 20-cell standalone ML pipeline. Zero API keys, zero local dependencies, runs in ~90s on free CPU. |
+| **2** | **Excel Financial Model** | [**Open in Excel Online (OneDrive)**](https://1drv.ms/x/c/d60414ee7b60239b/IQDt8Tm9OCY0TrB-BuRbFUM4AeOaSTeDYpPUGq6YKj6_0ac?e=8M8Ja7) | [**`2_Excel_Nextute_Case_B_Financial_Model.xlsx`**](file:///c:/Users/aryan/OneDrive/Desktop/Data%20Moat/2_Excel_Nextute_Case_B_Financial_Model.xlsx) | 5 linked sheets: Assumptions, Institute ROI, Platform Unit Economics, 3-Year Projections, and Sensitivity Matrix. |
+| **3** | **PowerPoint Pitch Deck** | [**Open in Google Slides**](https://docs.google.com/presentation/d/1-JMFZVQYazTDPJXLMlF96xofFSOSrFMkJRZYu1CCFuw/edit?usp=sharing) | [**`3_PPT_Intelliparivart_CaseB_Round1.pptx`**](file:///c:/Users/aryan/OneDrive/Desktop/Data%20Moat/3_PPT_Intelliparivart_CaseB_Round1.pptx)<br>*(and [PDF version](file:///c:/Users/aryan/OneDrive/Desktop/Data%20Moat/3_PPT_Intelliparivart_CaseB_Round1.pdf))* | Definitive 14-slide competition deck tailored to the 70% Tech / 30% Market rubric, with companion speaker notes. |
+| **4** | **GitHub Repository** | [**tribhuvneshsharma/Intelliprivart**](https://github.com/tribhuvneshsharma/Intelliprivart) | [**`4_GitHub_Repository_Submission.md`**](file:///c:/Users/aryan/OneDrive/Desktop/Data%20Moat/4_GitHub_Repository_Submission.md) | Full-stack production codebase: Streamlit SaaS UI, FastAPI REST API, PostgreSQL/SQLite ORM, Docker, and ML pipeline. |
 
 > [!TIP]
 > A duplicate copy of all 4 deliverables is also packaged in the [**`Final_Submission_Deliverables/`**](file:///c:/Users/aryan/OneDrive/Desktop/Data%20Moat/Final_Submission_Deliverables) folder for immediate zip or portal upload.
@@ -31,25 +32,10 @@ This repository contains the four complete, synchronized deliverables required f
 
 ## 🚀 2. Quick-Start Git Commands (Pushing to Your GitHub)
 
-To publish this codebase directly to your personal or team GitHub repository:
+The repository remote `origin` is already linked to `https://github.com/tribhuvneshsharma/Intelliprivart.git`. To push:
 
 ```bash
-# 1. Initialize Git in the project root
-git init
-
-# 2. Add all files (respects .gitignore)
-git add .
-
-# 3. Commit the initial build
-git commit -m "Initial release: Intelliprivart Data Moat Platform (IIT Patna Case B 2026)"
-
-# 4. Set default branch to main
-git branch -M main
-
-# 5. Add your remote repository (replace with your GitHub repository URL)
-git remote add origin https://github.com/YOUR_USERNAME/Data-Moat.git
-
-# 6. Push to GitHub
+# Push to GitHub main branch
 git push -u origin main
 ```
 

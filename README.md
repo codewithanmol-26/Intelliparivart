@@ -3,7 +3,21 @@
 > **Nextute EdTech × Finance Club, IIT Patna — Case Competition 2026**  
 > **Track**: Case B — The Data Moat  
 > **Mission**: Build an AI-powered intelligence platform that transforms the fragmented educational exhaust of India's coaching institutes into structured records, predictive diagnostics, and measurable academic interventions — creating a durable, compound data moat.  
-> **Weightage Focus**: **70% Technology** (Architecture, ML Rigour, Privacy & Safety) | **30% Market** (Unit Economics, GTM, Institute ROI)
+> **Weightage Focus**: **70% Technology** (Architecture, ML Rigour, Privacy & Safety) | **30% Market** (Unit Economics, GTM, Institute ROI)  
+> **Team Name**: **Team Intelliparivart**
+
+---
+
+### 🏆 Official Competition Submission Deliverables
+
+| # | Deliverable | Live Cloud Link | Local Deliverable File |
+| :-: | :--- | :--- | :--- |
+| **1** | **Google Colab Notebook** | [**Open in Google Colab**](https://colab.research.google.com/drive/1UTJ0NDZTffQQ-if6o_TP_OBLeP15rkYi?usp=sharing) | [`1_Colab_Intelliprivart_DataMoat_ML.ipynb`](file:///c:/Users/aryan/OneDrive/Desktop/Data%20Moat/1_Colab_Intelliprivart_DataMoat_ML.ipynb) |
+| **2** | **Excel Financial Model** | [**Open in Excel Online (OneDrive)**](https://1drv.ms/x/c/d60414ee7b60239b/IQDt8Tm9OCY0TrB-BuRbFUM4AeOaSTeDYpPUGq6YKj6_0ac?e=8M8Ja7) | [`2_Excel_Nextute_Case_B_Financial_Model.xlsx`](file:///c:/Users/aryan/OneDrive/Desktop/Data%20Moat/2_Excel_Nextute_Case_B_Financial_Model.xlsx) |
+| **3** | **Google Slides Pitch Deck** | [**Open in Google Slides (14 Slides)**](https://docs.google.com/presentation/d/1-JMFZVQYazTDPJXLMlF96xofFSOSrFMkJRZYu1CCFuw/edit?usp=sharing) | [`3_PPT_Intelliparivart_CaseB_Round1.pptx`](file:///c:/Users/aryan/OneDrive/Desktop/Data%20Moat/3_PPT_Intelliparivart_CaseB_Round1.pptx) / [PDF](file:///c:/Users/aryan/OneDrive/Desktop/Data%20Moat/3_PPT_Intelliparivart_CaseB_Round1.pdf) |
+| **4** | **GitHub Repository** | [**github.com/tribhuvneshsharma/Intelliprivart**](https://github.com/tribhuvneshsharma/Intelliprivart) | [`4_GitHub_Repository_Submission.md`](file:///c:/Users/aryan/OneDrive/Desktop/Data%20Moat/4_GitHub_Repository_Submission.md) |
+
+*All 4 deliverables are also bundled inside the [`Final_Submission_Deliverables/`](file:///c:/Users/aryan/OneDrive/Desktop/Data%20Moat/Final_Submission_Deliverables) folder.*
 
 ---
 
