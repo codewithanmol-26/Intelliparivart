@@ -4,7 +4,7 @@
 > **Track**: Case B — The Data Moat  
 > **Mission**: Build an AI-powered intelligence platform that transforms the fragmented educational exhaust of India's coaching institutes into structured records, predictive diagnostics, and measurable academic interventions — creating a durable, compound data moat.  
 > **Weightage Focus**: **70% Technology** (Architecture, ML Rigour, Privacy & Safety) | **30% Market** (Unit Economics, GTM, Institute ROI)  
-> **Team Name**: **Team Intelliparivart**
+> **Team Name**: **Intelliparivart**
 
 ---
 
