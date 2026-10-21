@@ -1,0 +1,31 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.pytest_cache/
+
+# Environments
+.env
+.venv/
+venv/
+ENV/
+env/
+
+# SQLite databases & temp WAL/SHM (preserve sample db if needed, ignore transient locks)
+*.db-journal
+*.db-wal
+*.db-shm
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Intermediate log files
+*.log

@@ -1,0 +1,301 @@
+question_id,topic_id,subject,chapter,topic,difficulty_b,discrimination_a,correct_option
+Q_001,TOP_01,Physics,Mechanics,Kinematics,-0.176,1.072,Option_A
+Q_002,TOP_01,Physics,Mechanics,Kinematics,-0.109,1.545,Option_A
+Q_003,TOP_01,Physics,Mechanics,Kinematics,-0.505,1.05,Option_C
+Q_004,TOP_01,Physics,Mechanics,Kinematics,0.311,1.308,Option_B
+Q_005,TOP_01,Physics,Mechanics,Kinematics,-0.611,1.245,Option_B
+Q_006,TOP_01,Physics,Mechanics,Kinematics,-0.609,0.998,Option_B
+Q_007,TOP_01,Physics,Mechanics,Kinematics,-0.291,0.725,Option_A
+Q_008,TOP_01,Physics,Mechanics,Kinematics,-1.176,0.977,Option_A
+Q_009,TOP_01,Physics,Mechanics,Kinematics,-0.856,1.184,Option_D
+Q_010,TOP_01,Physics,Mechanics,Kinematics,-0.809,0.81,Option_A
+Q_011,TOP_01,Physics,Mechanics,Kinematics,0.26,1.052,Option_A
+Q_012,TOP_01,Physics,Mechanics,Kinematics,-0.37,0.808,Option_A
+Q_013,TOP_01,Physics,Mechanics,Kinematics,-0.645,1.132,Option_B
+Q_014,TOP_01,Physics,Mechanics,Kinematics,-0.918,1.2,Option_B
+Q_015,TOP_01,Physics,Mechanics,Kinematics,-0.67,1.036,Option_A
+Q_016,TOP_01,Physics,Mechanics,Kinematics,-0.671,1.661,Option_B
+Q_017,TOP_01,Physics,Mechanics,Kinematics,-0.406,0.876,Option_D
+Q_018,TOP_01,Physics,Mechanics,Kinematics,-0.03,0.845,Option_B
+Q_019,TOP_01,Physics,Mechanics,Kinematics,-0.306,0.718,Option_D
+Q_020,TOP_01,Physics,Mechanics,Kinematics,-0.998,1.154,Option_C
+Q_021,TOP_01,Physics,Mechanics,Kinematics,-0.068,1.148,Option_A
+Q_022,TOP_01,Physics,Mechanics,Kinematics,-0.452,1.034,Option_B
+Q_023,TOP_01,Physics,Mechanics,Kinematics,-1.065,0.943,Option_D
+Q_024,TOP_01,Physics,Mechanics,Kinematics,-0.607,1.395,Option_C
+Q_025,TOP_01,Physics,Mechanics,Kinematics,-0.245,0.75,Option_C
+Q_026,TOP_02,Physics,Mechanics,Rotational Dynamics,0.746,1.015,Option_B
+Q_027,TOP_02,Physics,Mechanics,Rotational Dynamics,0.295,1.264,Option_B
+Q_028,TOP_02,Physics,Mechanics,Rotational Dynamics,1.064,1.356,Option_C
+Q_029,TOP_02,Physics,Mechanics,Rotational Dynamics,0.222,1.032,Option_A
+Q_030,TOP_02,Physics,Mechanics,Rotational Dynamics,0.749,1.37,Option_A
+Q_031,TOP_02,Physics,Mechanics,Rotational Dynamics,0.384,1.061,Option_D
+Q_032,TOP_02,Physics,Mechanics,Rotational Dynamics,0.102,0.849,Option_A
+Q_033,TOP_02,Physics,Mechanics,Rotational Dynamics,0.966,1.489,Option_C
+Q_034,TOP_02,Physics,Mechanics,Rotational Dynamics,0.568,1.378,Option_C
+Q_035,TOP_02,Physics,Mechanics,Rotational Dynamics,0.763,0.959,Option_C
+Q_036,TOP_02,Physics,Mechanics,Rotational Dynamics,0.763,1.55,Option_A
+Q_037,TOP_02,Physics,Mechanics,Rotational Dynamics,0.584,1.559,Option_D
+Q_038,TOP_02,Physics,Mechanics,Rotational Dynamics,-0.579,1.324,Option_A
+Q_039,TOP_02,Physics,Mechanics,Rotational Dynamics,0.639,1.035,Option_D
+Q_040,TOP_02,Physics,Mechanics,Rotational Dynamics,0.641,0.714,Option_A
+Q_041,TOP_02,Physics,Mechanics,Rotational Dynamics,0.501,1.196,Option_C
+Q_042,TOP_02,Physics,Mechanics,Rotational Dynamics,1.265,0.986,Option_C
+Q_043,TOP_02,Physics,Mechanics,Rotational Dynamics,0.236,0.99,Option_B
+Q_044,TOP_02,Physics,Mechanics,Rotational Dynamics,1.012,1.188,Option_A
+Q_045,TOP_02,Physics,Mechanics,Rotational Dynamics,0.362,1.237,Option_A
+Q_046,TOP_02,Physics,Mechanics,Rotational Dynamics,0.644,1.368,Option_B
+Q_047,TOP_02,Physics,Mechanics,Rotational Dynamics,0.284,1.028,Option_C
+Q_048,TOP_02,Physics,Mechanics,Rotational Dynamics,0.424,0.801,Option_A
+Q_049,TOP_02,Physics,Mechanics,Rotational Dynamics,0.733,1.171,Option_B
+Q_050,TOP_02,Physics,Mechanics,Rotational Dynamics,0.602,1.05,Option_A
+Q_051,TOP_03,Physics,Electrodynamics,Electrostatics,-0.537,1.007,Option_D
+Q_052,TOP_03,Physics,Electrodynamics,Electrostatics,-0.054,0.926,Option_C
+Q_053,TOP_03,Physics,Electrodynamics,Electrostatics,0.027,1.208,Option_D
+Q_054,TOP_03,Physics,Electrodynamics,Electrostatics,0.949,1.148,Option_C
+Q_055,TOP_03,Physics,Electrodynamics,Electrostatics,0.216,1.087,Option_B
+Q_056,TOP_03,Physics,Electrodynamics,Electrostatics,-0.763,1.099,Option_C
+Q_057,TOP_03,Physics,Electrodynamics,Electrostatics,0.127,1.9,Option_C
+Q_058,TOP_03,Physics,Electrodynamics,Electrostatics,0.013,1.181,Option_B
+Q_059,TOP_03,Physics,Electrodynamics,Electrostatics,0.084,0.855,Option_C
+Q_060,TOP_03,Physics,Electrodynamics,Electrostatics,0.614,1.304,Option_A
+Q_061,TOP_03,Physics,Electrodynamics,Electrostatics,0.456,0.905,Option_B
+Q_062,TOP_03,Physics,Electrodynamics,Electrostatics,0.731,0.812,Option_B
+Q_063,TOP_03,Physics,Electrodynamics,Electrostatics,0.364,1.789,Option_B
+Q_064,TOP_03,Physics,Electrodynamics,Electrostatics,-0.346,0.976,Option_D
+Q_065,TOP_03,Physics,Electrodynamics,Electrostatics,0.145,0.989,Option_D
+Q_066,TOP_03,Physics,Electrodynamics,Electrostatics,-0.598,1.122,Option_C
+Q_067,TOP_03,Physics,Electrodynamics,Electrostatics,-0.378,1.227,Option_B
+Q_068,TOP_03,Physics,Electrodynamics,Electrostatics,-0.314,1.554,Option_C
+Q_069,TOP_03,Physics,Electrodynamics,Electrostatics,-0.252,1.03,Option_A
+Q_070,TOP_03,Physics,Electrodynamics,Electrostatics,0.466,0.843,Option_B
+Q_071,TOP_03,Physics,Electrodynamics,Electrostatics,0.202,1.473,Option_A
+Q_072,TOP_03,Physics,Electrodynamics,Electrostatics,-0.623,1.151,Option_C
+Q_073,TOP_03,Physics,Electrodynamics,Electrostatics,0.217,1.313,Option_D
+Q_074,TOP_03,Physics,Electrodynamics,Electrostatics,-0.457,0.827,Option_C
+Q_075,TOP_03,Physics,Electrodynamics,Electrostatics,0.335,1.18,Option_A
+Q_076,TOP_04,Chemistry,Organic,Reaction Mechanisms,0.413,1.193,Option_B
+Q_077,TOP_04,Chemistry,Organic,Reaction Mechanisms,-0.006,1.163,Option_C
+Q_078,TOP_04,Chemistry,Organic,Reaction Mechanisms,0.432,0.944,Option_B
+Q_079,TOP_04,Chemistry,Organic,Reaction Mechanisms,1.14,1.227,Option_D
+Q_080,TOP_04,Chemistry,Organic,Reaction Mechanisms,-0.236,1.277,Option_D
+Q_081,TOP_04,Chemistry,Organic,Reaction Mechanisms,-0.139,1.314,Option_D
+Q_082,TOP_04,Chemistry,Organic,Reaction Mechanisms,0.821,0.923,Option_B
+Q_083,TOP_04,Chemistry,Organic,Reaction Mechanisms,0.734,1.21,Option_C
+Q_084,TOP_04,Chemistry,Organic,Reaction Mechanisms,0.67,1.677,Option_B
+Q_085,TOP_04,Chemistry,Organic,Reaction Mechanisms,0.19,0.936,Option_B
+Q_086,TOP_04,Chemistry,Organic,Reaction Mechanisms,-0.1,0.924,Option_C
+Q_087,TOP_04,Chemistry,Organic,Reaction Mechanisms,0.265,1.191,Option_D
+Q_088,TOP_04,Chemistry,Organic,Reaction Mechanisms,0.425,1.326,Option_D
+Q_089,TOP_04,Chemistry,Organic,Reaction Mechanisms,0.306,1.522,Option_C
+Q_090,TOP_04,Chemistry,Organic,Reaction Mechanisms,0.181,2.011,Option_B
+Q_091,TOP_04,Chemistry,Organic,Reaction Mechanisms,0.582,0.915,Option_B
+Q_092,TOP_04,Chemistry,Organic,Reaction Mechanisms,-0.182,1.229,Option_D
+Q_093,TOP_04,Chemistry,Organic,Reaction Mechanisms,0.199,1.293,Option_A
+Q_094,TOP_04,Chemistry,Organic,Reaction Mechanisms,0.513,1.088,Option_A
+Q_095,TOP_04,Chemistry,Organic,Reaction Mechanisms,-0.081,0.792,Option_A
+Q_096,TOP_04,Chemistry,Organic,Reaction Mechanisms,0.099,1.334,Option_B
+Q_097,TOP_04,Chemistry,Organic,Reaction Mechanisms,0.396,0.84,Option_B
+Q_098,TOP_04,Chemistry,Organic,Reaction Mechanisms,0.378,1.203,Option_D
+Q_099,TOP_04,Chemistry,Organic,Reaction Mechanisms,-0.098,1.143,Option_A
+Q_100,TOP_04,Chemistry,Organic,Reaction Mechanisms,0.326,0.859,Option_D
+Q_101,TOP_05,Chemistry,Physical,Chemical Kinetics,0.061,1.25,Option_D
+Q_102,TOP_05,Chemistry,Physical,Chemical Kinetics,0.387,1.394,Option_D
+Q_103,TOP_05,Chemistry,Physical,Chemical Kinetics,-0.72,0.899,Option_C
+Q_104,TOP_05,Chemistry,Physical,Chemical Kinetics,0.132,1.237,Option_A
+Q_105,TOP_05,Chemistry,Physical,Chemical Kinetics,0.132,2.3,Option_A
+Q_106,TOP_05,Chemistry,Physical,Chemical Kinetics,0.157,1.419,Option_C
+Q_107,TOP_05,Chemistry,Physical,Chemical Kinetics,0.329,1.275,Option_C
+Q_108,TOP_05,Chemistry,Physical,Chemical Kinetics,-0.242,1.306,Option_A
+Q_109,TOP_05,Chemistry,Physical,Chemical Kinetics,-0.448,1.049,Option_C
+Q_110,TOP_05,Chemistry,Physical,Chemical Kinetics,-0.318,1.125,Option_D
+Q_111,TOP_05,Chemistry,Physical,Chemical Kinetics,0.942,0.733,Option_B
+Q_112,TOP_05,Chemistry,Physical,Chemical Kinetics,0.209,0.775,Option_D
+Q_113,TOP_05,Chemistry,Physical,Chemical Kinetics,-0.312,1.404,Option_A
+Q_114,TOP_05,Chemistry,Physical,Chemical Kinetics,-0.071,0.872,Option_C
+Q_115,TOP_05,Chemistry,Physical,Chemical Kinetics,-0.422,1.283,Option_B
+Q_116,TOP_05,Chemistry,Physical,Chemical Kinetics,-0.429,1.159,Option_A
+Q_117,TOP_05,Chemistry,Physical,Chemical Kinetics,-0.079,0.958,Option_C
+Q_118,TOP_05,Chemistry,Physical,Chemical Kinetics,0.865,1.271,Option_B
+Q_119,TOP_05,Chemistry,Physical,Chemical Kinetics,-1.011,1.151,Option_B
+Q_120,TOP_05,Chemistry,Physical,Chemical Kinetics,-0.398,1.333,Option_C
+Q_121,TOP_05,Chemistry,Physical,Chemical Kinetics,-0.457,1.078,Option_B
+Q_122,TOP_05,Chemistry,Physical,Chemical Kinetics,0.127,1.337,Option_A
+Q_123,TOP_05,Chemistry,Physical,Chemical Kinetics,-0.64,1.027,Option_C
+Q_124,TOP_05,Chemistry,Physical,Chemical Kinetics,-0.314,0.957,Option_D
+Q_125,TOP_05,Chemistry,Physical,Chemical Kinetics,0.694,1.208,Option_A
+Q_126,TOP_06,Chemistry,Inorganic,Coordination Compounds,-0.367,1.352,Option_A
+Q_127,TOP_06,Chemistry,Inorganic,Coordination Compounds,1.155,1.387,Option_C
+Q_128,TOP_06,Chemistry,Inorganic,Coordination Compounds,-0.484,0.993,Option_C
+Q_129,TOP_06,Chemistry,Inorganic,Coordination Compounds,0.77,0.946,Option_B
+Q_130,TOP_06,Chemistry,Inorganic,Coordination Compounds,0.4,1.311,Option_A
+Q_131,TOP_06,Chemistry,Inorganic,Coordination Compounds,-0.217,1.091,Option_B
+Q_132,TOP_06,Chemistry,Inorganic,Coordination Compounds,-1.259,0.882,Option_A
+Q_133,TOP_06,Chemistry,Inorganic,Coordination Compounds,0.086,0.84,Option_A
+Q_134,TOP_06,Chemistry,Inorganic,Coordination Compounds,0.935,0.807,Option_D
+Q_135,TOP_06,Chemistry,Inorganic,Coordination Compounds,0.002,1.137,Option_A
+Q_136,TOP_06,Chemistry,Inorganic,Coordination Compounds,0.849,0.806,Option_B
+Q_137,TOP_06,Chemistry,Inorganic,Coordination Compounds,0.723,1.108,Option_B
+Q_138,TOP_06,Chemistry,Inorganic,Coordination Compounds,-0.242,1.223,Option_D
+Q_139,TOP_06,Chemistry,Inorganic,Coordination Compounds,0.29,0.968,Option_B
+Q_140,TOP_06,Chemistry,Inorganic,Coordination Compounds,0.231,1.015,Option_C
+Q_141,TOP_06,Chemistry,Inorganic,Coordination Compounds,0.251,1.278,Option_D
+Q_142,TOP_06,Chemistry,Inorganic,Coordination Compounds,0.914,0.842,Option_B
+Q_143,TOP_06,Chemistry,Inorganic,Coordination Compounds,1.16,0.719,Option_B
+Q_144,TOP_06,Chemistry,Inorganic,Coordination Compounds,0.132,1.258,Option_C
+Q_145,TOP_06,Chemistry,Inorganic,Coordination Compounds,0.326,0.964,Option_D
+Q_146,TOP_06,Chemistry,Inorganic,Coordination Compounds,0.106,0.992,Option_C
+Q_147,TOP_06,Chemistry,Inorganic,Coordination Compounds,-0.065,1.332,Option_D
+Q_148,TOP_06,Chemistry,Inorganic,Coordination Compounds,0.361,0.949,Option_D
+Q_149,TOP_06,Chemistry,Inorganic,Coordination Compounds,0.605,1.182,Option_A
+Q_150,TOP_06,Chemistry,Inorganic,Coordination Compounds,0.566,1.269,Option_B
+Q_151,TOP_07,Mathematics,Calculus,Definite Integration,0.327,0.977,Option_B
+Q_152,TOP_07,Mathematics,Calculus,Definite Integration,1.036,1.264,Option_A
+Q_153,TOP_07,Mathematics,Calculus,Definite Integration,0.691,1.134,Option_C
+Q_154,TOP_07,Mathematics,Calculus,Definite Integration,1.275,0.97,Option_A
+Q_155,TOP_07,Mathematics,Calculus,Definite Integration,0.946,1.057,Option_B
+Q_156,TOP_07,Mathematics,Calculus,Definite Integration,0.602,1.407,Option_B
+Q_157,TOP_07,Mathematics,Calculus,Definite Integration,1.071,1.322,Option_A
+Q_158,TOP_07,Mathematics,Calculus,Definite Integration,1.287,1.11,Option_A
+Q_159,TOP_07,Mathematics,Calculus,Definite Integration,1.007,1.032,Option_A
+Q_160,TOP_07,Mathematics,Calculus,Definite Integration,0.846,1.074,Option_B
+Q_161,TOP_07,Mathematics,Calculus,Definite Integration,0.744,1.26,Option_A
+Q_162,TOP_07,Mathematics,Calculus,Definite Integration,0.332,1.751,Option_A
+Q_163,TOP_07,Mathematics,Calculus,Definite Integration,0.247,0.846,Option_C
+Q_164,TOP_07,Mathematics,Calculus,Definite Integration,1.221,1.315,Option_A
+Q_165,TOP_07,Mathematics,Calculus,Definite Integration,0.981,1.269,Option_B
+Q_166,TOP_07,Mathematics,Calculus,Definite Integration,0.694,0.907,Option_C
+Q_167,TOP_07,Mathematics,Calculus,Definite Integration,0.734,0.952,Option_D
+Q_168,TOP_07,Mathematics,Calculus,Definite Integration,1.139,1.07,Option_B
+Q_169,TOP_07,Mathematics,Calculus,Definite Integration,0.329,1.03,Option_B
+Q_170,TOP_07,Mathematics,Calculus,Definite Integration,0.886,0.976,Option_D
+Q_171,TOP_07,Mathematics,Calculus,Definite Integration,0.33,1.166,Option_B
+Q_172,TOP_07,Mathematics,Calculus,Definite Integration,0.81,0.989,Option_D
+Q_173,TOP_07,Mathematics,Calculus,Definite Integration,0.488,1.163,Option_D
+Q_174,TOP_07,Mathematics,Calculus,Definite Integration,0.048,0.811,Option_B
+Q_175,TOP_07,Mathematics,Calculus,Definite Integration,0.377,1.054,Option_A
+Q_176,TOP_08,Mathematics,Algebra,Quadratic Equations,-0.36,1.529,Option_A
+Q_177,TOP_08,Mathematics,Algebra,Quadratic Equations,-0.114,1.067,Option_D
+Q_178,TOP_08,Mathematics,Algebra,Quadratic Equations,-0.509,0.886,Option_C
+Q_179,TOP_08,Mathematics,Algebra,Quadratic Equations,-0.508,1.037,Option_D
+Q_180,TOP_08,Mathematics,Algebra,Quadratic Equations,-0.355,0.921,Option_D
+Q_181,TOP_08,Mathematics,Algebra,Quadratic Equations,-0.266,1.548,Option_D
+Q_182,TOP_08,Mathematics,Algebra,Quadratic Equations,-0.549,1.207,Option_A
+Q_183,TOP_08,Mathematics,Algebra,Quadratic Equations,-0.189,1.012,Option_A
+Q_184,TOP_08,Mathematics,Algebra,Quadratic Equations,-0.399,1.108,Option_A
+Q_185,TOP_08,Mathematics,Algebra,Quadratic Equations,-0.456,0.932,Option_D
+Q_186,TOP_08,Mathematics,Algebra,Quadratic Equations,-0.489,1.233,Option_C
+Q_187,TOP_08,Mathematics,Algebra,Quadratic Equations,0.153,1.365,Option_A
+Q_188,TOP_08,Mathematics,Algebra,Quadratic Equations,0.469,0.933,Option_B
+Q_189,TOP_08,Mathematics,Algebra,Quadratic Equations,-0.107,1.151,Option_B
+Q_190,TOP_08,Mathematics,Algebra,Quadratic Equations,0.485,0.925,Option_B
+Q_191,TOP_08,Mathematics,Algebra,Quadratic Equations,-0.878,0.969,Option_D
+Q_192,TOP_08,Mathematics,Algebra,Quadratic Equations,-1.456,0.984,Option_B
+Q_193,TOP_08,Mathematics,Algebra,Quadratic Equations,-0.842,1.142,Option_D
+Q_194,TOP_08,Mathematics,Algebra,Quadratic Equations,-0.346,1.67,Option_B
+Q_195,TOP_08,Mathematics,Algebra,Quadratic Equations,-0.072,0.973,Option_C
+Q_196,TOP_08,Mathematics,Algebra,Quadratic Equations,-0.904,1.231,Option_D
+Q_197,TOP_08,Mathematics,Algebra,Quadratic Equations,-1.094,1.654,Option_B
+Q_198,TOP_08,Mathematics,Algebra,Quadratic Equations,0.031,0.997,Option_A
+Q_199,TOP_08,Mathematics,Algebra,Quadratic Equations,-1.271,1.489,Option_D
+Q_200,TOP_08,Mathematics,Algebra,Quadratic Equations,-0.552,1.451,Option_A
+Q_201,TOP_09,Mathematics,Geometry,Vectors & 3D Geometry,-0.317,0.969,Option_A
+Q_202,TOP_09,Mathematics,Geometry,Vectors & 3D Geometry,0.402,1.117,Option_A
+Q_203,TOP_09,Mathematics,Geometry,Vectors & 3D Geometry,0.197,1.267,Option_A
+Q_204,TOP_09,Mathematics,Geometry,Vectors & 3D Geometry,-0.08,1.071,Option_B
+Q_205,TOP_09,Mathematics,Geometry,Vectors & 3D Geometry,0.454,1.238,Option_B
+Q_206,TOP_09,Mathematics,Geometry,Vectors & 3D Geometry,0.72,0.863,Option_D
+Q_207,TOP_09,Mathematics,Geometry,Vectors & 3D Geometry,-0.29,1.464,Option_D
+Q_208,TOP_09,Mathematics,Geometry,Vectors & 3D Geometry,0.55,0.937,Option_D
+Q_209,TOP_09,Mathematics,Geometry,Vectors & 3D Geometry,1.098,1.134,Option_B
+Q_210,TOP_09,Mathematics,Geometry,Vectors & 3D Geometry,0.931,1.122,Option_D
+Q_211,TOP_09,Mathematics,Geometry,Vectors & 3D Geometry,1.327,1.626,Option_A
+Q_212,TOP_09,Mathematics,Geometry,Vectors & 3D Geometry,0.288,1.369,Option_B
+Q_213,TOP_09,Mathematics,Geometry,Vectors & 3D Geometry,0.69,1.493,Option_D
+Q_214,TOP_09,Mathematics,Geometry,Vectors & 3D Geometry,-0.034,1.285,Option_A
+Q_215,TOP_09,Mathematics,Geometry,Vectors & 3D Geometry,0.876,0.751,Option_D
+Q_216,TOP_09,Mathematics,Geometry,Vectors & 3D Geometry,-0.132,0.706,Option_C
+Q_217,TOP_09,Mathematics,Geometry,Vectors & 3D Geometry,0.279,1.294,Option_D
+Q_218,TOP_09,Mathematics,Geometry,Vectors & 3D Geometry,1.076,1.123,Option_C
+Q_219,TOP_09,Mathematics,Geometry,Vectors & 3D Geometry,1.133,0.816,Option_D
+Q_220,TOP_09,Mathematics,Geometry,Vectors & 3D Geometry,-0.367,1.092,Option_D
+Q_221,TOP_09,Mathematics,Geometry,Vectors & 3D Geometry,0.573,1.097,Option_B
+Q_222,TOP_09,Mathematics,Geometry,Vectors & 3D Geometry,-0.53,1.084,Option_B
+Q_223,TOP_09,Mathematics,Geometry,Vectors & 3D Geometry,-0.187,1.281,Option_C
+Q_224,TOP_09,Mathematics,Geometry,Vectors & 3D Geometry,0.565,0.899,Option_B
+Q_225,TOP_09,Mathematics,Geometry,Vectors & 3D Geometry,0.169,0.875,Option_A
+Q_226,TOP_10,Biology,Botany,Plant Physiology,-0.028,1.364,Option_A
+Q_227,TOP_10,Biology,Botany,Plant Physiology,-0.444,1.235,Option_C
+Q_228,TOP_10,Biology,Botany,Plant Physiology,-0.239,0.928,Option_A
+Q_229,TOP_10,Biology,Botany,Plant Physiology,-0.048,0.88,Option_A
+Q_230,TOP_10,Biology,Botany,Plant Physiology,-0.249,0.849,Option_D
+Q_231,TOP_10,Biology,Botany,Plant Physiology,0.884,1.114,Option_B
+Q_232,TOP_10,Biology,Botany,Plant Physiology,-0.315,1.158,Option_A
+Q_233,TOP_10,Biology,Botany,Plant Physiology,-0.051,1.053,Option_A
+Q_234,TOP_10,Biology,Botany,Plant Physiology,0.276,1.306,Option_B
+Q_235,TOP_10,Biology,Botany,Plant Physiology,-0.239,0.974,Option_A
+Q_236,TOP_10,Biology,Botany,Plant Physiology,-0.124,0.666,Option_A
+Q_237,TOP_10,Biology,Botany,Plant Physiology,-0.682,1.493,Option_B
+Q_238,TOP_10,Biology,Botany,Plant Physiology,0.74,1.046,Option_D
+Q_239,TOP_10,Biology,Botany,Plant Physiology,0.259,1.183,Option_A
+Q_240,TOP_10,Biology,Botany,Plant Physiology,1.385,1.414,Option_B
+Q_241,TOP_10,Biology,Botany,Plant Physiology,-0.058,0.896,Option_A
+Q_242,TOP_10,Biology,Botany,Plant Physiology,-0.723,1.156,Option_A
+Q_243,TOP_10,Biology,Botany,Plant Physiology,-0.34,0.808,Option_D
+Q_244,TOP_10,Biology,Botany,Plant Physiology,-0.291,0.871,Option_C
+Q_245,TOP_10,Biology,Botany,Plant Physiology,0.759,1.342,Option_C
+Q_246,TOP_10,Biology,Botany,Plant Physiology,-0.004,1.53,Option_B
+Q_247,TOP_10,Biology,Botany,Plant Physiology,0.035,0.914,Option_C
+Q_248,TOP_10,Biology,Botany,Plant Physiology,0.685,1.244,Option_B
+Q_249,TOP_10,Biology,Botany,Plant Physiology,-0.467,1.06,Option_C
+Q_250,TOP_10,Biology,Botany,Plant Physiology,-0.394,0.815,Option_D
+Q_251,TOP_11,Biology,Zoology,Human Physiology,0.217,1.682,Option_B
+Q_252,TOP_11,Biology,Zoology,Human Physiology,-0.829,1.251,Option_C
+Q_253,TOP_11,Biology,Zoology,Human Physiology,-0.493,0.993,Option_D
+Q_254,TOP_11,Biology,Zoology,Human Physiology,-0.467,0.914,Option_C
+Q_255,TOP_11,Biology,Zoology,Human Physiology,-0.178,0.921,Option_A
+Q_256,TOP_11,Biology,Zoology,Human Physiology,-0.078,1.093,Option_A
+Q_257,TOP_11,Biology,Zoology,Human Physiology,-0.308,0.905,Option_D
+Q_258,TOP_11,Biology,Zoology,Human Physiology,-0.46,1.305,Option_A
+Q_259,TOP_11,Biology,Zoology,Human Physiology,0.025,0.891,Option_A
+Q_260,TOP_11,Biology,Zoology,Human Physiology,-0.155,1.304,Option_B
+Q_261,TOP_11,Biology,Zoology,Human Physiology,-0.951,1.246,Option_C
+Q_262,TOP_11,Biology,Zoology,Human Physiology,-0.498,1.253,Option_B
+Q_263,TOP_11,Biology,Zoology,Human Physiology,-0.543,0.743,Option_C
+Q_264,TOP_11,Biology,Zoology,Human Physiology,-0.932,1.117,Option_A
+Q_265,TOP_11,Biology,Zoology,Human Physiology,-0.083,0.906,Option_B
+Q_266,TOP_11,Biology,Zoology,Human Physiology,0.087,0.767,Option_C
+Q_267,TOP_11,Biology,Zoology,Human Physiology,-0.23,0.847,Option_C
+Q_268,TOP_11,Biology,Zoology,Human Physiology,-0.493,1.117,Option_B
+Q_269,TOP_11,Biology,Zoology,Human Physiology,-0.587,1.016,Option_D
+Q_270,TOP_11,Biology,Zoology,Human Physiology,0.253,0.973,Option_C
+Q_271,TOP_11,Biology,Zoology,Human Physiology,0.176,0.862,Option_A
+Q_272,TOP_11,Biology,Zoology,Human Physiology,0.038,1.518,Option_C
+Q_273,TOP_11,Biology,Zoology,Human Physiology,-1.312,0.927,Option_A
+Q_274,TOP_11,Biology,Zoology,Human Physiology,0.06,1.057,Option_B
+Q_275,TOP_11,Biology,Zoology,Human Physiology,-0.033,0.968,Option_C
+Q_276,TOP_12,Biology,Genetics,Genetics & Evolution,0.339,1.068,Option_A
+Q_277,TOP_12,Biology,Genetics,Genetics & Evolution,0.826,1.169,Option_A
+Q_278,TOP_12,Biology,Genetics,Genetics & Evolution,0.452,1.009,Option_B
+Q_279,TOP_12,Biology,Genetics,Genetics & Evolution,0.081,1.005,Option_C
+Q_280,TOP_12,Biology,Genetics,Genetics & Evolution,0.478,1.007,Option_C
+Q_281,TOP_12,Biology,Genetics,Genetics & Evolution,0.43,1.745,Option_B
+Q_282,TOP_12,Biology,Genetics,Genetics & Evolution,0.692,1.029,Option_C
+Q_283,TOP_12,Biology,Genetics,Genetics & Evolution,0.841,1.01,Option_B
+Q_284,TOP_12,Biology,Genetics,Genetics & Evolution,-0.617,0.885,Option_C
+Q_285,TOP_12,Biology,Genetics,Genetics & Evolution,-0.542,1.023,Option_D
+Q_286,TOP_12,Biology,Genetics,Genetics & Evolution,0.308,1.598,Option_C
+Q_287,TOP_12,Biology,Genetics,Genetics & Evolution,0.447,1.053,Option_A
+Q_288,TOP_12,Biology,Genetics,Genetics & Evolution,0.673,0.679,Option_A
+Q_289,TOP_12,Biology,Genetics,Genetics & Evolution,0.406,1.309,Option_D
+Q_290,TOP_12,Biology,Genetics,Genetics & Evolution,-0.365,1.421,Option_C
+Q_291,TOP_12,Biology,Genetics,Genetics & Evolution,0.452,1.009,Option_A
+Q_292,TOP_12,Biology,Genetics,Genetics & Evolution,0.585,1.821,Option_A
+Q_293,TOP_12,Biology,Genetics,Genetics & Evolution,0.382,1.167,Option_C
+Q_294,TOP_12,Biology,Genetics,Genetics & Evolution,0.093,0.917,Option_B
+Q_295,TOP_12,Biology,Genetics,Genetics & Evolution,0.674,0.915,Option_C
+Q_296,TOP_12,Biology,Genetics,Genetics & Evolution,0.332,0.995,Option_B
+Q_297,TOP_12,Biology,Genetics,Genetics & Evolution,0.516,1.189,Option_D
+Q_298,TOP_12,Biology,Genetics,Genetics & Evolution,0.767,0.988,Option_D
+Q_299,TOP_12,Biology,Genetics,Genetics & Evolution,0.179,0.891,Option_A
+Q_300,TOP_12,Biology,Genetics,Genetics & Evolution,0.1,1.201,Option_A

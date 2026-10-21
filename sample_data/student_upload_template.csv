@@ -1,0 +1,2 @@
+student_id,institute_id,batch_id,name,class_level,join_date,fee_plan,parent_contact_consent,parent_name,phone_anonymized
+STD_001,INST_PATNA_01,INST_PATNA_01_B1_JEE,Rohan Sharma,12th,2025-04-01,Standard-10-Installments,True,Rajesh Sharma,+91 98XXX X1234

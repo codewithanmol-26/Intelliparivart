@@ -1,0 +1,94 @@
+flowchart TD
+    %% =========================================================================
+    %% VIEW A: HIGH-LEVEL BUSINESS ARCHITECTURE
+    %% The DataMoat AI-Powered EdTech Intelligence Platform
+    %% =========================================================================
+
+    subgraph SOURCES ["1. Coaching Institute Data Sources (Disparate & Siloed)"]
+        SRC_ATT["Attendance Spreadsheets<br/>(Biometric CSV / Register Excel) - [MVP]"]
+        SRC_TEST["Mock Exam Records<br/>(Topic Scores, Batch Ranks, Chapter Marks) - [MVP]"]
+        SRC_FEE["Fee Ledgers & Dues<br/>(Installment History, Pending Balances) - [MVP]"]
+        SRC_PROF["Student & Batch Registers<br/>(Target Exam, Stream, Demographic Profile) - [MVP]"]
+        SRC_LMS["LMS / Online Quiz Logs<br/>(Doubt Portal, Video Watch-time) - [Phase 2]"]
+    end
+
+    subgraph INGESTION ["2. Data Ingestion & Sanitization Gateway"]
+        ING_MAP["Schema Matcher & Column Normalizer<br/>(Fuzzy Header Matching & Template Presets) - [MVP]"]
+        ING_VAL["Data Integrity & Pydantic Sanitizer<br/>(Type Enforcement, Deduplication, Null Checks) - [MVP]"]
+        ING_QUAR["Quarantine Store & Error Reporter<br/>(Downloadable Row-Level Audit Manifest) - [MVP]"]
+    end
+
+    subgraph UNIFIED_DATA ["3. Unified Student & Academic Data Layer (Tenant-Isolated)"]
+        DATA_CORE["Unified Longitudinal Academic Store<br/>(Normalized Attendance, Test & Fee Sequences) - [MVP]"]
+        DATA_VAULT["Encrypted Identity Vault<br/>(PII Separation: Name, Phone, Address) - [MVP]"]
+        DATA_HIST["Time-Series Trajectory Warehouse<br/>(Historical Baselines & Multi-Month Trends) - [MVP]"]
+    end
+
+    subgraph ANALYTICS_ML ["4. Analytics & Machine Learning Layer (Statistical Scoring)"]
+        FEAT_ENG["Rolling Feature Engineering<br/>(14d/30d Drops, Variance, Absenteeism Bursts) - [MVP]"]
+        ML_MODEL["Statistical / Supervised ML Risk Classifier<br/>(LightGBM / Calibrated Ensemble - NOT LLM) - [MVP]"]
+        ML_SHAP["Interpretable Factor Explainer<br/>(TreeSHAP Attribution: Top 3 Risk Drivers) - [MVP]"]
+        BENCH_ENG["Cohort Relative Benchmark Engine<br/>(Batch Percentile & Subject Clustering) - [MVP]"]
+    end
+
+    subgraph AI_EXPLANATION ["5. AI Insights & Prescriptive Recommendation Engine"]
+        LLM_SEC["De-Identification & Tokenization Layer<br/>(Zero-PII Payload Builder) - [MVP]"]
+        LLM_GATE["Provider-Independent LLM Gateway<br/>(Local SLM / Gemini / OpenAI / Rule Fallback) - [MVP]"]
+        REC_GEN["Prescriptive Recommendation Synthesizer<br/>(Pedagogical Actions & Parent Briefs) - [MVP]"]
+    end
+
+    subgraph STAKEHOLDERS ["6. Actionable Stakeholder Delivery Interfaces"]
+        UI_LEAD["Institute Leadership Dashboard<br/>(Macro Attrition, Batch Health, Revenue Risk) - [MVP]"]
+        UI_FAC["Faculty & Coordinator Workspace<br/>(Priority Triage Queue & 1-Click Action Logging) - [MVP]"]
+        UI_PAR["Empathetic Student & Parent Reports<br/>(Strengths, Growth Areas, Action Plans) - [Phase 2]"]
+    end
+
+    subgraph FEEDBACK ["7. Closed-Loop Feedback & Continuous Governance"]
+        ACT_LOG["Intervention Tracking Store<br/>(Counseling, Remedial Tests, Fee Plans) - [MVP]"]
+        EVAL_LOOP["Outcome Tracker & Model Calibration<br/>(30-Day Score/Attendance Lift vs Control) - [Phase 2]"]
+    end
+
+    %% Data Flow Connections
+    SRC_ATT -->|"Raw CSV/Excel attendance sheets"| ING_MAP
+    SRC_TEST -->|"Raw test marks & chapter scores"| ING_MAP
+    SRC_FEE -->|"Fee installment & dues exports"| ING_MAP
+    SRC_PROF -->|"Enrollment & batch rosters"| ING_MAP
+    SRC_LMS -.->|"API activity streams & LMS logs"| ING_MAP
+
+    ING_MAP -->|"Standardized column mappings"| ING_VAL
+    ING_VAL -->|"Malformed / rejected rows & error schema"| ING_QUAR
+    ING_VAL -->|"Sanitized academic & financial records"| DATA_CORE
+    ING_VAL -->|"Isolated sensitive identity fields"| DATA_VAULT
+    DATA_CORE -->|"Longitudinal aggregation & time sequences"| DATA_HIST
+
+    DATA_CORE -->|"Normalized student metrics"| FEAT_ENG
+    DATA_HIST -->|"Multi-test trends & attendance slopes"| FEAT_ENG
+    FEAT_ENG -->|"Calibrated feature vectors"| ML_MODEL
+    FEAT_ENG -->|"Subject & batch distributions"| BENCH_ENG
+
+    ML_MODEL -->|"Calibrated risk probability score (0.0 - 1.0)"| ML_SHAP
+    ML_MODEL -->|"Risk tier categorization (High/Medium/Low)"| REC_GEN
+    ML_SHAP -->|"Top-3 negative drivers (SHAP values)"| REC_GEN
+    BENCH_ENG -->|"Relative batch percentile context"| REC_GEN
+
+    REC_GEN -->|"Anonymized metrics & SHAP factors"| LLM_SEC
+    LLM_SEC -->|"De-identified prompt payload (Zero PII)"| LLM_GATE
+    LLM_GATE -->|"Structured natural-language action suggestions"| REC_GEN
+
+    REC_GEN -->|"Macro health & cohort revenue exposure"| UI_LEAD
+    REC_GEN -->|"Ranked at-risk roster & diagnostic action plans"| UI_FAC
+    REC_GEN -.->|"Constructive parent progress digests"| UI_PAR
+
+    UI_FAC -->|"Teacher logs intervention executed"| ACT_LOG
+    ACT_LOG -->|"Logged action & timestamp"| EVAL_LOOP
+    DATA_CORE -->|"Post-intervention marks & attendance"| EVAL_LOOP
+    EVAL_LOOP -.->|"Empirical intervention efficacy & retraining signal"| ML_MODEL
+
+    %% Component Classes & Styling
+    classDef mvp fill:#e8f4fd,stroke:#1d70b8,stroke-width:2px,color:#0b0c0c;
+    classDef future fill:#f3f2f1,stroke:#6f777b,stroke-width:1px,stroke-dasharray: 5 5,color:#505a5f;
+    classDef security fill:#fef7e0,stroke:#f47738,stroke-width:2px,color:#0b0c0c;
+
+    class SRC_ATT,SRC_TEST,SRC_FEE,SRC_PROF,ING_MAP,ING_VAL,ING_QUAR,DATA_CORE,DATA_HIST,FEAT_ENG,ML_MODEL,ML_SHAP,BENCH_ENG,REC_GEN,UI_LEAD,UI_FAC,ACT_LOG mvp;
+    class SRC_LMS,UI_PAR,EVAL_LOOP future;
+    class DATA_VAULT,LLM_SEC,LLM_GATE security;

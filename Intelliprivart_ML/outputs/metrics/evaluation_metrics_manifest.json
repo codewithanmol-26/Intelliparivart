@@ -1,0 +1,26 @@
+{
+  "generated_at": "2026-10-21 02:44:27",
+  "dataset_summary": {
+    "institutes": 3,
+    "students": 1200,
+    "questions": 300,
+    "tests": 24,
+    "dropout_prevalence_pct": 12.0
+  },
+  "irt_parameter_recovery": {
+    "item_difficulty_pearson_r": 0.9781,
+    "student_ability_pearson_r": 0.9891
+  },
+  "early_warning_loio_cross_validation": {
+    "mean_roc_auc": 1.0,
+    "mean_brier_score": 0.0,
+    "mean_recall_at_top20_pct": 100.0
+  },
+  "conformal_percentile_prediction": {
+    "nominal_coverage_pct": 90.0,
+    "empirical_test_coverage_pct": 91.51,
+    "half_width_margin": 8.08,
+    "model_mae": 3.71,
+    "model_rmse": 4.79
+  }
+}

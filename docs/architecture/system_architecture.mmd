@@ -1,0 +1,60 @@
+sequenceDiagram
+    autonumber
+    actor Staff as Institute Staff / Faculty
+    participant FE as Next.js Web Frontend
+    participant API as FastAPI Gateway (Auth & RLS)
+    participant Worker as Background Task / ETL
+    participant DB as PostgreSQL (Multi-Tenant RLS)
+    participant ML as ML Risk Engine (LightGBM + SHAP)
+    participant LLM as Provider-Agnostic LLM Gateway
+    actor Director as Institute Director / Counselor
+
+    %% Phase 1: Ingestion & Validation
+    Note over Staff,DB: Phase 1: Ingestion, Validation & Tenant Isolation
+    Staff->>FE: Upload attendance/mock exam spreadsheets (CSV/XLSX)
+    FE->>API: POST /api/v1/ingest/upload (Multipart + Bearer JWT)
+    API->>API: Verify JWT, extract tenant_id, enforce RBAC
+    API->>Worker: Dispatch asynchronous processing job (file_buffer, tenant_id)
+    API-->>FE: HTTP 202 Accepted (job_id: uuid)
+    Worker->>Worker: Map column headers & run Pydantic validations
+    alt Malformed Rows Detected
+        Worker->>DB: Save rejected rows in quarantine manifest (tenant-isolated)
+    end
+    Worker->>DB: SET LOCAL app.current_tenant_id; Bulk INSERT valid records
+
+    %% Phase 2: Feature Engineering & Statistical ML Scoring
+    Note over Worker,ML: Phase 2: Statistical Risk Estimation (No LLM for Prediction)
+    Worker->>ML: Trigger risk inference pipeline for affected batch
+    ML->>DB: Query longitudinal 30-day window (attendance, test scores, fee status)
+    ML->>ML: Compute features (14d attendance slope, score delta, subject variance)
+    ML->>ML: Execute calibrated LightGBM classifier -> risk_probability (0.0 - 1.0)
+    ML->>ML: Compute TreeSHAP values -> extract Top 3 negative risk drivers
+    ML->>DB: Persist risk_tier, risk_probability & SHAP factors in risk_scores table
+
+    %% Phase 3: Prescriptive AI Generation & Delivery
+    Note over Staff,LLM: Phase 3: De-identified Prescriptive Explanations
+    Director->>FE: View Batch At-Risk Priority Roster
+    FE->>API: GET /api/v1/students/at-risk?batch_id=xyz (Bearer JWT)
+    API->>DB: Fetch ranked at-risk students (tenant_id filtered)
+    API-->>FE: Render prioritized table with risk scores & SHAP badges
+    
+    Staff->>FE: Click "Generate Action Plan" for at-risk Student
+    FE->>API: POST /api/v1/students/{id}/recommendation
+    API->>DB: Fetch student subject weaknesses & SHAP factors
+    API->>API: Tokenize & mask PII (Student Name -> "Candidate #481")
+    API->>LLM: Dispatch de-identified prompt (Metrics + Drivers + Pedagogical template)
+    LLM-->>API: Return structured JSON (Diagnostic summary, 3-step action, parent note)
+    API->>API: Validate JSON against Pydantic schema guardrails
+    API->>DB: Cache generated recommendation in DB
+    API-->>FE: Display actionable diagnostic card & talking points
+
+    %% Phase 4: Action Execution & Closed-Loop Evaluation
+    Note over Staff,DB: Phase 4: Intervention Logging & Closed-Loop Feedback
+    Staff->>FE: Log action ("Conducted 1-on-1 organic chemistry review")
+    FE->>API: POST /api/v1/interventions (action_type, notes, student_id)
+    API->>DB: Store intervention event in logged_interventions table
+    
+    Note over DB,ML: 30-Day Follow-Up & Model Evaluation Loop
+    DB-->>ML: Aggregate post-intervention attendance & test scores (30-day window)
+    ML->>ML: Measure delta (Risk lift vs control group)
+    ML->>DB: Record intervention efficacy score & flag concept drift if calibration deviates

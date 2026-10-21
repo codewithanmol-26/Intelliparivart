@@ -1,0 +1,13 @@
+topic_id,subject,chapter,topic
+TOP_01,Physics,Mechanics,Kinematics
+TOP_02,Physics,Mechanics,Rotational Dynamics
+TOP_03,Physics,Electrodynamics,Electrostatics
+TOP_04,Chemistry,Organic,Reaction Mechanisms
+TOP_05,Chemistry,Physical,Chemical Kinetics
+TOP_06,Chemistry,Inorganic,Coordination Compounds
+TOP_07,Mathematics,Calculus,Definite Integration
+TOP_08,Mathematics,Algebra,Quadratic Equations
+TOP_09,Mathematics,Geometry,Vectors & 3D Geometry
+TOP_10,Biology,Botany,Plant Physiology
+TOP_11,Biology,Zoology,Human Physiology
+TOP_12,Biology,Genetics,Genetics & Evolution

@@ -1,0 +1,13 @@
+batch_id,institute_id,name,class_level,target_exam,faculty
+INST_PATNA_01_B1_JEE_12,INST_PATNA_01,12th JEE Achievers Top-30,12th,JEE Advanced,Er. R. K. Verma (Physics)
+INST_PATNA_01_B2_JEE_11,INST_PATNA_01,11th JEE Foundation Core,11th,JEE Main,Prof. V. K. Gupta (Mathematics)
+INST_PATNA_01_B3_NEET_12,INST_PATNA_01,12th NEET Medical Pinnacle,12th,NEET,Dr. Ananya Roy (Biology)
+INST_PATNA_01_B4_DROP,INST_PATNA_01,Repeater / Dropper Fastrack,Dropper,JEE/NEET,Dr. S. N. Mishra (Chemistry)
+INST_KOTA_02_B1_JEE_12,INST_KOTA_02,12th JEE Achievers Top-30,12th,JEE Advanced,Er. R. K. Verma (Physics)
+INST_KOTA_02_B2_JEE_11,INST_KOTA_02,11th JEE Foundation Core,11th,JEE Main,Prof. V. K. Gupta (Mathematics)
+INST_KOTA_02_B3_NEET_12,INST_KOTA_02,12th NEET Medical Pinnacle,12th,NEET,Dr. Ananya Roy (Biology)
+INST_KOTA_02_B4_DROP,INST_KOTA_02,Repeater / Dropper Fastrack,Dropper,JEE/NEET,Dr. S. N. Mishra (Chemistry)
+INST_LUCKNOW_03_B1_JEE_12,INST_LUCKNOW_03,12th JEE Achievers Top-30,12th,JEE Advanced,Er. R. K. Verma (Physics)
+INST_LUCKNOW_03_B2_JEE_11,INST_LUCKNOW_03,11th JEE Foundation Core,11th,JEE Main,Prof. V. K. Gupta (Mathematics)
+INST_LUCKNOW_03_B3_NEET_12,INST_LUCKNOW_03,12th NEET Medical Pinnacle,12th,NEET,Dr. Ananya Roy (Biology)
+INST_LUCKNOW_03_B4_DROP,INST_LUCKNOW_03,Repeater / Dropper Fastrack,Dropper,JEE/NEET,Dr. S. N. Mishra (Chemistry)
