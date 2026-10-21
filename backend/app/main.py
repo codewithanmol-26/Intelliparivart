@@ -38,19 +38,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Mount all feature routers
-app.include_router(auth.router)
-app.include_router(ingest.router)
-app.include_router(mastery.router)
-app.include_router(risk.router)
-app.include_router(predictions.router)
-app.include_router(reports.router)
-app.include_router(owner.router)
-app.include_router(consent.router)
-app.include_router(audit.router)
-app.include_router(model_report.router)
-app.include_router(simulate.router)
-app.include_router(demo.router)
+# Mount all feature routers under both root and /api for seamless frontend client compatibility
+feature_routers = [
+    auth.router, ingest.router, mastery.router, risk.router,
+    predictions.router, reports.router, owner.router, consent.router,
+    audit.router, model_report.router, simulate.router, demo.router
+]
+for r in feature_routers:
+    app.include_router(r)
+    app.include_router(r, prefix="/api")
 
 from backend.app.models import Institute
 from backend.app.database import get_db
