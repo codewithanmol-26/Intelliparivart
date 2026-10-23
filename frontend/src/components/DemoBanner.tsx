@@ -111,15 +111,7 @@ export default function DemoBanner({ onOpenRoleModal }: DemoBannerProps) {
             );
           })}
 
-          {onOpenRoleModal && (
-            <button
-              onClick={onOpenRoleModal}
-              title="View full persona descriptions and guidance"
-              className="px-2.5 py-1.5 rounded-xl bg-blue-900/60 hover:bg-blue-800 text-slate-300 hover:text-white text-xs font-semibold border border-blue-800 transition"
-            >
-              Role Guide
-            </button>
-          )}
+
         </div>
       </div>
     </div>

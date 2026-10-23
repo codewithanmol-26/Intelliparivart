@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import DemoBanner from '@/components/DemoBanner';
-import DemoRoleModal from '@/components/DemoRoleModal';
 import {
   DEMO_BATCHES,
   DEMO_TOPIC_MASTERY,
@@ -31,7 +30,6 @@ import {
 } from 'lucide-react';
 
 export default function DemoTeacherPage() {
-  const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
   const [selectedSubject, setSelectedSubject] = useState<string>('All');
   const [selectedBatch, setSelectedBatch] = useState<string>('BATCH_TOP30');
   const [selectedTopic, setSelectedTopic] = useState<string>('Rotational Dynamics');
@@ -47,7 +45,7 @@ export default function DemoTeacherPage() {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
       {/* Top Demo Banner */}
-      <DemoBanner onOpenRoleModal={() => setIsRoleModalOpen(true)} />
+      <DemoBanner />
 
       {/* Main Content */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
@@ -382,11 +380,7 @@ export default function DemoTeacherPage() {
         </div>
       </main>
 
-      {/* Role Selection Modal */}
-      <DemoRoleModal
-        isOpen={isRoleModalOpen}
-        onClose={() => setIsRoleModalOpen(false)}
-      />
+
     </div>
   );
 }

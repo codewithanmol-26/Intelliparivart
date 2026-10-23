@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import DemoBanner from '@/components/DemoBanner';
-import DemoRoleModal from '@/components/DemoRoleModal';
 import { SAMPLE_CSV_CONTENT } from '@/lib/demoData';
 import {
   Building2,
@@ -21,7 +20,6 @@ import {
 } from 'lucide-react';
 
 export default function DemoHubPage() {
-  const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
 
   const handleDownloadSampleCsv = () => {
     const blob = new Blob([SAMPLE_CSV_CONTENT], { type: 'text/csv;charset=utf-8;' });
@@ -83,7 +81,7 @@ export default function DemoHubPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
-      <DemoBanner onOpenRoleModal={() => setIsRoleModalOpen(true)} />
+      <DemoBanner />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         {/* Hub Header */}
@@ -101,13 +99,7 @@ export default function DemoHubPage() {
           </p>
 
           <div className="flex flex-wrap items-center gap-3 pt-2">
-            <button
-              onClick={() => setIsRoleModalOpen(true)}
-              className="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs sm:text-sm transition flex items-center space-x-2 shadow-xs"
-            >
-              <span>Quick Role Selector</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
+
             <Link
               href="/upload"
               className="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-50 font-semibold text-xs sm:text-sm transition flex items-center space-x-1.5"
@@ -210,10 +202,7 @@ export default function DemoHubPage() {
         </section>
       </main>
 
-      <DemoRoleModal
-        isOpen={isRoleModalOpen}
-        onClose={() => setIsRoleModalOpen(false)}
-      />
+
     </div>
   );
 }

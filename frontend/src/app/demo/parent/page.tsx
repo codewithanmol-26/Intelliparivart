@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import DemoBanner from '@/components/DemoBanner';
-import DemoRoleModal from '@/components/DemoRoleModal';
 import { DEMO_PARENT_REPORTS, DEMO_STUDENTS, DemoStudent } from '@/lib/demoData';
 import {
   HeartHandshake,
@@ -24,7 +23,6 @@ import {
 } from 'lucide-react';
 
 export default function DemoParentPage() {
-  const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
   const [language, setLanguage] = useState<'en' | 'hi'>('en');
   const [whatsAppSent, setWhatsAppSent] = useState(false);
   const [selectedStudentId, setSelectedStudentId] = useState<string>('STD_PAT_001');
@@ -45,7 +43,7 @@ export default function DemoParentPage() {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
       {/* Top Demo Banner */}
-      <DemoBanner onOpenRoleModal={() => setIsRoleModalOpen(true)} />
+      <DemoBanner />
 
       {/* Main Container */}
       <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
@@ -287,11 +285,7 @@ export default function DemoParentPage() {
         </div>
       </main>
 
-      {/* Role Selection Modal */}
-      <DemoRoleModal
-        isOpen={isRoleModalOpen}
-        onClose={() => setIsRoleModalOpen(false)}
-      />
+
     </div>
   );
 }

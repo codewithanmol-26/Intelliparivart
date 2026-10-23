@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import DemoBanner from '@/components/DemoBanner';
-import DemoRoleModal from '@/components/DemoRoleModal';
 import {
   DEMO_INSTITUTE,
   DEMO_BATCHES,
@@ -43,7 +42,6 @@ import {
 } from 'recharts';
 
 export default function DemoOwnerPage() {
-  const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
   const [selectedBatch, setSelectedBatch] = useState<string>('all');
   const [timePeriod, setTimePeriod] = useState<string>('m1-m5');
 
@@ -85,7 +83,7 @@ export default function DemoOwnerPage() {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
       {/* In-Demo Top Role Switcher Bar */}
-      <DemoBanner onOpenRoleModal={() => setIsRoleModalOpen(true)} />
+      <DemoBanner />
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
@@ -418,11 +416,7 @@ export default function DemoOwnerPage() {
         </div>
       </main>
 
-      {/* Role Selection Modal */}
-      <DemoRoleModal
-        isOpen={isRoleModalOpen}
-        onClose={() => setIsRoleModalOpen(false)}
-      />
+
     </div>
   );
 }

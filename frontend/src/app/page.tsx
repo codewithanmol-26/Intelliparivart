@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useApp } from '../context/AppContext';
-import DemoRoleModal from '../components/DemoRoleModal';
 import {
   TrendingUp,
   ShieldCheck,
@@ -41,7 +40,6 @@ import {
 export default function HomePage() {
   const router = useRouter();
   const { setRole } = useApp();
-  const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
   const [activeRoleTab, setActiveRoleTab] = useState<'owner' | 'teacher' | 'student' | 'parent'>('owner');
 
   // ROI Calculator Interactive State (Directly calibrated to Case B Financial Model)
@@ -67,8 +65,6 @@ export default function HomePage() {
 
   return (
     <div className="space-y-20 pb-20">
-      {/* Role Selection Modal */}
-      <DemoRoleModal isOpen={isRoleModalOpen} onClose={() => setIsRoleModalOpen(false)} />
 
       {/* 1. HERO SECTION */}
       <section className="relative overflow-hidden rounded-3xl bg-[#0B1F3A] text-white p-6 sm:p-10 md:p-16 border border-blue-900/60 shadow-2xl">
@@ -89,13 +85,13 @@ export default function HomePage() {
 
           {/* Primary Action Buttons */}
           <div className="pt-3 flex flex-wrap gap-3 sm:gap-4 items-center">
-            <button
-              onClick={() => setIsRoleModalOpen(true)}
-              className="inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-teal-500 text-white font-bold text-sm hover:bg-teal-600 transition shadow-lg shadow-teal-500/25 cursor-pointer"
+            <Link
+              href="/demo"
+              className="inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-teal-500 text-white font-bold text-sm hover:bg-teal-600 transition shadow-lg shadow-teal-500/25"
             >
               <PlayCircle className="w-4 h-4 mr-2" />
               <span>Explore Interactive Demo</span>
-            </button>
+            </Link>
 
             <a
               href="#how-it-works"
@@ -146,13 +142,7 @@ export default function HomePage() {
               Real-Time Academic Intelligence Interface
             </h2>
           </div>
-          <button
-            onClick={() => setIsRoleModalOpen(true)}
-            className="text-xs font-bold text-teal-600 hover:text-teal-700 flex items-center space-x-1 cursor-pointer"
-          >
-            <span>Launch All 4 Interactive Roles</span>
-            <ChevronRight className="w-4 h-4" />
-          </button>
+
         </div>
 
         {/* Browser Mock Shell */}
@@ -609,13 +599,7 @@ export default function HomePage() {
               Built For Every Stakeholder in the Coaching Ecosystem
             </h2>
           </div>
-          <button
-            onClick={() => setIsRoleModalOpen(true)}
-            className="text-xs font-bold text-teal-600 hover:text-teal-700 flex items-center space-x-1 cursor-pointer"
-          >
-            <span>Role Switcher Modal</span>
-            <ChevronRight className="w-4 h-4" />
-          </button>
+
         </div>
 
         {/* Role Tabs */}
@@ -1105,13 +1089,13 @@ export default function HomePage() {
         </div>
 
         <div className="flex flex-wrap gap-3 shrink-0">
-          <button
-            onClick={() => setIsRoleModalOpen(true)}
-            className="px-6 py-3.5 bg-white text-teal-900 rounded-xl font-bold text-xs sm:text-sm hover:bg-slate-100 transition shadow-lg cursor-pointer flex items-center space-x-2"
+          <Link
+            href="/demo"
+            className="px-6 py-3.5 bg-white text-teal-900 rounded-xl font-bold text-xs sm:text-sm hover:bg-slate-100 transition shadow-lg flex items-center space-x-2"
           >
             <PlayCircle className="w-4 h-4" />
             <span>Explore Interactive Demo</span>
-          </button>
+          </Link>
           <Link
             href="/register"
             className="px-6 py-3.5 bg-teal-800/70 hover:bg-teal-800 text-white rounded-xl font-semibold text-xs sm:text-sm transition border border-teal-300/40"

@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import DemoBanner from '@/components/DemoBanner';
-import DemoRoleModal from '@/components/DemoRoleModal';
 import { DEMO_STUDENTS, DEMO_TOPIC_MASTERY, DemoStudent } from '@/lib/demoData';
 import {
   GraduationCap,
@@ -35,7 +34,6 @@ import {
 } from 'recharts';
 
 export default function DemoStudentPage() {
-  const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'progress' | 'practice' | 'history'>('progress');
   const [selectedStudentId, setSelectedStudentId] = useState<string>('STD_PAT_001');
   const [activeDrillTopic, setActiveDrillTopic] = useState<string | null>(null);
@@ -72,7 +70,7 @@ export default function DemoStudentPage() {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
       {/* Top Demo Banner */}
-      <DemoBanner onOpenRoleModal={() => setIsRoleModalOpen(true)} />
+      <DemoBanner />
 
       {/* Main Container */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
@@ -526,11 +524,7 @@ export default function DemoStudentPage() {
         </div>
       )}
 
-      {/* Role Selection Modal */}
-      <DemoRoleModal
-        isOpen={isRoleModalOpen}
-        onClose={() => setIsRoleModalOpen(false)}
-      />
+
     </div>
   );
 }
