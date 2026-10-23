@@ -38,6 +38,7 @@ export default function ReportsPage() {
   const [recipientPhone, setRecipientPhone] = useState('+91 98765 43210');
   const [isSendingWhatsApp, setIsSendingWhatsApp] = useState(false);
   const [whatsAppDeliveryResult, setWhatsAppDeliveryResult] = useState<any | null>(null);
+  const [whatsAppSendError, setWhatsAppSendError] = useState<string | null>(null);
   const [isBroadcasting, setIsBroadcasting] = useState(false);
   const [broadcastNotice, setBroadcastNotice] = useState<string | null>(null);
   const [logsDrawerOpen, setLogsDrawerOpen] = useState(false);
@@ -56,9 +57,13 @@ export default function ReportsPage() {
     try {
       const res = await api.getStudentReport(selectedStudentId, lang, tenantId);
       setReportData(res);
-      // Auto sync student phone
-      const match = cohortStudents.find(s => s.id === selectedStudentId);
-      if (match) setRecipientPhone(match.phone);
+      // Auto sync student phone from authoritative report response or cohort
+      if (res && res.guardian_phone) {
+        setRecipientPhone(res.guardian_phone);
+      } else {
+        const match = cohortStudents.find(s => s.id === selectedStudentId);
+        if (match) setRecipientPhone(match.phone);
+      }
     } catch (err: any) {
       console.error('Failed to load report:', err);
       // Fallback data if backend offline
@@ -96,12 +101,14 @@ export default function ReportsPage() {
   const handleOpenWhatsAppModal = () => {
     if (!reportData || isConsentWithdrawn) return;
     setWhatsAppDeliveryResult(null);
+    setWhatsAppSendError(null);
     setWhatsAppModalOpen(true);
   };
 
   const handleSendWhatsAppAPI = async () => {
-    if (!reportData || isConsentWithdrawn) return;
+    if (!reportData || isConsentWithdrawn || isSendingWhatsApp) return;
     setIsSendingWhatsApp(true);
+    setWhatsAppSendError(null);
     try {
       const res = await api.sendWhatsApp({
         recipient_phone: recipientPhone,
@@ -114,10 +121,25 @@ export default function ReportsPage() {
         strong_topics: [reportData.strong_topic],
         language: lang,
       }, tenantId);
-      setWhatsAppDeliveryResult(res);
-      notifyRecomputed(undefined, `WhatsApp digest sent to ${recipientPhone}`);
+
+      if (res.status === 'failed' || res.delivery_details?.dispatch_state === 'FAILED') {
+        setWhatsAppSendError(res.delivery_details?.error || res.message || 'Dispatch was rejected by Meta Gateway.');
+      } else {
+        setWhatsAppDeliveryResult(res);
+        notifyRecomputed(undefined, `WhatsApp digest accepted for ${recipientPhone}`);
+      }
     } catch (err: any) {
-      alert('WhatsApp dispatch failed. Running in fallback verification mode.');
+      let msg = err.message || 'WhatsApp dispatch could not connect to backend gateway.';
+      if (msg.includes('403') || msg.includes('consent') || msg.includes('DPDP')) {
+        msg = 'DPDP Act 2023 Section 9: Parental communication consent has been withdrawn for this student. Dispatch halted.';
+      } else if (msg.includes('401')) {
+        msg = 'Faculty session expired or unauthorized. Please log in again.';
+      } else if (msg.includes('404')) {
+        msg = 'Backend WhatsApp service endpoint returned 404 Not Found. Please verify the deployed backend release.';
+      } else if (msg.includes('Failed to fetch') || msg.includes('NetworkError')) {
+        msg = 'Network failure: Unable to establish connection to the backend WhatsApp API gateway.';
+      }
+      setWhatsAppSendError(msg);
     } finally {
       setIsSendingWhatsApp(false);
     }
@@ -488,13 +510,35 @@ export default function ReportsPage() {
                 <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-900 space-y-1">
                   <div className="font-bold flex items-center space-x-1.5">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                    <span>WhatsApp Delivery Confirmed!</span>
+                    <span>
+                      {whatsAppDeliveryResult.delivery_details?.delivery_status === 'READ'
+                        ? 'WhatsApp Digest Read by Guardian'
+                        : whatsAppDeliveryResult.delivery_details?.delivery_status === 'DELIVERED'
+                        ? 'WhatsApp Delivery Confirmed!'
+                        : whatsAppDeliveryResult.delivery_details?.dispatch_state === 'ACCEPTED'
+                        ? 'WhatsApp Message Dispatched & Accepted'
+                        : 'Dispatch Processed'}
+                    </span>
                   </div>
-                  <div className="text-[10px] font-mono text-emerald-800">
+                  <div className="text-[10px] font-mono text-emerald-800 truncate">
                     Message ID: {whatsAppDeliveryResult.delivery_details?.message_id}
                   </div>
-                  <div className="text-[10px] text-emerald-700">
-                    Delivery Speed: 340ms • Utility Cost: ₹0.275 (Standard Meta Tariff)
+                  <div className="text-[10px] text-emerald-700 flex items-center justify-between">
+                    <span>Provider: {whatsAppDeliveryResult.delivery_details?.provider || 'Meta WhatsApp Cloud API'}</span>
+                    <span>Cost: ₹{whatsAppDeliveryResult.delivery_details?.cost_inr ?? 0.275}</span>
+                  </div>
+                </div>
+              )}
+
+              {/* Error feedback */}
+              {whatsAppSendError && (
+                <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-rose-900 space-y-1">
+                  <div className="font-bold flex items-center space-x-1.5 text-xs text-rose-700">
+                    <AlertCircle className="w-4 h-4 text-rose-600" />
+                    <span>WhatsApp Dispatch Notice</span>
+                  </div>
+                  <div className="text-[11px] text-rose-800">
+                    {whatsAppSendError}
                   </div>
                 </div>
               )}

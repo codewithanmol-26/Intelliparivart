@@ -49,8 +49,12 @@ async function request<T>(
   options: RequestInit = {},
   tenantId: string = 'INST_PATNA_01'
 ): Promise<T> {
-  const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
-  const url = `${getApiBaseUrl()}${cleanEndpoint}`;
+  const baseUrl = getApiBaseUrl();
+  let cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  if (baseUrl.endsWith('/api') && cleanEndpoint.startsWith('/api/')) {
+    cleanEndpoint = cleanEndpoint.substring(4);
+  }
+  const url = `${baseUrl}${cleanEndpoint}`;
   const headers = new Headers(options.headers || {});
   headers.set('X-Tenant-ID', tenantId);
 

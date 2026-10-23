@@ -27,6 +27,16 @@ class Settings(BaseSettings):
     JWT_SECRET: str = os.getenv("JWT_SECRET_KEY", os.getenv("JWT_SECRET", "intelliprivart-competition-key-2026-secure"))
     DEFAULT_TENANT_ID: str = "INST_PATNA_01"
 
+    # Meta WhatsApp Business Cloud API
+    WHATSAPP_PHONE_NUMBER_ID: str = os.getenv("WHATSAPP_PHONE_NUMBER_ID", "")
+    WHATSAPP_ACCESS_TOKEN: str = os.getenv("WHATSAPP_ACCESS_TOKEN", os.getenv("WHATSAPP_API_TOKEN", os.getenv("META_WHATSAPP_TOKEN", "")))
+    WHATSAPP_BUSINESS_ACCOUNT_ID: str = os.getenv("WHATSAPP_BUSINESS_ACCOUNT_ID", "")
+    WHATSAPP_GRAPH_API_VERSION: str = os.getenv("WHATSAPP_GRAPH_API_VERSION", "v20.0")
+    WHATSAPP_VERIFY_TOKEN: str = os.getenv("WHATSAPP_VERIFY_TOKEN", "")
+    WHATSAPP_APP_SECRET: str = os.getenv("WHATSAPP_APP_SECRET", "")
+    WHATSAPP_TEMPLATE_NAME: str = os.getenv("WHATSAPP_TEMPLATE_NAME", "parent_weekly_progress_digest")
+    WHATSAPP_FALLBACK_SIMULATION: bool = os.getenv("WHATSAPP_FALLBACK_SIMULATION", "true").lower() in ("true", "1", "yes")
+
     # Directory Paths
     DATA_DIR: Path = BASE_DIR / "data"
     OMR_DIR: Path = BASE_DIR / "data" / "omr_samples"
