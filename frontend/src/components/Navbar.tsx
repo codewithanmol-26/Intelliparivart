@@ -26,7 +26,8 @@ import {
   Building2,
   RotateCw,
   Database,
-  CheckCircle2
+  CheckCircle2,
+  User
 } from 'lucide-react';
 
 export default function Navbar() {
@@ -63,6 +64,7 @@ export default function Navbar() {
       case 'owner':
         return [
           { href: '/overview', label: 'Owner Dashboard', icon: LineChart },
+          { href: '/profile', label: 'Profile View', icon: User },
           { href: '/owner', label: 'Executive ROI & Cohort', icon: LineChart },
           { href: '/risk', label: 'Early-Warning Dropouts', icon: ShieldAlert },
           { href: '/mastery', label: 'Batch Mastery Heatmap', icon: Layers },
@@ -73,6 +75,7 @@ export default function Navbar() {
       case 'teacher':
         return [
           { href: '/overview', label: 'Teacher Workspace', icon: Layers },
+          { href: '/profile', label: 'Profile View', icon: User },
           { href: '/mastery', label: 'Topic Mastery Heatmap', icon: Layers },
           { href: '/ai-assistant', label: 'AI Teaching Copilot', icon: Sparkles },
           { href: '/interventions', label: 'Remedial Triage & Worksheets', icon: CheckCircle2 },
@@ -83,6 +86,7 @@ export default function Navbar() {
       case 'student':
         return [
           { href: '/overview', label: 'My Growth Dashboard', icon: Layers },
+          { href: '/profile', label: 'Profile View', icon: User },
           { href: '/student', label: 'My Learning & Mastery', icon: Layers },
           { href: '/predict', label: 'My Predicted Progress', icon: LineChart },
           { href: '/ai-assistant', label: 'AI Doubt Practice', icon: Sparkles },
@@ -91,6 +95,7 @@ export default function Navbar() {
       case 'parent':
         return [
           { href: '/overview', label: 'Parent Progress Digest', icon: GraduationCap },
+          { href: '/profile', label: 'Profile View', icon: User },
           { href: '/reports', label: 'Weekly Progress Digest', icon: GraduationCap },
           { href: '/privacy', label: 'Guardian Consent Register', icon: Lock },
         ];
@@ -102,7 +107,7 @@ export default function Navbar() {
   const handleLogout = () => {
     logout();
     setMobileMenuOpen(false);
-    router.push('/login');
+    router.push('/');
   };
 
   return (
@@ -207,58 +212,51 @@ export default function Navbar() {
               </select>
             </div>
 
-            {/* Role Switcher */}
-            <div className="flex items-center bg-blue-950/70 border border-blue-800/60 rounded-md px-2.5 py-1 text-xs">
-              <span className="text-slate-400 mr-1.5 font-medium">Role:</span>
-              <select
-                aria-label="Select User Role"
-                value={role}
-                onChange={(e) => {
-                  const newRole = e.target.value as UserRole;
-                  setRole(newRole);
-                  if (newRole === 'student' || newRole === 'parent') {
-                    setSelectedStudentId('STD_PAT_001');
-                  }
-                }}
-                className="bg-transparent text-teal-300 font-semibold focus:outline-none cursor-pointer capitalize"
-              >
-                <option value="owner" className="bg-[#0B1F3A] text-white">Institute Owner</option>
-                <option value="teacher" className="bg-[#0B1F3A] text-white">Teacher / Academic Head</option>
-                <option value="student" className="bg-[#0B1F3A] text-white">Student (Growth View)</option>
-                <option value="parent" className="bg-[#0B1F3A] text-white">Parent (Digest View)</option>
-              </select>
-            </div>
-
-            {/* Auth Profile / Logout */}
+            {/* Profile View Pill / Logout */}
             {user ? (
               <div className="flex items-center space-x-2 pl-2 border-l border-blue-800/60">
-                <div className="w-7 h-7 rounded-full bg-teal-600 flex items-center justify-center text-xs font-bold text-white shrink-0">
-                  {user.full_name ? user.full_name.charAt(0) : 'U'}
-                </div>
-                <div className="text-left text-[11px] leading-tight">
-                  <span className="font-semibold text-white block max-w-[110px] truncate">
-                    {user.full_name}
-                  </span>
-                  <span className="text-teal-300 capitalize text-[10px]">
-                    {user.role}
-                  </span>
-                </div>
+                <Link
+                  href="/profile"
+                  className="flex items-center space-x-2 p-1 rounded-md hover:bg-blue-900/50 transition group"
+                  title="Profile View"
+                >
+                  <div className="w-7 h-7 rounded-full bg-teal-600 flex items-center justify-center text-xs font-bold text-white shrink-0 group-hover:bg-teal-500">
+                    {user.full_name ? user.full_name.charAt(0) : <User className="w-3.5 h-3.5" />}
+                  </div>
+                  <div className="text-left text-[11px] leading-tight">
+                    <span className="font-semibold text-white block max-w-[110px] truncate group-hover:text-teal-300">
+                      {user.full_name}
+                    </span>
+                    <span className="text-teal-300 capitalize text-[10px] block">
+                      Profile View • {user.role}
+                    </span>
+                  </div>
+                </Link>
                 <button
                   onClick={handleLogout}
-                  title="Sign Out"
+                  title="Sign Out (Redirect to Home)"
                   className="p-1.5 hover:bg-blue-900/60 text-slate-300 hover:text-white rounded-md transition"
                 >
                   <LogOut className="w-4 h-4" />
                 </button>
               </div>
             ) : (
-              <Link
-                href="/login"
-                className="inline-flex items-center space-x-1 px-3 py-1 bg-teal-600 hover:bg-teal-700 text-white rounded-md text-xs font-semibold shadow-xs"
-              >
-                <LogIn className="w-3.5 h-3.5 mr-1" />
-                <span>Sign In</span>
-              </Link>
+              <div className="flex items-center space-x-2">
+                <Link
+                  href="/profile"
+                  className="inline-flex items-center space-x-1 px-2.5 py-1 bg-blue-950/70 hover:bg-blue-900 border border-blue-800/60 text-slate-200 rounded-md text-xs font-semibold"
+                >
+                  <User className="w-3.5 h-3.5 mr-1" />
+                  <span>Profile</span>
+                </Link>
+                <Link
+                  href="/login"
+                  className="inline-flex items-center space-x-1 px-3 py-1 bg-teal-600 hover:bg-teal-700 text-white rounded-md text-xs font-semibold shadow-xs"
+                >
+                  <LogIn className="w-3.5 h-3.5 mr-1" />
+                  <span>Sign In</span>
+                </Link>
+              </div>
             )}
           </div>
 
@@ -288,19 +286,23 @@ export default function Navbar() {
             {/* User Profile Card on Mobile */}
             {user ? (
               <div className="flex items-center justify-between p-3 bg-blue-950/90 rounded-xl border border-blue-800/60">
-                <div className="flex items-center space-x-2.5">
-                  <div className="w-9 h-9 rounded-full bg-teal-500 flex items-center justify-center font-bold text-white text-sm">
-                    {user.full_name ? user.full_name.charAt(0) : 'U'}
+                <Link
+                  href="/profile"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center space-x-2.5 group"
+                >
+                  <div className="w-9 h-9 rounded-full bg-teal-500 flex items-center justify-center font-bold text-white text-sm group-hover:bg-teal-400">
+                    {user.full_name ? user.full_name.charAt(0) : <User className="w-4 h-4" />}
                   </div>
                   <div>
-                    <span className="text-xs font-bold text-white block">
+                    <span className="text-xs font-bold text-white block group-hover:text-teal-300">
                       {user.full_name}
                     </span>
                     <span className="text-[10px] text-teal-300 capitalize font-medium">
-                      {user.role} • {user.email}
+                      Profile View • {user.role}
                     </span>
                   </div>
-                </div>
+                </Link>
                 <button
                   onClick={handleLogout}
                   className="px-2.5 py-1 bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 rounded text-xs font-semibold flex items-center space-x-1"
@@ -310,58 +312,43 @@ export default function Navbar() {
                 </button>
               </div>
             ) : (
-              <Link
-                href="/login"
-                onClick={() => setMobileMenuOpen(false)}
-                className="w-full py-2 bg-teal-600 text-white rounded-lg text-xs font-semibold flex items-center justify-center space-x-1"
-              >
-                <LogIn className="w-3.5 h-3.5 mr-1" />
-                <span>Sign In to Your Institute</span>
-              </Link>
+              <div className="grid grid-cols-2 gap-2">
+                <Link
+                  href="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="py-2 bg-teal-600 text-white rounded-lg text-xs font-semibold flex items-center justify-center space-x-1"
+                >
+                  <LogIn className="w-3.5 h-3.5 mr-1" />
+                  <span>Sign In</span>
+                </Link>
+                <Link
+                  href="/profile"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="py-2 bg-blue-950 border border-blue-800 text-teal-300 rounded-lg text-xs font-semibold flex items-center justify-center space-x-1"
+                >
+                  <User className="w-3.5 h-3.5 mr-1" />
+                  <span>Profile View</span>
+                </Link>
+              </div>
             )}
 
-            {/* Mobile Selectors */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-              <div className="bg-blue-950 p-2.5 rounded-lg border border-blue-800">
-                <label className="text-[10px] text-slate-400 font-medium block mb-1">
-                  Active Institute Tenant:
-                </label>
-                <select
-                  aria-label="Select Institute Tenant"
-                  value={tenantId}
-                  onChange={(e) => setTenantId(e.target.value)}
-                  className="w-full bg-transparent text-white font-medium focus:outline-none"
-                >
-                  {institutes.map((inst) => (
-                    <option key={inst.id} value={inst.id} className="bg-[#0B1F3A] text-white">
-                      {inst.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="bg-blue-950 p-2.5 rounded-lg border border-blue-800">
-                <label className="text-[10px] text-slate-400 font-medium block mb-1">
-                  Active Role Perspective:
-                </label>
-                <select
-                  aria-label="Select User Role"
-                  value={role}
-                  onChange={(e) => {
-                  const newRole = e.target.value as UserRole;
-                  setRole(newRole);
-                  if (newRole === 'student' || newRole === 'parent') {
-                    setSelectedStudentId('STD_PAT_001');
-                  }
-                }}
-                  className="w-full bg-transparent text-teal-300 font-bold focus:outline-none capitalize"
-                >
-                  <option value="owner" className="bg-[#0B1F3A] text-white">Institute Owner</option>
-                  <option value="teacher" className="bg-[#0B1F3A] text-white">Teacher / Academic Head</option>
-                  <option value="student" className="bg-[#0B1F3A] text-white">Student (Growth View)</option>
-                  <option value="parent" className="bg-[#0B1F3A] text-white">Parent (Digest View)</option>
-                </select>
-              </div>
+            {/* Mobile Tenant Selector */}
+            <div className="bg-blue-950 p-2.5 rounded-lg border border-blue-800 text-xs">
+              <label className="text-[10px] text-slate-400 font-medium block mb-1">
+                Active Institute Tenant:
+              </label>
+              <select
+                aria-label="Select Institute Tenant"
+                value={tenantId}
+                onChange={(e) => setTenantId(e.target.value)}
+                className="w-full bg-transparent text-white font-medium focus:outline-none"
+              >
+                {institutes.map((inst) => (
+                  <option key={inst.id} value={inst.id} className="bg-[#0B1F3A] text-white">
+                    {inst.name}
+                  </option>
+                ))}
+              </select>
             </div>
 
             {/* Mobile Nav Links List */}

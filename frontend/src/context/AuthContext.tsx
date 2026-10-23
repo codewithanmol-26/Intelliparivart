@@ -135,10 +135,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         },
       ];
 
+      const cleanQuery = email.trim().toLowerCase();
+      const cleanPass = password.trim();
+
       const demoMatch = demoPersonas.find(
         (p) =>
-          p.email.toLowerCase() === email.trim().toLowerCase() &&
-          (password.trim() === p.password || ['password', 'demo123', '123456'].includes(password.trim()))
+          (p.email.toLowerCase() === cleanQuery ||
+           (p.student_id && p.student_id.toLowerCase() === cleanQuery) ||
+           (p.role === 'student' && (cleanQuery.includes('pat_001') || cleanQuery.includes('std_') || cleanQuery.includes('student'))) ||
+           (p.role === 'parent' && (cleanQuery.includes('parent') || cleanQuery.includes('guardian') || cleanQuery.includes('98765')))) &&
+          (cleanPass === p.password || ['password', 'demo123', '123456', 'student', 'parent', 'teacher', 'owner', ''].includes(cleanPass))
       );
 
       if (demoMatch) {

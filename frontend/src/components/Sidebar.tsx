@@ -27,7 +27,8 @@ import {
   PlayCircle,
   X,
   HeartHandshake,
-  UserCheck
+  UserCheck,
+  User
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -44,6 +45,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       case 'owner':
         return [
           { href: '/overview', label: 'Owner Dashboard', icon: LayoutDashboard },
+          { href: '/profile', label: 'Profile View', icon: User },
           { href: '/owner', label: 'Executive ROI Model', icon: FileSpreadsheet },
           { href: '/risk', label: 'Early-Warning Dropouts', icon: ShieldAlert },
           { href: '/interventions', label: 'Remedial Triage Ledger', icon: CheckCircle2 },
@@ -56,6 +58,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       case 'teacher':
         return [
           { href: '/overview', label: 'Teacher Workspace', icon: LayoutDashboard },
+          { href: '/profile', label: 'Profile View', icon: User },
           { href: '/mastery', label: 'Topic Mastery Heatmap', icon: Layers },
           { href: '/ai-assistant', label: 'AI Teaching Copilot', icon: Sparkles },
           { href: '/interventions', label: 'Remedial Triage & Worksheets', icon: CheckCircle2 },
@@ -68,6 +71,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       case 'student':
         return [
           { href: '/overview', label: 'My Growth Dashboard', icon: LayoutDashboard },
+          { href: '/profile', label: 'Profile View', icon: User },
           { href: '/student', label: 'Topic Mastery & Strengths', icon: Layers },
           { href: '/predict', label: 'Predicted Progress', icon: LineChart },
           { href: '/ai-assistant', label: 'AI Doubt Practice', icon: Sparkles },
@@ -76,12 +80,14 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       case 'parent':
         return [
           { href: '/overview', label: 'Parent Progress Digest', icon: LayoutDashboard },
+          { href: '/profile', label: 'Profile View', icon: User },
           { href: '/reports', label: 'Bilingual Report (EN/HI)', icon: GraduationCap },
           { href: '/privacy', label: 'Guardian Consent Register', icon: Lock },
         ];
       default:
         return [
           { href: '/overview', label: 'Overview', icon: LayoutDashboard },
+          { href: '/profile', label: 'Profile View', icon: User },
           { href: '/student', label: 'Student Analytics', icon: Users },
           { href: '/mastery', label: 'Topic Mastery', icon: Layers },
           { href: '/interventions', label: 'Intervention Tracker', icon: CheckCircle2 },
@@ -92,7 +98,6 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const primaryNavItems = getRoleNavItems();
 
   const secondaryNavItems = [
-    { href: '/demo', label: 'Interactive Demo (4 Roles)', icon: PlayCircle },
     { href: '/demo-tools', label: 'Scenario Simulator', icon: Sparkles },
     { href: '/', label: 'Public Website', icon: Globe },
   ];
@@ -136,58 +141,6 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           >
             <X className="w-5 h-5" />
           </button>
-        </div>
-
-        {/* Role Quick Switcher Box in Sidebar */}
-        <div className="p-3 bg-[#0a1b33] border-b border-blue-900/40">
-          <div className="flex items-center justify-between text-[10px] text-slate-400 font-semibold uppercase tracking-wider mb-1.5">
-            <span>Active Role View:</span>
-            <span className="text-teal-400 font-bold capitalize">{role}</span>
-          </div>
-          <div className="grid grid-cols-2 gap-1 text-[11px] font-bold">
-            <button
-              onClick={() => setRole('owner')}
-              className={`px-2 py-1 rounded transition text-left truncate flex items-center space-x-1 ${
-                role === 'owner' ? 'bg-teal-600 text-white font-extrabold shadow-2xs' : 'text-slate-300 hover:bg-blue-900/50'
-              }`}
-            >
-              <Building2 className="w-3 h-3 shrink-0" />
-              <span className="truncate">Owner</span>
-            </button>
-            <button
-              onClick={() => setRole('teacher')}
-              className={`px-2 py-1 rounded transition text-left truncate flex items-center space-x-1 ${
-                role === 'teacher' ? 'bg-teal-600 text-white font-extrabold shadow-2xs' : 'text-slate-300 hover:bg-blue-900/50'
-              }`}
-            >
-              <Layers className="w-3 h-3 shrink-0" />
-              <span className="truncate">Teacher</span>
-            </button>
-            <button
-              onClick={() => {
-                setRole('student');
-                setSelectedStudentId('STD_PAT_001');
-              }}
-              className={`px-2 py-1 rounded transition text-left truncate flex items-center space-x-1 ${
-                role === 'student' ? 'bg-teal-600 text-white font-extrabold shadow-2xs' : 'text-slate-300 hover:bg-blue-900/50'
-              }`}
-            >
-              <GraduationCap className="w-3 h-3 shrink-0" />
-              <span className="truncate">Student</span>
-            </button>
-            <button
-              onClick={() => {
-                setRole('parent');
-                setSelectedStudentId('STD_PAT_001');
-              }}
-              className={`px-2 py-1 rounded transition text-left truncate flex items-center space-x-1 ${
-                role === 'parent' ? 'bg-teal-600 text-white font-extrabold shadow-2xs' : 'text-slate-300 hover:bg-blue-900/50'
-              }`}
-            >
-              <HeartHandshake className="w-3 h-3 shrink-0" />
-              <span className="truncate">Parent</span>
-            </button>
-          </div>
         </div>
 
         {/* Role-Adaptive Primary Navigation Menu */}

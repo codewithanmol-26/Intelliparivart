@@ -34,7 +34,10 @@ import {
   HelpCircle,
   Activity,
   Calendar,
-  Share2
+  Share2,
+  LogIn,
+  HeartHandshake,
+  User
 } from 'lucide-react';
 
 export default function HomePage() {
@@ -83,23 +86,23 @@ export default function HomePage() {
             identify learners who need support, and guide the next best action.
           </p>
 
-          {/* Primary Action Buttons */}
+          {/* Primary Action Buttons: Sign In & Register */}
           <div className="pt-3 flex flex-wrap gap-3 sm:gap-4 items-center">
             <Link
-              href="/demo"
+              href="/login"
               className="inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-teal-500 text-white font-bold text-sm hover:bg-teal-600 transition shadow-lg shadow-teal-500/25"
             >
-              <PlayCircle className="w-4 h-4 mr-2" />
-              <span>Explore Interactive Demo</span>
+              <LogIn className="w-4 h-4 mr-2" />
+              <span>Sign In to Portal</span>
             </Link>
 
-            <a
-              href="#how-it-works"
-              className="inline-flex items-center justify-center px-5 py-3.5 rounded-xl bg-white/10 text-white hover:bg-white/15 transition font-semibold text-sm border border-white/10"
+            <Link
+              href="/register"
+              className="inline-flex items-center justify-center px-5 py-3.5 rounded-xl bg-white/10 text-white hover:bg-white/20 transition font-semibold text-sm border border-white/20"
             >
-              <span>See How It Works</span>
-              <ChevronRight className="w-4 h-4 ml-1" />
-            </a>
+              <Building2 className="w-4 h-4 mr-2 text-teal-300" />
+              <span>Register Institute</span>
+            </Link>
 
             <Link
               href="/ai-assistant"
@@ -108,6 +111,13 @@ export default function HomePage() {
               <Bot className="w-4 h-4 mr-2 text-teal-400" />
               <span>AI Teaching Copilot &rarr;</span>
             </Link>
+
+            <a
+              href="#portal-roles"
+              className="inline-flex items-center justify-center px-3 py-2 text-slate-300 hover:text-white text-xs font-medium transition"
+            >
+              <span>Direct Role Portals &darr;</span>
+            </a>
           </div>
 
           {/* Micro trust indicators */}
@@ -129,6 +139,191 @@ export default function HomePage() {
 
         {/* Ambient Grid Accent */}
         <div className="absolute right-0 top-0 bottom-0 w-1/2 opacity-15 bg-[radial-gradient(#14B8A6_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
+      </section>
+
+      {/* 2. DEDICATED ROLE PORTAL ACCESS (STUDENTS, PARENTS, TEACHERS, OWNERS) */}
+      <section id="portal-roles" className="space-y-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div>
+            <div className="inline-flex items-center space-x-2 bg-teal-500/10 text-teal-700 border border-teal-500/20 px-3 py-1 rounded-full text-xs font-semibold mb-2">
+              <ShieldCheck className="w-3.5 h-3.5 text-teal-600" />
+              <span>Multi-Role Stakeholder Portals</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-900">
+              Sign In to Your Institute Portal
+            </h2>
+            <p className="text-sm text-slate-500 mt-1 max-w-2xl">
+              Each stakeholder accesses a dedicated, role-tailored view. Students and parents verify their enrolled coaching institute before entering.
+            </p>
+          </div>
+          <div className="flex items-center space-x-3 text-xs">
+            <Link
+              href="/register"
+              className="text-teal-700 font-bold hover:underline flex items-center space-x-1"
+            >
+              <span>Coaching Director? Register New Institute</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Student Portal Card */}
+          <div className="p-5 rounded-2xl bg-white border border-slate-200 hover:border-emerald-500 hover:shadow-md transition flex flex-col justify-between group">
+            <div className="space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                <GraduationCap className="w-5 h-5" />
+              </div>
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-600 block">
+                  Student Portal
+                </span>
+                <h3 className="text-base font-bold text-slate-900 mt-0.5">
+                  Growth & Practice
+                </h3>
+              </div>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Personalized topic mastery trajectories, zero-shaming percentile predictions, and AI doubt practice.
+              </p>
+              <div className="pt-2 text-[11px] text-slate-400 space-y-1">
+                <div className="flex items-center space-x-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                  <span>Enrolled Institute Verification</span>
+                </div>
+                <div className="flex items-center space-x-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                  <span>Student ID / Roll Code Sign In</span>
+                </div>
+              </div>
+            </div>
+            <div className="pt-5 mt-4 border-t border-slate-100">
+              <Link
+                href="/login?role=student"
+                className="w-full py-2.5 px-3 rounded-xl bg-emerald-50 hover:bg-emerald-600 hover:text-white text-emerald-700 font-bold text-xs transition flex items-center justify-center space-x-1.5"
+              >
+                <span>Student Sign In</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          </div>
+
+          {/* Parent Portal Card */}
+          <div className="p-5 rounded-2xl bg-white border border-slate-200 hover:border-amber-500 hover:shadow-md transition flex flex-col justify-between group">
+            <div className="space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                <HeartHandshake className="w-5 h-5" />
+              </div>
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-amber-600 block">
+                  Parent / Guardian Portal
+                </span>
+                <h3 className="text-base font-bold text-slate-900 mt-0.5">
+                  Bilingual Digest
+                </h3>
+              </div>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Weekly progress updates in English & Hindi, attendance records, and constructive guidance without anxiety.
+              </p>
+              <div className="pt-2 text-[11px] text-slate-400 space-y-1">
+                <div className="flex items-center space-x-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                  <span>Institute Affiliation Check</span>
+                </div>
+                <div className="flex items-center space-x-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                  <span>Ward Student ID Verification</span>
+                </div>
+              </div>
+            </div>
+            <div className="pt-5 mt-4 border-t border-slate-100">
+              <Link
+                href="/login?role=parent"
+                className="w-full py-2.5 px-3 rounded-xl bg-amber-50 hover:bg-amber-600 hover:text-white text-amber-700 font-bold text-xs transition flex items-center justify-center space-x-1.5"
+              >
+                <span>Parent Sign In</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          </div>
+
+          {/* Teacher Portal Card */}
+          <div className="p-5 rounded-2xl bg-white border border-slate-200 hover:border-teal-500 hover:shadow-md transition flex flex-col justify-between group">
+            <div className="space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center">
+                <Layers className="w-5 h-5" />
+              </div>
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-teal-600 block">
+                  Teacher & Faculty
+                </span>
+                <h3 className="text-base font-bold text-slate-900 mt-0.5">
+                  Academic Head Workspace
+                </h3>
+              </div>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Topic mastery heatmaps, automated OMR upload, remedial worksheet generation, and AI Teaching Copilot.
+              </p>
+              <div className="pt-2 text-[11px] text-slate-400 space-y-1">
+                <div className="flex items-center space-x-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-teal-500 shrink-0" />
+                  <span>Faculty Email & Course Focus</span>
+                </div>
+                <div className="flex items-center space-x-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-teal-500 shrink-0" />
+                  <span>Batch-Level Remedial Triage</span>
+                </div>
+              </div>
+            </div>
+            <div className="pt-5 mt-4 border-t border-slate-100">
+              <Link
+                href="/login?role=teacher"
+                className="w-full py-2.5 px-3 rounded-xl bg-teal-50 hover:bg-teal-600 hover:text-white text-teal-700 font-bold text-xs transition flex items-center justify-center space-x-1.5"
+              >
+                <span>Teacher Sign In</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          </div>
+
+          {/* Owner Portal Card */}
+          <div className="p-5 rounded-2xl bg-white border border-slate-200 hover:border-blue-700 hover:shadow-md transition flex flex-col justify-between group">
+            <div className="space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center">
+                <Building2 className="w-5 h-5" />
+              </div>
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-blue-700 block">
+                  Institute Owner
+                </span>
+                <h3 className="text-base font-bold text-slate-900 mt-0.5">
+                  Executive ROI Dashboard
+                </h3>
+              </div>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Multi-batch financial forecasts, fee drop-out prevention, executive analytics, and DPDP Act compliance.
+              </p>
+              <div className="pt-2 text-[11px] text-slate-400 space-y-1">
+                <div className="flex items-center space-x-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                  <span>Director & Admin Authorization</span>
+                </div>
+                <div className="flex items-center space-x-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                  <span>Full Tenant Data Moat Control</span>
+                </div>
+              </div>
+            </div>
+            <div className="pt-5 mt-4 border-t border-slate-100">
+              <Link
+                href="/login?role=owner"
+                className="w-full py-2.5 px-3 rounded-xl bg-blue-50 hover:bg-blue-700 hover:text-white text-blue-800 font-bold text-xs transition flex items-center justify-center space-x-1.5"
+              >
+                <span>Owner Sign In</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* 3. THE FRAGMENTED DATA PROBLEM */}
@@ -892,17 +1087,18 @@ export default function HomePage() {
 
         <div className="flex flex-wrap gap-3 shrink-0">
           <Link
-            href="/demo"
+            href="/login"
             className="px-6 py-3.5 bg-white text-teal-900 rounded-xl font-bold text-xs sm:text-sm hover:bg-slate-100 transition shadow-lg flex items-center space-x-2"
           >
-            <PlayCircle className="w-4 h-4" />
-            <span>Explore Interactive Demo</span>
+            <LogIn className="w-4 h-4 text-teal-700" />
+            <span>Sign In to Portal</span>
           </Link>
           <Link
             href="/register"
-            className="px-6 py-3.5 bg-teal-800/70 hover:bg-teal-800 text-white rounded-xl font-semibold text-xs sm:text-sm transition border border-teal-300/40"
+            className="px-6 py-3.5 bg-teal-800/80 hover:bg-teal-900 text-white rounded-xl font-semibold text-xs sm:text-sm transition border border-teal-300/40 flex items-center space-x-2"
           >
-            Register Institute
+            <Building2 className="w-4 h-4 text-teal-200" />
+            <span>Register Institute</span>
           </Link>
         </div>
       </section>
