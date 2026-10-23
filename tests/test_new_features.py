@@ -188,6 +188,61 @@ def test_whatsapp_endpoints():
     assert r_bcast.json()["total_dispatched"] == 0
 
 
+def test_whatsapp_status_reports_unavailable_database(monkeypatch):
+    from sqlalchemy.exc import OperationalError
+    from backend.app.database import get_db
+
+    class BrokenDatabase:
+        def execute(self, *_args, **_kwargs):
+            raise OperationalError("SELECT 1", {}, OSError("database unavailable"))
+
+        def rollback(self):
+            pass
+
+    def override_db():
+        yield BrokenDatabase()
+
+    app.dependency_overrides[get_db] = override_db
+    try:
+        response = client.get("/api/whatsapp/status", headers={"X-Tenant-ID": "INST_TEST"})
+        assert response.status_code == 200
+        assert response.json()["database_status"] == "unavailable"
+    finally:
+        app.dependency_overrides.pop(get_db, None)
+
+
+def test_whatsapp_send_fails_closed_when_database_unavailable(monkeypatch):
+    from sqlalchemy.exc import OperationalError
+    from backend.app.database import get_db
+    from backend.app.services import whatsapp_service
+
+    class BrokenDatabase:
+        def query(self, *_args, **_kwargs):
+            raise OperationalError("SELECT students", {}, OSError("database unavailable"))
+
+        def rollback(self):
+            pass
+
+    def override_db():
+        yield BrokenDatabase()
+
+    def should_not_send(**_kwargs):
+        pytest.fail("WhatsApp send must not happen unless consent can be checked")
+
+    monkeypatch.setattr(whatsapp_service, "send_whatsapp_message", should_not_send)
+    app.dependency_overrides[get_db] = override_db
+    try:
+        response = client.post(
+            "/api/whatsapp/send",
+            json={"recipient_phone": "+919876543210", "student_id": "STD_TEST"},
+            headers={"X-Tenant-ID": "INST_TEST"},
+        )
+        assert response.status_code == 503
+        assert "consent" in response.json()["detail"].lower()
+    finally:
+        app.dependency_overrides.pop(get_db, None)
+
+
 def test_whatsapp_simulation_never_claims_delivery(monkeypatch):
     from backend.app.services import whatsapp_service
 

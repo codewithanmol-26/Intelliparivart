@@ -38,6 +38,7 @@ export default function ReportsPage() {
   const [recipientPhone, setRecipientPhone] = useState('+91 98765 43210');
   const [isSendingWhatsApp, setIsSendingWhatsApp] = useState(false);
   const [whatsAppDeliveryResult, setWhatsAppDeliveryResult] = useState<any | null>(null);
+  const [whatsAppSendError, setWhatsAppSendError] = useState<string | null>(null);
   const [isBroadcasting, setIsBroadcasting] = useState(false);
   const [broadcastNotice, setBroadcastNotice] = useState<string | null>(null);
   const [logsDrawerOpen, setLogsDrawerOpen] = useState(false);
@@ -96,12 +97,14 @@ export default function ReportsPage() {
   const handleOpenWhatsAppModal = () => {
     if (!reportData || isConsentWithdrawn) return;
     setWhatsAppDeliveryResult(null);
+    setWhatsAppSendError(null);
     setWhatsAppModalOpen(true);
   };
 
   const handleSendWhatsAppAPI = async () => {
-    if (!reportData || isConsentWithdrawn) return;
+    if (!reportData || isConsentWithdrawn || isSendingWhatsApp) return;
     setIsSendingWhatsApp(true);
+    setWhatsAppSendError(null);
     try {
       const res = await api.sendWhatsApp({
         recipient_phone: recipientPhone,
@@ -114,14 +117,33 @@ export default function ReportsPage() {
         strong_topics: [reportData.strong_topic],
         language: lang,
       }, tenantId);
-      setWhatsAppDeliveryResult(res);
-      if (res.status === 'simulated') {
-        setBroadcastNotice('Simulation only — no message was sent. Configure WHATSAPP_API_TOKEN and WHATSAPP_PHONE_NUMBER_ID on the backend for live delivery.');
+      if (res.status === 'failed' || res.delivery_details?.dispatch_state === 'FAILED') {
+        setWhatsAppSendError(res.delivery_details?.error || res.message || 'WhatsApp provider rejected the message.');
       } else {
-        notifyRecomputed(undefined, `WhatsApp message accepted by Meta for ${recipientPhone}`);
+        setWhatsAppDeliveryResult(res);
+        if (res.status === 'simulated') {
+          setBroadcastNotice('Simulation only — no message was sent. Configure Meta WhatsApp credentials on the backend for live delivery.');
+        } else {
+          notifyRecomputed(undefined, `WhatsApp message accepted by Meta for ${recipientPhone}`);
+        }
       }
     } catch (err: any) {
-      alert(err.message || 'WhatsApp dispatch failed. Check the backend status and Meta credentials.');
+      const detail = err.data?.detail || err.data?.message || err.message || '';
+      if (err.status === 403 || /consent|DPDP/i.test(detail)) {
+        setWhatsAppSendError('Guardian consent is not active for this student. Sending was blocked.');
+      } else if (err.status === 401) {
+        setWhatsAppSendError('Your session has expired or is unauthorized. Please sign in again.');
+      } else if ([500, 502, 503, 504].includes(err.status)) {
+        setWhatsAppSendError(`The backend or database is unavailable (${err.status}). Check the Render service and its DATABASE_URL configuration.`);
+      } else if (err.status === 404) {
+        setWhatsAppSendError('The student or WhatsApp endpoint was not found. Check the selected student and deployed backend.');
+      } else if (err.status === 429) {
+        setWhatsAppSendError('The WhatsApp provider rate limit was reached. Wait a moment and retry.');
+      } else if (err.name === 'TypeError' || /Failed to fetch|NetworkError/i.test(err.message || '')) {
+        setWhatsAppSendError('Cannot reach the backend. Check your network and the deployed API URL, then retry.');
+      } else {
+        setWhatsAppSendError(detail || 'WhatsApp dispatch failed. Check backend and Meta configuration.');
+      }
     } finally {
       setIsSendingWhatsApp(false);
     }
@@ -430,7 +452,7 @@ export default function ReportsPage() {
                     <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block" />
                   </div>
                   <span className="text-[11px] text-teal-100 block">
-                    WhatsApp Cloud API dispatch
+                    WhatsApp API status is checked when you send
                   </span>
                 </div>
               </div>
@@ -506,6 +528,16 @@ export default function ReportsPage() {
                       ? 'Configure Meta WhatsApp credentials to send real messages.'
                       : 'Message accepted by Meta; delivery status is not yet confirmed.'}
                   </div>
+                </div>
+              )}
+
+              {whatsAppSendError && (
+                <div role="alert" className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-rose-900 space-y-1">
+                  <div className="font-bold flex items-center space-x-1.5 text-xs text-rose-700">
+                    <AlertCircle className="w-4 h-4 text-rose-600" />
+                    <span>WhatsApp Dispatch Notice</span>
+                  </div>
+                  <div className="text-[11px] text-rose-800">{whatsAppSendError}</div>
                 </div>
               )}
 

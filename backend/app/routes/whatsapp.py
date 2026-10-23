@@ -8,10 +8,13 @@ from fastapi import APIRouter, Depends, Header, HTTPException, Query, Body
 from pydantic import BaseModel, Field
 from typing import Optional, List, Dict, Any
 from sqlalchemy.orm import Session
+from sqlalchemy import text
+from sqlalchemy.exc import SQLAlchemyError
 import datetime
 
 from backend.app.database import get_db
 from backend.app.models import Student
+from backend.app.auth import get_current_user_optional
 
 from backend.app.services.whatsapp_service import (
     get_whatsapp_config,
@@ -41,13 +44,25 @@ class BroadcastBatchRequest(BaseModel):
 
 @router.get("/whatsapp/status")
 @router.get("/api/whatsapp/status")
-def get_whatsapp_status():
-    """Returns WhatsApp Business Cloud API operational status."""
+def get_whatsapp_status(
+    tenant_id: Optional[str] = None,
+    x_tenant_id: Optional[str] = Header(None, alias="X-Tenant-ID"),
+    db: Session = Depends(get_db),
+):
+    """Returns WhatsApp API configuration and tenant-scoped message totals."""
     config = get_whatsapp_config()
-    logs = get_whatsapp_logs()
-    total_sent = len(logs)
+    tid = tenant_id or x_tenant_id or "INST_PATNA_01"
+    try:
+        db.execute(text("SELECT 1"))
+        total_sent = len(get_whatsapp_logs(tid))
+        database_status = "connected"
+    except SQLAlchemyError:
+        db.rollback()
+        total_sent = 0
+        database_status = "unavailable"
     return {
         "status": "configured" if config["has_live_token"] and config["phone_number_id"] else ("invalid_configuration" if config["has_live_token"] else "simulation_only"),
+        "database_status": database_status,
         "provider": config["provider"],
         "mode": config["mode"],
         "has_live_token": config["has_live_token"],
@@ -63,19 +78,31 @@ def send_parent_report_whatsapp(
     payload: SendWhatsAppRequest,
     tenant_id: Optional[str] = None,
     x_tenant_id: Optional[str] = Header(None, alias="X-Tenant-ID"),
+    current_user: Optional[Dict[str, Any]] = Depends(get_current_user_optional),
     db: Session = Depends(get_db),
 ):
     """
     Sends an empathetic weekly parent progress report via WhatsApp.
     Automatically generates bilingual formatting with zero numerical hallucinations.
     """
-    tid = tenant_id or x_tenant_id or "INST_PATNA_01"
+    tid = (
+        current_user.get("tenant_id")
+        if current_user and current_user.get("tenant_id")
+        else tenant_id or x_tenant_id or "INST_PATNA_01"
+    )
     if not payload.student_id:
         raise HTTPException(status_code=422, detail="student_id is required to verify guardian consent before sending.")
-    student = db.query(Student).filter(
-        Student.id == payload.student_id,
-        Student.tenant_id == tid,
-    ).first()
+    try:
+        student = db.query(Student).filter(
+            Student.id == payload.student_id,
+            Student.tenant_id == tid,
+        ).first()
+    except SQLAlchemyError as exc:
+        db.rollback()
+        raise HTTPException(
+            status_code=503,
+            detail="Student consent could not be verified because the database is unavailable. No WhatsApp message was sent.",
+        ) from exc
     if not student:
         raise HTTPException(status_code=404, detail="Student not found in this institute roster.")
     if not student.parent_contact_consent:
@@ -126,8 +153,6 @@ def broadcast_whatsapp_batch(
     """
     Broadcasts parent digests to an entire coaching batch in one transaction.
     """
-    tid = tenant_id or x_tenant_id or "INST_PATNA_01"
-    
     # Live broadcasts require guardian phone numbers and consented, verified reports.
     # Neither is available in the current student schema, so do not send to a hard-coded cohort.
     return {

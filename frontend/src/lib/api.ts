@@ -16,6 +16,12 @@ import {
 } from './types';
 
 export function getApiBaseUrl(): string {
+  const canonicalUrl = 'https://intelliparivart.onrender.com/api';
+  const normalizeUrl = (rawUrl: string): string => rawUrl
+    .replace(/\/+$/, '')
+    .replace('intelliparivart-backend.onrender.com', 'intelliparivart.onrender.com')
+    .replace('intelliprivart-backend.onrender.com', 'intelliparivart.onrender.com');
+
   // Use the local API during local development unless explicitly configured.
   if (typeof window !== 'undefined' && ['localhost', '127.0.0.1'].includes(window.location.hostname)) {
     return process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, '') || 'http://127.0.0.1:8000/api';
@@ -24,7 +30,7 @@ export function getApiBaseUrl(): string {
   // 1. In browser or build client bundle, check public framework variable if defined
   const publicUrl = process.env.NEXT_PUBLIC_API_URL;
   if (publicUrl && !publicUrl.includes('127.0.0.1') && !publicUrl.includes('localhost')) {
-    return publicUrl.replace(/\/+$/, '');
+    return normalizeUrl(publicUrl);
   }
 
   // 2. On server side (SSR / Node runtime), check private server variables (Vercel-safe without public prefix)
@@ -34,12 +40,23 @@ export function getApiBaseUrl(): string {
       process.env.API_URL ||
       process.env.BACKEND_INTERNAL_URL;
     if (serverUrl && !serverUrl.includes('127.0.0.1') && !serverUrl.includes('localhost')) {
-      return serverUrl.replace(/\/+$/, '');
+      return normalizeUrl(serverUrl);
     }
   }
 
   // 3. Deployed Production Render backend fallback (works out of the box with 0 env vars)
-  return 'https://intelliparivart.onrender.com/api';
+  return canonicalUrl;
+}
+
+export class ApiError extends Error {
+  constructor(
+    public readonly status: number,
+    public readonly data: any,
+    message: string,
+  ) {
+    super(message);
+    this.name = 'ApiError';
+  }
 }
 
 function getStoredToken(): string | null {
@@ -75,7 +92,14 @@ async function request<T>(
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`API Error [${response.status}] ${response.statusText}: ${errorText}`);
+    let data: any = {};
+    try {
+      data = JSON.parse(errorText);
+    } catch {
+      data = { detail: errorText };
+    }
+    const detail = data.detail || data.message || errorText || response.statusText;
+    throw new ApiError(response.status, data, `API Error [${response.status}] ${response.statusText}: ${detail}`);
   }
 
   return response.json();

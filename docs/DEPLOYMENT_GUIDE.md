@@ -45,7 +45,7 @@
    ```
    postgresql://postgres.[PROJECT-REF]:[YOUR-PASSWORD]@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres
    ```
-   *(Or direct: `postgresql://postgres:[YOUR-PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres`)*
+   *(Use the Supabase pooler URI for hosts such as Render that cannot reach Supabase's IPv6-only direct endpoint. For transaction pooling on port `6543`, add `?sslmode=require&pgbouncer=true`; use your project's exact Supabase connection string and user.)*
 
 ### Initialize Tables and Data:
 You have two simple options:
@@ -84,7 +84,7 @@ python scripts/seed_supabase.py "postgresql://postgres:[PASSWORD]@db.[PROJECT-RE
 5. Under **Environment Variables**, add the following:
    | Key | Value | Notes |
    | :--- | :--- | :--- |
-   | `DATABASE_URL` | `postgresql://postgres:[PASSWORD]@db.[REF].supabase.co:5432/postgres` | Your Supabase URI from Step 1 |
+   | `DATABASE_URL` | `postgresql://postgres.[PROJECT-REF]:[PASSWORD]@aws-0-[REGION].pooler.supabase.com:6543/postgres?sslmode=require&pgbouncer=true` | Use the Supabase pooler URI reachable from Render; replace placeholders with your project's URI |
    | `ENVIRONMENT` | `production` | Enables production mode |
    | `PYTHON_VERSION` | `3.11.9` | Recommended Python version |
    | `JWT_SECRET_KEY` | `any-secure-random-32-char-string` | Used to sign auth tokens |
@@ -139,6 +139,7 @@ Once deployed:
 2. **Health Indicator**: Verify the green "API Online" badge on the top banner.
 3. **Login Test**: Click **Sign In** or go to `/login`. Click **"Launch"** on any 1-Click Demo Persona (e.g. Dr. S. K. Narayan - Owner).
 4. **Data Verification**:
+   - Open `https://<your-render-service>.onrender.com/api/readiness`; it should return `{"status":"ready","database_status":"connected"}` before testing database-backed features. If it returns `degraded`, correct `DATABASE_URL` in the Render service environment. Never put database credentials in GitHub, chat, or frontend environment variables.
    - Navigate to `/mastery`: Confirm topic mastery percentages load live from Supabase.
    - Navigate to `/risk`: Confirm prioritized at-risk students are displayed.
    - Navigate to `/reports`: Toggle between English and Hindi to verify deterministic parent digests.

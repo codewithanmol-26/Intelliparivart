@@ -7,7 +7,7 @@ Nextute EdTech × Finance Club, IIT Patna (Case B: The Data Moat)
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from backend.app.config import settings
-from backend.app.database import engine, Base
+from backend.app.database import engine, Base, get_db
 import backend.app.models
 from backend.app.routes import (
     auth, ingest, mastery, risk, predictions, reports,
@@ -164,6 +164,18 @@ def root():
 @app.get("/health")
 def health():
     return {"status": "online", "platform": settings.PROJECT_NAME, "version": settings.PROJECT_VERSION}
+
+@app.get("/api/readiness")
+@app.get("/readiness")
+def readiness(db: Session = Depends(get_db)):
+    """Report database readiness without exposing connection details."""
+    try:
+        from sqlalchemy import text
+        db.execute(text("SELECT 1"))
+        return {"status": "ready", "database_status": "connected"}
+    except Exception:
+        db.rollback()
+        return {"status": "degraded", "database_status": "unavailable"}
 
 if __name__ == "__main__":
     import uvicorn
