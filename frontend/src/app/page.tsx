@@ -37,7 +37,12 @@ import {
   Share2,
   LogIn,
   HeartHandshake,
-  User
+  User,
+  Zap,
+  Smartphone,
+  Shield,
+  FileCheck2,
+  ArrowUpRight
 } from 'lucide-react';
 
 export default function HomePage() {
@@ -45,55 +50,66 @@ export default function HomePage() {
   const { setRole } = useApp();
   const [activeRoleTab, setActiveRoleTab] = useState<'owner' | 'teacher' | 'student' | 'parent'>('owner');
 
-  // ROI Calculator Interactive State (Directly calibrated to Case B Financial Model)
+  // Interactive ROI Calculator State (Calibrated directly to Case B Financial Model)
   const [roiStudents, setRoiStudents] = useState<number>(400);
   const [roiAnnualFee, setRoiAnnualFee] = useState<number>(60000);
-  const [roiRetentionEfficiency, setRoiRetentionEfficiency] = useState<number>(15); // 15% prevention efficiency
+  const [roiRetentionEfficiency, setRoiRetentionEfficiency] = useState<number>(15); // 15% churn prevented
 
   const baselineDropoutRate = 0.12; // 12% industry baseline
   const dropoutsWithoutPlatform = Math.round(roiStudents * baselineDropoutRate);
   const studentsSaved = Math.round(dropoutsWithoutPlatform * (roiRetentionEfficiency / 100));
   const lostFeePerDropout = (roiAnnualFee / 10) * 6; // 6 unpaid monthly installments
   const revenueProtected = studentsSaved * lostFeePerDropout;
-  const monthlyPlatformCost = roiStudents <= 150 ? 5999 : roiStudents <= 300 ? 9999 : 9999 + (roiStudents - 300) * 30;
+  const monthlyPlatformCost =
+    roiStudents <= 150 ? 5999 : roiStudents <= 300 ? 9999 : 9999 + (roiStudents - 300) * 30;
   const platformAnnualCost = monthlyPlatformCost * 10; // 10 active billing months
   const netProfitProtected = revenueProtected - platformAnnualCost;
-  const netRoiRatio = platformAnnualCost > 0 ? (revenueProtected / platformAnnualCost).toFixed(2) : '1.94';
+  const netRoiRatio =
+    platformAnnualCost > 0 ? (revenueProtected / platformAnnualCost).toFixed(2) : '1.94';
   const breakevenThreshold = (platformAnnualCost / lostFeePerDropout).toFixed(1);
 
-  const handleLaunchRole = (role: 'owner' | 'teacher' | 'student' | 'parent') => {
-    setRole(role);
-    router.push(`/demo/${role}`);
-  };
+  // Parent demo language toggle (Teachmint-inspired bilingual feature)
+  const [parentPreviewLang, setParentPreviewLang] = useState<'en' | 'hi'>('hi');
 
   return (
-    <div className="space-y-20 pb-20">
+    <div className="space-y-20 pb-20 font-sans selection:bg-teal-500 selection:text-white">
 
-      {/* 1. HERO SECTION */}
-      <section className="relative overflow-hidden rounded-3xl bg-[#0B1F3A] text-white p-6 sm:p-10 md:p-16 border border-blue-900/60 shadow-2xl">
+      {/* 1. TEACHMINT-INSPIRED HERO SECTION */}
+      <section className="relative overflow-hidden rounded-3xl bg-[#08172c] text-white p-6 sm:p-12 md:p-16 border border-blue-900/60 shadow-2xl">
+        {/* Subtle Ambient Radial Glows */}
+        <div className="absolute -top-24 -right-24 w-96 h-96 bg-teal-500/15 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />
+
         <div className="relative z-10 max-w-4xl space-y-6">
-          <div className="inline-flex items-center space-x-2 bg-teal-500/20 text-teal-300 border border-teal-500/30 px-3.5 py-1.5 rounded-full text-xs font-semibold shadow-inner">
+          {/* Badge Pill */}
+          <div className="inline-flex items-center space-x-2 bg-teal-500/15 text-teal-300 border border-teal-500/30 px-3.5 py-1.5 rounded-full text-xs font-semibold backdrop-blur-md shadow-inner">
             <Sparkles className="w-3.5 h-3.5 text-teal-400" />
-            <span>AI Intelligence Platform for JEE & NEET Institutes</span>
+            <span>The All-In-One AI Operating System for Coaching Institutes</span>
           </div>
 
+          {/* Headline */}
           <h1 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight leading-[1.12]">
-            Turn Coaching Data Into Better Student Outcomes.
+            Turn Fragmented Coaching Data Into{' '}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-300 via-teal-200 to-emerald-400">
+              Measurable Student Success.
+            </span>
           </h1>
 
+          {/* Subtitle */}
           <p className="text-base sm:text-lg md:text-xl text-slate-300 leading-relaxed max-w-3xl font-normal">
-            Bring test results, attendance, and academic records together to understand student mastery,
-            identify learners who need support, and guide the next best action.
+            Connect smartphone OMR tests, daily attendance, 2PL IRT topic mastery, early dropout prevention,
+            and automated parent digests in one enterprise-grade platform built for JEE & NEET excellence.
           </p>
 
-          {/* Primary Action Buttons: Sign In & Register */}
+          {/* Primary Action Buttons */}
           <div className="pt-3 flex flex-wrap gap-3 sm:gap-4 items-center">
             <Link
               href="/login"
-              className="inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-teal-500 text-white font-bold text-sm hover:bg-teal-600 transition shadow-lg shadow-teal-500/25"
+              className="inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-teal-500 text-white font-bold text-sm hover:bg-teal-400 transition shadow-lg shadow-teal-500/25 group"
             >
               <LogIn className="w-4 h-4 mr-2" />
               <span>Sign In to Portal</span>
+              <ArrowRight className="w-4 h-4 ml-1.5 group-hover:translate-x-0.5 transition" />
             </Link>
 
             <Link
@@ -101,7 +117,7 @@ export default function HomePage() {
               className="inline-flex items-center justify-center px-5 py-3.5 rounded-xl bg-white/10 text-white hover:bg-white/20 transition font-semibold text-sm border border-white/20"
             >
               <Building2 className="w-4 h-4 mr-2 text-teal-300" />
-              <span>Register Institute</span>
+              <span>Register Coaching Institute</span>
             </Link>
 
             <Link
@@ -111,775 +127,628 @@ export default function HomePage() {
               <Bot className="w-4 h-4 mr-2 text-teal-400" />
               <span>AI Teaching Copilot &rarr;</span>
             </Link>
-
-            <a
-              href="#portal-roles"
-              className="inline-flex items-center justify-center px-3 py-2 text-slate-300 hover:text-white text-xs font-medium transition"
-            >
-              <span>Direct Role Portals &darr;</span>
-            </a>
           </div>
 
-          {/* Micro trust indicators */}
-          <div className="pt-4 flex flex-wrap items-center gap-y-2 gap-x-6 text-xs text-slate-400 border-t border-blue-900/40">
-            <div className="flex items-center space-x-1.5">
-              <Check className="w-3.5 h-3.5 text-teal-400" />
-              <span>Pre-calibrated with 1,200 Benchmark Students</span>
+          {/* Teachmint-Style Key Metrics Counter Banner */}
+          <div className="pt-6 mt-6 border-t border-blue-900/60 grid grid-cols-2 sm:grid-cols-4 gap-4 text-left">
+            <div>
+              <div className="text-2xl sm:text-3xl font-black text-white font-mono">1,200+</div>
+              <div className="text-[11px] text-teal-300/80 font-medium mt-0.5">Benchmark Cohort Tested</div>
             </div>
-            <div className="flex items-center space-x-1.5">
-              <Check className="w-3.5 h-3.5 text-teal-400" />
-              <span>DPDP Act 2023 Sec 9 Child Privacy VPC</span>
+            <div>
+              <div className="text-2xl sm:text-3xl font-black text-white font-mono">4–6 Wks</div>
+              <div className="text-[11px] text-teal-300/80 font-medium mt-0.5">Early Dropout Notice</div>
             </div>
-            <div className="flex items-center space-x-1.5">
-              <Check className="w-3.5 h-3.5 text-teal-400" />
-              <span>Zero Model Retraining on Private Marks</span>
+            <div>
+              <div className="text-2xl sm:text-3xl font-black text-white font-mono">100%</div>
+              <div className="text-[11px] text-teal-300/80 font-medium mt-0.5">DPDP Act Sec 9 Compliant</div>
+            </div>
+            <div>
+              <div className="text-2xl sm:text-3xl font-black text-white font-mono">1.94x</div>
+              <div className="text-[11px] text-teal-300/80 font-medium mt-0.5">Direct Net Fee ROI</div>
             </div>
           </div>
         </div>
 
-        {/* Ambient Grid Accent */}
+        {/* Ambient Grid Background */}
         <div className="absolute right-0 top-0 bottom-0 w-1/2 opacity-15 bg-[radial-gradient(#14B8A6_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
       </section>
 
-      {/* 2. DEDICATED ROLE PORTAL ACCESS (STUDENTS, PARENTS, TEACHERS, OWNERS) */}
-      <section id="portal-roles" className="space-y-6">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div>
-            <div className="inline-flex items-center space-x-2 bg-teal-500/10 text-teal-700 border border-teal-500/20 px-3 py-1 rounded-full text-xs font-semibold mb-2">
-              <ShieldCheck className="w-3.5 h-3.5 text-teal-600" />
-              <span>Multi-Role Stakeholder Portals</span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900">
-              Sign In to Your Institute Portal
-            </h2>
-            <p className="text-sm text-slate-500 mt-1 max-w-2xl">
-              Each stakeholder accesses a dedicated, role-tailored view. Students and parents verify their enrolled coaching institute before entering.
-            </p>
+
+      {/* 2. TEACHMINT-STYLE "ONE CONNECTED PLATFORM, EVERY STAKEHOLDER" */}
+      <section id="stakeholder-ecosystem" className="space-y-8 scroll-mt-20">
+        <div className="text-center max-w-3xl mx-auto space-y-2">
+          <div className="inline-flex items-center space-x-2 bg-teal-50 text-teal-700 border border-teal-200 px-3 py-1 rounded-full text-xs font-semibold">
+            <Users className="w-3.5 h-3.5 text-teal-600" />
+            <span>Unified Stakeholder Experience</span>
           </div>
-          <div className="flex items-center space-x-3 text-xs">
-            <Link
-              href="/register"
-              className="text-teal-700 font-bold hover:underline flex items-center space-x-1"
+          <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+            One Intelligent Platform. Tailored for Every Role.
+          </h2>
+          <p className="text-sm text-slate-500 leading-relaxed">
+            Eliminate silos between coaching management, faculty, students, and parents. Each stakeholder accesses a dedicated, purpose-built workspace.
+          </p>
+        </div>
+
+        {/* Interactive Teachmint Role Switcher Tabs */}
+        <div className="max-w-3xl mx-auto">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 p-1.5 bg-slate-100 rounded-2xl border border-slate-200 text-xs font-bold">
+            <button
+              onClick={() => setActiveRoleTab('owner')}
+              className={`py-3 px-3 rounded-xl transition flex items-center justify-center space-x-2 ${
+                activeRoleTab === 'owner'
+                  ? 'bg-blue-900 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+              }`}
             >
-              <span>Coaching Director? Register New Institute</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <Building2 className="w-4 h-4" />
+              <span>Institute Owner</span>
+            </button>
+
+            <button
+              onClick={() => setActiveRoleTab('teacher')}
+              className={`py-3 px-3 rounded-xl transition flex items-center justify-center space-x-2 ${
+                activeRoleTab === 'teacher'
+                  ? 'bg-teal-700 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+              }`}
+            >
+              <Layers className="w-4 h-4" />
+              <span>Teacher / Faculty</span>
+            </button>
+
+            <button
+              onClick={() => setActiveRoleTab('student')}
+              className={`py-3 px-3 rounded-xl transition flex items-center justify-center space-x-2 ${
+                activeRoleTab === 'student'
+                  ? 'bg-emerald-600 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+              }`}
+            >
+              <GraduationCap className="w-4 h-4" />
+              <span>Student Growth</span>
+            </button>
+
+            <button
+              onClick={() => setActiveRoleTab('parent')}
+              className={`py-3 px-3 rounded-xl transition flex items-center justify-center space-x-2 ${
+                activeRoleTab === 'parent'
+                  ? 'bg-amber-600 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+              }`}
+            >
+              <HeartHandshake className="w-4 h-4" />
+              <span>Parent Digest</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Tab Content Cards (Teachmint-Style Side-by-Side Presentation) */}
+        <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-md">
+          {/* OWNER TAB */}
+          {activeRoleTab === 'owner' && (
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+              <div className="lg:col-span-7 space-y-5">
+                <span className="px-2.5 py-1 rounded bg-blue-100 text-blue-900 text-[11px] font-bold uppercase tracking-wider">
+                  For Institute Directors &amp; Decision Makers
+                </span>
+                <h3 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-snug">
+                  Protect Fee Revenue and Maintain Institutional Moat Across Batches
+                </h3>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  Gain executive visibility across all branches and batches. Track student retention probabilities 4–6 weeks before dropouts occur, monitor faculty intervention velocity, and govern DPDP Act child privacy compliance.
+                </p>
+
+                <div className="space-y-2.5 pt-1 text-xs text-slate-700">
+                  <div className="flex items-start space-x-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-blue-700 shrink-0 mt-0.5" />
+                    <span><strong>Executive Fee Protection Ledger:</strong> Quantify retained fees through proactive intervention triage.</span>
+                  </div>
+                  <div className="flex items-start space-x-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-blue-700 shrink-0 mt-0.5" />
+                    <span><strong>Multi-Batch Health Radar:</strong> Cross-batch milestone test slumps, attendance dropoffs, and faculty check-ins.</span>
+                  </div>
+                  <div className="flex items-start space-x-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-blue-700 shrink-0 mt-0.5" />
+                    <span><strong>DPDP Act 2023 Section 9 VPC:</strong> Cryptographically isolated multi-tenant records with verifiable guardian consent.</span>
+                  </div>
+                </div>
+
+                <div className="pt-3 flex flex-wrap gap-3 items-center">
+                  <Link
+                    href="/login?role=owner"
+                    className="px-5 py-2.5 rounded-xl bg-blue-900 hover:bg-blue-800 text-white text-xs font-bold transition inline-flex items-center shadow-sm"
+                  >
+                    <span>Sign In to Owner Portal</span>
+                    <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
+                  </Link>
+                  <Link
+                    href="/owner"
+                    className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold transition"
+                  >
+                    Explore Executive ROI Model &rarr;
+                  </Link>
+                </div>
+              </div>
+
+              {/* Owner Live Telemetry Preview Card */}
+              <div className="lg:col-span-5 bg-gradient-to-br from-slate-900 to-[#0B1F3A] text-white p-6 rounded-2xl border border-slate-800 shadow-xl space-y-4">
+                <div className="flex items-center justify-between pb-3 border-b border-slate-800 text-xs">
+                  <span className="font-bold uppercase tracking-wider text-teal-400">Executive Telemetry</span>
+                  <span className="text-[10px] bg-teal-950 text-teal-300 border border-teal-500/40 px-2 py-0.5 rounded font-mono">
+                    Live Isolated DB
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3 text-xs">
+                  <div className="p-3.5 rounded-xl bg-slate-800/80 border border-slate-700/50">
+                    <span className="text-slate-400 block text-[10px]">Fee Revenue Protected</span>
+                    <span className="text-xl font-black text-emerald-400 font-mono">₹28.50 L</span>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-slate-800/80 border border-slate-700/50">
+                    <span className="text-slate-400 block text-[10px]">Net Annual ROI</span>
+                    <span className="text-xl font-black text-teal-300 font-mono">18.3x</span>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-slate-800/80 border border-slate-700/50">
+                    <span className="text-slate-400 block text-[10px]">Active Enrolled Batches</span>
+                    <span className="text-lg font-bold text-white font-mono">4 Cohorts</span>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-slate-800/80 border border-slate-700/50">
+                    <span className="text-slate-400 block text-[10px]">Dropout Churn Rate</span>
+                    <span className="text-lg font-bold text-emerald-400 font-mono">12.8% &rarr; 5.7%</span>
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-xl bg-blue-950/60 border border-blue-800/50 text-[11px] text-blue-200">
+                  ⚡ <strong>Proactive Alert:</strong> 14 students flagged in Batch Achievers Top-30 for consecutive milestone test slumps.
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TEACHER TAB */}
+          {activeRoleTab === 'teacher' && (
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+              <div className="lg:col-span-7 space-y-5">
+                <span className="px-2.5 py-1 rounded bg-teal-100 text-teal-900 text-[11px] font-bold uppercase tracking-wider">
+                  For Faculty Leads &amp; Academic Heads
+                </span>
+                <h3 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-snug">
+                  Pinpoint Concept Misconceptions Before the Next Lecture
+                </h3>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  Move beyond deceptive overall scores. Our 2PL Item Response Theory (IRT) and Bayesian Knowledge Tracing (BKT) isolate question difficulty from student latent ability ($\theta$), showing precisely which sub-topic failed.
+                </p>
+
+                <div className="space-y-2.5 pt-1 text-xs text-slate-700">
+                  <div className="flex items-start space-x-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-teal-600 shrink-0 mt-0.5" />
+                    <span><strong>Topic Mastery Matrix:</strong> Micro-topic heatmaps covering JEE Physics, Chemistry, and Mathematics.</span>
+                  </div>
+                  <div className="flex items-start space-x-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-teal-600 shrink-0 mt-0.5" />
+                    <span><strong>1-Click AI Remedial Generator:</strong> Instantly create 15-minute 3-tier worksheets with voice explanations.</span>
+                  </div>
+                  <div className="flex items-start space-x-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-teal-600 shrink-0 mt-0.5" />
+                    <span><strong>Mobile OMR Camera Ingestion:</strong> Scan bubble sheets via smartphone camera with automated question tagging.</span>
+                  </div>
+                </div>
+
+                <div className="pt-3 flex flex-wrap gap-3 items-center">
+                  <Link
+                    href="/login?role=teacher"
+                    className="px-5 py-2.5 rounded-xl bg-teal-700 hover:bg-teal-600 text-white text-xs font-bold transition inline-flex items-center shadow-sm"
+                  >
+                    <span>Sign In to Teacher Portal</span>
+                    <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
+                  </Link>
+                  <Link
+                    href="/mastery"
+                    className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold transition"
+                  >
+                    View Mastery Matrix &rarr;
+                  </Link>
+                </div>
+              </div>
+
+              {/* Teacher Preview Mockup */}
+              <div className="lg:col-span-5 bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-4">
+                <div className="flex items-center justify-between pb-2 border-b border-slate-200 text-xs">
+                  <span className="font-bold text-slate-700 uppercase tracking-wider">AI Remedial Triage</span>
+                  <span className="text-[10px] bg-teal-100 text-teal-800 font-bold px-2 py-0.5 rounded">
+                    BKT Active
+                  </span>
+                </div>
+
+                <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-2xs space-y-2.5 text-xs">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h4 className="font-bold text-slate-900">Rotational Dynamics Remedial</h4>
+                      <p className="text-[11px] text-slate-500">Targeting: Moment of Inertia on Incline Planes</p>
+                    </div>
+                    <span className="text-[10px] font-mono font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded">
+                      42% Mastery
+                    </span>
+                  </div>
+
+                  <div className="p-2.5 bg-slate-50 rounded-lg text-[11px] font-mono text-slate-700 border border-slate-100">
+                    Q1: A solid cylinder rolls down an inclined plane of 30° without slipping. Calculate angular acceleration...
+                  </div>
+
+                  <div className="pt-1 flex items-center justify-between text-[11px] text-teal-700 font-semibold">
+                    <span>Generated in 1.4s • Ready to Print / Send</span>
+                    <CheckCircle2 className="w-4 h-4 text-teal-600" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* STUDENT TAB */}
+          {activeRoleTab === 'student' && (
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+              <div className="lg:col-span-7 space-y-5">
+                <span className="px-2.5 py-1 rounded bg-emerald-100 text-emerald-900 text-[11px] font-bold uppercase tracking-wider">
+                  For JEE &amp; NEET Aspirants
+                </span>
+                <h3 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-snug">
+                  Personalized Growth Trajectories with Zero Public Shaming
+                </h3>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  Students see their strengths celebrated alongside actionable recovery recommendations. No anxiety-inducing public rank boards or demoralizing labels — only calibrated percentile ranges and targeted practice drills.
+                </p>
+
+                <div className="space-y-2.5 pt-1 text-xs text-slate-700">
+                  <div className="flex items-start space-x-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                    <span><strong>Concept Mastery Map:</strong> Visual breakdown of strong anchor concepts vs focus drill areas.</span>
+                  </div>
+                  <div className="flex items-start space-x-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                    <span><strong>Conformal Prediction Ranges:</strong> Scientifically proven percentile bands $[P_{10}, P_{90}]$ showing real trajectory.</span>
+                  </div>
+                  <div className="flex items-start space-x-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                    <span><strong>AI Doubt Tutor:</strong> Ask questions anytime in natural voice or text for step-by-step problem breakdown.</span>
+                  </div>
+                </div>
+
+                <div className="pt-3 flex flex-wrap gap-3 items-center">
+                  <Link
+                    href="/login?role=student"
+                    className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition inline-flex items-center shadow-sm"
+                  >
+                    <span>Sign In to Student Portal</span>
+                    <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
+                  </Link>
+                  <Link
+                    href="/student"
+                    className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold transition"
+                  >
+                    Explore Student View &rarr;
+                  </Link>
+                </div>
+              </div>
+
+              {/* Student Growth Card Mockup */}
+              <div className="lg:col-span-5 bg-gradient-to-br from-emerald-950 to-slate-900 text-white p-6 rounded-2xl border border-emerald-800 shadow-xl space-y-4">
+                <div className="flex items-center justify-between pb-2 border-b border-emerald-800 text-xs">
+                  <span className="font-bold uppercase tracking-wider text-emerald-300">My Learning Health</span>
+                  <span className="text-[10px] bg-emerald-900/80 text-emerald-200 border border-emerald-500/40 px-2 py-0.5 rounded font-mono">
+                    STD_PAT_001
+                  </span>
+                </div>
+
+                <div className="space-y-3 text-xs">
+                  <div className="p-3 rounded-xl bg-emerald-900/40 border border-emerald-700/50">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-slate-300">Kinematics &amp; Vectors</span>
+                      <span className="text-emerald-400 font-bold font-mono">91% (Solid Anchor)</span>
+                    </div>
+                    <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                      <div className="bg-emerald-400 h-full rounded-full" style={{ width: '91%' }} />
+                    </div>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-amber-950/40 border border-amber-700/50">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-slate-300">Rotational Dynamics</span>
+                      <span className="text-amber-400 font-bold font-mono">44% (Focus Drill)</span>
+                    </div>
+                    <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                      <div className="bg-amber-400 h-full rounded-full" style={{ width: '44%' }} />
+                    </div>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-slate-800/60 text-[11px] text-teal-200">
+                    💡 <em>&quot;Your problem-solving speed has improved 18% over the last 2 milestone tests.&quot;</em>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* PARENT TAB */}
+          {activeRoleTab === 'parent' && (
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+              <div className="lg:col-span-7 space-y-5">
+                <span className="px-2.5 py-1 rounded bg-amber-100 text-amber-900 text-[11px] font-bold uppercase tracking-wider">
+                  For Parents &amp; Guardians
+                </span>
+                <h3 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-snug">
+                  Transparent Weekly Progress Digests in English &amp; Hindi
+                </h3>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  Parents receive deterministic, supportive progress summaries in English and Hindi (हिन्दी) formatted for WhatsApp. Gain complete transparency into attendance, concept milestones, and constructive at-home tips without hostile blame.
+                </p>
+
+                <div className="space-y-2.5 pt-1 text-xs text-slate-700">
+                  <div className="flex items-start space-x-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                    <span><strong>1-Click Language Switch:</strong> Seamless bilingual rendering between English and Hindi (हिन्दी).</span>
+                  </div>
+                  <div className="flex items-start space-x-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                    <span><strong>Verified Attendance &amp; Effort:</strong> Direct attendance percentages synced with biometric/app registers.</span>
+                  </div>
+                  <div className="flex items-start space-x-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                    <span><strong>WhatsApp One-Click Sharing:</strong> Instant dispatch directly to parent mobile numbers.</span>
+                  </div>
+                </div>
+
+                <div className="pt-3 flex flex-wrap gap-3 items-center">
+                  <Link
+                    href="/login?role=parent"
+                    className="px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold transition inline-flex items-center shadow-sm"
+                  >
+                    <span>Sign In to Parent Portal</span>
+                    <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
+                  </Link>
+                  <Link
+                    href="/reports"
+                    className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold transition"
+                  >
+                    View Sample Bilingual Digests &rarr;
+                  </Link>
+                </div>
+              </div>
+
+              {/* Parent WhatsApp Preview Mockup */}
+              <div className="lg:col-span-5 bg-slate-900 text-white p-6 rounded-2xl border border-slate-800 space-y-4">
+                <div className="flex items-center justify-between pb-2 border-b border-slate-800 text-xs">
+                  <span className="font-bold text-amber-400 uppercase tracking-wider">WhatsApp Delivery Preview</span>
+                  {/* Language Toggle Pill */}
+                  <div className="inline-flex items-center p-0.5 bg-slate-800 rounded-lg text-[10px] font-bold">
+                    <button
+                      onClick={() => setParentPreviewLang('en')}
+                      className={`px-2 py-0.5 rounded transition ${parentPreviewLang === 'en' ? 'bg-amber-500 text-slate-950 font-black' : 'text-slate-400'}`}
+                    >
+                      English
+                    </button>
+                    <button
+                      onClick={() => setParentPreviewLang('hi')}
+                      className={`px-2 py-0.5 rounded transition ${parentPreviewLang === 'hi' ? 'bg-amber-500 text-slate-950 font-black' : 'text-slate-400'}`}
+                    >
+                      हिन्दी
+                    </button>
+                  </div>
+                </div>
+
+                {parentPreviewLang === 'hi' ? (
+                  <div className="p-4 bg-emerald-950/80 rounded-xl text-xs space-y-2 border border-emerald-800 text-emerald-100 leading-relaxed font-sans">
+                    <p className="font-bold text-white text-sm">अपेक्स अकादमी, पटना — साप्ताहिक प्रगति रिपोर्ट</p>
+                    <p>प्रिय अभिभावक, आरव शर्मा की इस सप्ताह <strong>96% उपस्थिति</strong> रही।</p>
+                    <p className="text-emerald-300">✓ मजबूत विषय: गतिज विज्ञान (Kinematics &amp; Vectors)</p>
+                    <p className="text-amber-300">⚡ अभ्यास की आवश्यकता: घूर्णन गति (Rotational Dynamics)</p>
+                    <p className="text-[11px] text-slate-300 pt-1 border-t border-emerald-800/80">
+                      शिक्षक टिप्पणी: छात्र की लगन उत्कृष्ट है। घूर्णन गति पर 15 मिनट का अभ्यास पत्रक पूरा कराया गया है।
+                    </p>
+                  </div>
+                ) : (
+                  <div className="p-4 bg-emerald-950/80 rounded-xl text-xs space-y-2 border border-emerald-800 text-emerald-100 leading-relaxed font-sans">
+                    <p className="font-bold text-white text-sm">Apex Academy, Patna — Weekly Progress Digest</p>
+                    <p>Dear Guardian, Aarav Sharma maintained <strong>96% attendance</strong> this week.</p>
+                    <p className="text-emerald-300">✓ Strong Mastery: Kinematics &amp; Vectors (91%)</p>
+                    <p className="text-amber-300">⚡ Focus Practice: Rotational Dynamics (44%)</p>
+                    <p className="text-[11px] text-slate-300 pt-1 border-t border-emerald-800/80">
+                      Faculty Note: Excellent consistency in problem sets. Targeted 15-minute worksheet completed.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
+
+      {/* 3. SIX PILLARS OF INTELLIPRIVART (TEACHMINT CONNECTED SUITE CARDS) */}
+      <section id="capabilities" className="space-y-8 scroll-mt-20">
+        <div className="text-center max-w-3xl mx-auto space-y-2">
+          <span className="text-xs font-bold uppercase tracking-wider text-teal-600 block">
+            Integrated Academic Infrastructure
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+            Engineered for Competitive Coaching Rigor
+          </h2>
+          <p className="text-sm text-slate-500 leading-relaxed">
+            From smartphone camera OMR grading to psychometric latent ability estimation, Intelliprivart replaces fragmented tools with modern educational intelligence.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Card 1: EduAI Copilot */}
+          <div className="p-6 rounded-3xl bg-white border border-slate-200 hover:border-teal-500 hover:shadow-md transition space-y-3.5 group">
+            <div className="w-11 h-11 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center group-hover:scale-105 transition">
+              <Bot className="w-6 h-6" />
+            </div>
+            <h3 className="text-base font-bold text-slate-900">
+              AI Teaching Copilot &amp; Doubt Tutor
+            </h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Equip faculty with automated test paper generation, question tagging, and step-by-step doubt resolution in English &amp; Hindi with full mathematical formatting.
+            </p>
+            <Link href="/ai-assistant" className="text-xs font-bold text-teal-600 group-hover:text-teal-700 inline-flex items-center pt-1">
+              <span>Try AI Copilot</span> &rarr;
             </Link>
           </div>
-        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Student Portal Card */}
-          <div className="p-5 rounded-2xl bg-white border border-slate-200 hover:border-emerald-500 hover:shadow-md transition flex flex-col justify-between group">
-            <div className="space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
-                <GraduationCap className="w-5 h-5" />
-              </div>
-              <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-600 block">
-                  Student Portal
-                </span>
-                <h3 className="text-base font-bold text-slate-900 mt-0.5">
-                  Growth & Practice
-                </h3>
-              </div>
-              <p className="text-xs text-slate-500 leading-relaxed">
-                Personalized topic mastery trajectories, zero-shaming percentile predictions, and AI doubt practice.
-              </p>
-              <div className="pt-2 text-[11px] text-slate-400 space-y-1">
-                <div className="flex items-center space-x-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-                  <span>Enrolled Institute Verification</span>
-                </div>
-                <div className="flex items-center space-x-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-                  <span>Student ID / Roll Code Sign In</span>
-                </div>
-              </div>
+          {/* Card 2: Camera OMR & Ingestion */}
+          <div className="p-6 rounded-3xl bg-white border border-slate-200 hover:border-teal-500 hover:shadow-md transition space-y-3.5 group">
+            <div className="w-11 h-11 rounded-2xl bg-blue-50 text-blue-700 flex items-center justify-center group-hover:scale-105 transition">
+              <Smartphone className="w-6 h-6" />
             </div>
-            <div className="pt-5 mt-4 border-t border-slate-100">
-              <Link
-                href="/login?role=student"
-                className="w-full py-2.5 px-3 rounded-xl bg-emerald-50 hover:bg-emerald-600 hover:text-white text-emerald-700 font-bold text-xs transition flex items-center justify-center space-x-1.5"
-              >
-                <span>Student Sign In</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-            </div>
-          </div>
-
-          {/* Parent Portal Card */}
-          <div className="p-5 rounded-2xl bg-white border border-slate-200 hover:border-amber-500 hover:shadow-md transition flex flex-col justify-between group">
-            <div className="space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
-                <HeartHandshake className="w-5 h-5" />
-              </div>
-              <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-amber-600 block">
-                  Parent / Guardian Portal
-                </span>
-                <h3 className="text-base font-bold text-slate-900 mt-0.5">
-                  Bilingual Digest
-                </h3>
-              </div>
-              <p className="text-xs text-slate-500 leading-relaxed">
-                Weekly progress updates in English & Hindi, attendance records, and constructive guidance without anxiety.
-              </p>
-              <div className="pt-2 text-[11px] text-slate-400 space-y-1">
-                <div className="flex items-center space-x-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-                  <span>Institute Affiliation Check</span>
-                </div>
-                <div className="flex items-center space-x-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-                  <span>Ward Student ID Verification</span>
-                </div>
-              </div>
-            </div>
-            <div className="pt-5 mt-4 border-t border-slate-100">
-              <Link
-                href="/login?role=parent"
-                className="w-full py-2.5 px-3 rounded-xl bg-amber-50 hover:bg-amber-600 hover:text-white text-amber-700 font-bold text-xs transition flex items-center justify-center space-x-1.5"
-              >
-                <span>Parent Sign In</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-            </div>
-          </div>
-
-          {/* Teacher Portal Card */}
-          <div className="p-5 rounded-2xl bg-white border border-slate-200 hover:border-teal-500 hover:shadow-md transition flex flex-col justify-between group">
-            <div className="space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center">
-                <Layers className="w-5 h-5" />
-              </div>
-              <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-teal-600 block">
-                  Teacher & Faculty
-                </span>
-                <h3 className="text-base font-bold text-slate-900 mt-0.5">
-                  Academic Head Workspace
-                </h3>
-              </div>
-              <p className="text-xs text-slate-500 leading-relaxed">
-                Topic mastery heatmaps, automated OMR upload, remedial worksheet generation, and AI Teaching Copilot.
-              </p>
-              <div className="pt-2 text-[11px] text-slate-400 space-y-1">
-                <div className="flex items-center space-x-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-teal-500 shrink-0" />
-                  <span>Faculty Email & Course Focus</span>
-                </div>
-                <div className="flex items-center space-x-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-teal-500 shrink-0" />
-                  <span>Batch-Level Remedial Triage</span>
-                </div>
-              </div>
-            </div>
-            <div className="pt-5 mt-4 border-t border-slate-100">
-              <Link
-                href="/login?role=teacher"
-                className="w-full py-2.5 px-3 rounded-xl bg-teal-50 hover:bg-teal-600 hover:text-white text-teal-700 font-bold text-xs transition flex items-center justify-center space-x-1.5"
-              >
-                <span>Teacher Sign In</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-            </div>
-          </div>
-
-          {/* Owner Portal Card */}
-          <div className="p-5 rounded-2xl bg-white border border-slate-200 hover:border-blue-700 hover:shadow-md transition flex flex-col justify-between group">
-            <div className="space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center">
-                <Building2 className="w-5 h-5" />
-              </div>
-              <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-blue-700 block">
-                  Institute Owner
-                </span>
-                <h3 className="text-base font-bold text-slate-900 mt-0.5">
-                  Executive ROI Dashboard
-                </h3>
-              </div>
-              <p className="text-xs text-slate-500 leading-relaxed">
-                Multi-batch financial forecasts, fee drop-out prevention, executive analytics, and DPDP Act compliance.
-              </p>
-              <div className="pt-2 text-[11px] text-slate-400 space-y-1">
-                <div className="flex items-center space-x-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-blue-600 shrink-0" />
-                  <span>Director & Admin Authorization</span>
-                </div>
-                <div className="flex items-center space-x-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-blue-600 shrink-0" />
-                  <span>Full Tenant Data Moat Control</span>
-                </div>
-              </div>
-            </div>
-            <div className="pt-5 mt-4 border-t border-slate-100">
-              <Link
-                href="/login?role=owner"
-                className="w-full py-2.5 px-3 rounded-xl bg-blue-50 hover:bg-blue-700 hover:text-white text-blue-800 font-bold text-xs transition flex items-center justify-center space-x-1.5"
-              >
-                <span>Owner Sign In</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 3. THE FRAGMENTED DATA PROBLEM */}
-      <section className="space-y-8">
-        <div className="max-w-2xl">
-          <span className="text-xs font-bold uppercase tracking-wider text-teal-600 block">
-            The Coaching Reality
-          </span>
-          <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
-            Why Institutes Lose Students and Fall Behind
-          </h2>
-          <p className="text-sm text-slate-500 mt-2 leading-relaxed">
-            Coaching institutes generate massive volumes of academic data daily, but fragmented tools leave directors and teachers flying blind until after results are published.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2.5 hover:border-teal-500/50 transition">
-            <div className="w-9 h-9 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center font-bold">
-              <FileSpreadsheet className="w-5 h-5" />
-            </div>
-            <h3 className="font-bold text-slate-900 text-sm">Paper Records & OMR Overhead</h3>
+            <h3 className="text-base font-bold text-slate-900">
+              Camera OMR &amp; Automated Ingestion
+            </h3>
             <p className="text-xs text-slate-500 leading-relaxed">
-              Bubble OMR sheets and paper registers take days to grade manually, distort easily, and are frequently misplaced between branch offices.
+              Scan bubble sheets via standard mobile camera with OpenCV corner-warp rectification. Question responses are automatically mapped to JEE &amp; NEET syllabi in seconds.
             </p>
+            <Link href="/upload" className="text-xs font-bold text-blue-700 group-hover:text-blue-800 inline-flex items-center pt-1">
+              <span>Inspect Ingestion Engine</span> &rarr;
+            </Link>
           </div>
 
-          <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2.5 hover:border-teal-500/50 transition">
-            <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
-              <Database className="w-5 h-5" />
+          {/* Card 3: 2PL IRT Mastery */}
+          <div className="p-6 rounded-3xl bg-white border border-slate-200 hover:border-teal-500 hover:shadow-md transition space-y-3.5 group">
+            <div className="w-11 h-11 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:scale-105 transition">
+              <Brain className="w-6 h-6" />
             </div>
-            <h3 className="font-bold text-slate-900 text-sm">Scattered Spreadsheets</h3>
+            <h3 className="text-base font-bold text-slate-900">
+              2PL IRT &amp; BKT Mastery Engine
+            </h3>
             <p className="text-xs text-slate-500 leading-relaxed">
-              Test scores live on faculty laptops, attendance in physical registers, fee payments in accounts, and parent communication in WhatsApp groups.
+              Bayesian Knowledge Tracing separates question difficulty from true student latent ability ($\theta$), catching concept slumps 4–6 weeks before test results are declared.
             </p>
-          </div>
-
-          <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2.5 hover:border-teal-500/50 transition">
-            <div className="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
-              <Clock className="w-5 h-5" />
-            </div>
-            <h3 className="font-bold text-slate-900 text-sm">Delayed Analysis</h3>
-            <p className="text-xs text-slate-500 leading-relaxed">
-              Disengagement and score drops are noticed 4–6 weeks after a test occurs — when the student has already fallen behind in foundational concepts.
-            </p>
-          </div>
-
-          <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2.5 hover:border-teal-500/50 transition">
-            <div className="w-9 h-9 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center font-bold">
-              <Users className="w-5 h-5" />
-            </div>
-            <h3 className="font-bold text-slate-900 text-sm">Limited Individual Visibility</h3>
-            <p className="text-xs text-slate-500 leading-relaxed">
-              Raw percentage totals mask concept misconceptions: a 75% score never clarifies whether a student guessed on Rotational Dynamics or genuinely mastered it.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* 4. SIX CORE CAPABILITIES */}
-      <section id="capabilities" className="bg-slate-50/80 rounded-3xl p-6 sm:p-10 border border-slate-200 space-y-8 scroll-mt-20">
-        <div className="max-w-2xl">
-          <span className="text-xs font-bold uppercase tracking-wider text-teal-600 block">
-            Engineered For Competitive Test-Prep
-          </span>
-          <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
-            Complete Intelligence Across the Academic Lifecycle
-          </h2>
-          <p className="text-sm text-slate-500 mt-2 leading-relaxed">
-            Intelliprivart provides specialized psychometrics, predictive modeling, and automated workflows designed specifically for JEE & NEET coaching ecosystems.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {/* 1. Topic Mastery */}
-          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-3">
-            <div className="w-10 h-10 rounded-xl bg-teal-100 text-teal-800 flex items-center justify-center font-bold">
-              <Brain className="w-5 h-5" />
-            </div>
-            <h3 className="font-bold text-slate-900 text-base">Topic Mastery Analytics</h3>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Bayesian Knowledge Tracing (BKT) and 2-Parameter Logistic Item Response Theory (2PL IRT) isolate student latent ability ($\theta$) from item difficulty, replacing misleading raw percentages.
-            </p>
-            <Link href="/mastery" className="text-xs font-bold text-teal-600 hover:text-teal-700 inline-flex items-center pt-1">
+            <Link href="/mastery" className="text-xs font-bold text-emerald-600 group-hover:text-emerald-700 inline-flex items-center pt-1">
               <span>Explore Mastery Matrix</span> &rarr;
             </Link>
           </div>
 
-          {/* 2. Early Warning */}
-          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-3">
-            <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-bold">
-              <AlertTriangle className="w-5 h-5" />
+          {/* Card 4: Conformal Prediction */}
+          <div className="p-6 rounded-3xl bg-white border border-slate-200 hover:border-teal-500 hover:shadow-md transition space-y-3.5 group">
+            <div className="w-11 h-11 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:scale-105 transition">
+              <TrendingUp className="w-6 h-6" />
             </div>
-            <h3 className="font-bold text-slate-900 text-base">Early-Warning Insights</h3>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Identifies disengagement 4–6 weeks early using strict Months 1–3 non-leaking features: consecutive test slumps, attendance dropoffs, and fee lags.
+            <h3 className="text-base font-bold text-slate-900">
+              Conformal Percentile Ranges
+            </h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Deliver finite-sample Split-Conformal intervals $[P_{10}, P_{90}]$ with mathematically proven statistical guarantees, explaining uncertainty instead of giving false exact ranks.
             </p>
-            <Link href="/risk" className="text-xs font-bold text-teal-600 hover:text-teal-700 inline-flex items-center pt-1">
-              <span>Inspect Risk Queue</span> &rarr;
+            <Link href="/predict" className="text-xs font-bold text-indigo-600 group-hover:text-indigo-700 inline-flex items-center pt-1">
+              <span>View Predictions</span> &rarr;
             </Link>
           </div>
 
-          {/* 3. Conformal Ranges */}
-          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-3">
-            <div className="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-800 flex items-center justify-center font-bold">
-              <TrendingUp className="w-5 h-5" />
+          {/* Card 5: Remedial Worksheets */}
+          <div className="p-6 rounded-3xl bg-white border border-slate-200 hover:border-teal-500 hover:shadow-md transition space-y-3.5 group">
+            <div className="w-11 h-11 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center group-hover:scale-105 transition">
+              <CheckCircle2 className="w-6 h-6" />
             </div>
-            <h3 className="font-bold text-slate-900 text-base">Exam Performance Ranges</h3>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Provides finite-sample Split-Conformal percentile intervals $[P_{10}, P_{90}]$ with mathematically proven coverage guarantees, explicitly explaining prediction uncertainty.
+            <h3 className="text-base font-bold text-slate-900">
+              Closed-Loop Remedial Triage
+            </h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Instantly generate 15-minute 3-tier remedial practice sheets tailored to specific concept mistakes, and log faculty mentor check-ins with closed-loop recovery tracking.
             </p>
-            <Link href="/predict" className="text-xs font-bold text-teal-600 hover:text-teal-700 inline-flex items-center pt-1">
-              <span>View Forecasts</span> &rarr;
+            <Link href="/interventions" className="text-xs font-bold text-amber-600 group-hover:text-amber-700 inline-flex items-center pt-1">
+              <span>View Interventions</span> &rarr;
             </Link>
           </div>
 
-          {/* 4. Personalized Interventions */}
-          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-3">
-            <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold">
-              <CheckCircle2 className="w-5 h-5" />
+          {/* Card 6: DPDP Privacy VPC */}
+          <div className="p-6 rounded-3xl bg-white border border-slate-200 hover:border-teal-500 hover:shadow-md transition space-y-3.5 group">
+            <div className="w-11 h-11 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center group-hover:scale-105 transition">
+              <Lock className="w-6 h-6" />
             </div>
-            <h3 className="font-bold text-slate-900 text-base">Personalized Interventions</h3>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Instantly generates 15-minute 3-tier remedial worksheets tailored to specific concept mistakes, and logs faculty mentor check-ins with closed-loop recovery tracking.
+            <h3 className="text-base font-bold text-slate-900">
+              DPDP Act 2023 Section 9 VPC
+            </h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Complete multi-tenant isolation, verifiable guardian consent registers, and zero AI retraining on student marks. Full compliance with Indian child data privacy mandates.
             </p>
-            <Link href="/interventions" className="text-xs font-bold text-teal-600 hover:text-teal-700 inline-flex items-center pt-1">
-              <span>Track Interventions</span> &rarr;
-            </Link>
-          </div>
-
-          {/* 5. Bilingual Reports */}
-          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-3">
-            <div className="w-10 h-10 rounded-xl bg-rose-100 text-rose-800 flex items-center justify-center font-bold">
-              <GraduationCap className="w-5 h-5" />
-            </div>
-            <h3 className="font-bold text-slate-900 text-base">Bilingual Parent Reports</h3>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Generates deterministic weekly progress digests in English and Hindi (हिन्दी) formatted for WhatsApp, building transparent family trust without hallucinated claims.
-            </p>
-            <Link href="/reports" className="text-xs font-bold text-teal-600 hover:text-teal-700 inline-flex items-center pt-1">
-              <span>Preview Parent Reports</span> &rarr;
-            </Link>
-          </div>
-
-          {/* 6. Batch-Level Intelligence */}
-          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-3">
-            <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center font-bold">
-              <Building2 className="w-5 h-5" />
-            </div>
-            <h3 className="font-bold text-slate-900 text-base">Batch-Level Intelligence</h3>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Equips directors with cross-batch health comparisons, faculty teaching loads, fee retention metrics, and ROI protection tracking across centres.
-            </p>
-            <Link href="/owner" className="text-xs font-bold text-teal-600 hover:text-teal-700 inline-flex items-center pt-1">
-              <span>View Executive Model</span> &rarr;
+            <Link href="/privacy" className="text-xs font-bold text-rose-600 group-hover:text-rose-700 inline-flex items-center pt-1">
+              <span>DPDP Compliance Register</span> &rarr;
             </Link>
           </div>
         </div>
       </section>
 
-      {/* 5. WHAT A COMPLETE SOLUTION LOOKS LIKE (6-STEP REFERENCE SKELETON FROM CASE B) */}
-      <section id="workflow" className="space-y-8 scroll-mt-20">
-        <div className="max-w-3xl">
+
+      {/* 4. TEACHMINT-STYLE COMPARISON MATRIX: "WHY INSTITUTES CHOOSE US OVER TRADITIONAL ERPS" */}
+      <section className="bg-slate-50 rounded-3xl p-6 sm:p-10 border border-slate-200 space-y-6">
+        <div className="max-w-2xl">
           <span className="text-xs font-bold uppercase tracking-wider text-teal-600 block">
-            Case Competition Section 05 Reference Skeleton
+            The Competitive Difference
           </span>
           <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
-            End-to-End Operational Pipeline: Capture &rarr; Prove ROI
+            Why Modern Institutes Choose Intelliprivart over Legacy ERPs
           </h2>
-          <p className="text-sm text-slate-500 mt-2 leading-relaxed">
-            The full 6-stage flow expected by IIT Patna judges connecting raw paper OMR and Excel records to predictive modeling, supportive action, and verifiable financial ROI.
+          <p className="text-sm text-slate-500 mt-1">
+            Traditional coaching software tracks fees and records after the fact. Intelliprivart provides active, predictive pedagogical intelligence.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-3">
-          {/* Step 1 */}
-          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2">
-            <div className="text-xs font-black font-mono text-teal-600 bg-teal-50 w-7 h-7 rounded-lg flex items-center justify-center border border-teal-200">
-              01
-            </div>
-            <h3 className="font-bold text-slate-900 text-sm">1. CAPTURE</h3>
-            <p className="text-xs text-slate-500 leading-relaxed">
-              Phone-camera OMR (OpenCV), Excel/CSV rosters, Google Forms, and offline queue sync.
-            </p>
-            <Link href="/upload" className="text-[11px] font-bold text-teal-600 hover:text-teal-700 block pt-1">
-              Test Ingestion &rarr;
-            </Link>
-          </div>
-
-          {/* Step 2 */}
-          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2">
-            <div className="text-xs font-black font-mono text-blue-600 bg-blue-50 w-7 h-7 rounded-lg flex items-center justify-center border border-blue-200">
-              02
-            </div>
-            <h3 className="font-bold text-slate-900 text-sm">2. STRUCTURE</h3>
-            <p className="text-xs text-slate-500 leading-relaxed">
-              Tag questions to JEE/NEET topics via SLM, quarantine glitches in Human Review Queue.
-            </p>
-            <Link href="/review-queue" className="text-[11px] font-bold text-blue-600 hover:text-blue-700 block pt-1">
-              Review Queue &rarr;
-            </Link>
-          </div>
-
-          {/* Step 3 */}
-          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2">
-            <div className="text-xs font-black font-mono text-indigo-600 bg-indigo-50 w-7 h-7 rounded-lg flex items-center justify-center border border-indigo-200">
-              03
-            </div>
-            <h3 className="font-bold text-slate-900 text-sm">3. MODEL</h3>
-            <p className="text-xs text-slate-500 leading-relaxed">
-              2PL IRT difficulty, BKT topic mastery, LOIO-CV dropout risk, and Conformal rank intervals.
-            </p>
-            <Link href="/model-report" className="text-[11px] font-bold text-indigo-600 hover:text-indigo-700 block pt-1">
-              ML Rigour Suite &rarr;
-            </Link>
-          </div>
-
-          {/* Step 4 */}
-          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2">
-            <div className="text-xs font-black font-mono text-amber-600 bg-amber-50 w-7 h-7 rounded-lg flex items-center justify-center border border-amber-200">
-              04
-            </div>
-            <h3 className="font-bold text-slate-900 text-sm">4. ACT</h3>
-            <p className="text-xs text-slate-500 leading-relaxed">
-              Early-warning mentor alerts, targeted remedial batches, and AI personalized study plans.
-            </p>
-            <Link href="/interventions" className="text-[11px] font-bold text-amber-600 hover:text-amber-700 block pt-1">
-              Interventions &rarr;
-            </Link>
-          </div>
-
-          {/* Step 5 */}
-          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2">
-            <div className="text-xs font-black font-mono text-rose-600 bg-rose-50 w-7 h-7 rounded-lg flex items-center justify-center border border-rose-200">
-              05
-            </div>
-            <h3 className="font-bold text-slate-900 text-sm">5. SHARE</h3>
-            <p className="text-xs text-slate-500 leading-relaxed">
-              Role-specific views for teacher, student (zero-shaming), and bilingual WhatsApp parent digests.
-            </p>
-            <Link href="/demo" className="text-[11px] font-bold text-rose-600 hover:text-rose-700 block pt-1">
-              4-Role Demo &rarr;
-            </Link>
-          </div>
-
-          {/* Step 6 */}
-          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2">
-            <div className="text-xs font-black font-mono text-emerald-600 bg-emerald-50 w-7 h-7 rounded-lg flex items-center justify-center border border-emerald-200">
-              06
-            </div>
-            <h3 className="font-bold text-slate-900 text-sm">6. PROVE ROI</h3>
-            <p className="text-xs text-slate-500 leading-relaxed">
-              Fee leakage prevention, 1.94x net ROI multiple, and auditable financial payback dashboard.
-            </p>
-            <Link href="/owner" className="text-[11px] font-bold text-emerald-600 hover:text-emerald-700 block pt-1">
-              Revenue Model &rarr;
-            </Link>
-          </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-2xs">
+            <thead>
+              <tr className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                <th className="p-4">Operational Capability</th>
+                <th className="p-4 text-slate-500">Traditional ERP &amp; Excel Sheets</th>
+                <th className="p-4 text-teal-700 bg-teal-50/80 font-black">Intelliprivart Connected Platform</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              <tr>
+                <td className="p-4 font-semibold text-slate-900">OMR Test Evaluation</td>
+                <td className="p-4 text-slate-500">3–5 days manual processing via desktop scanner hardware</td>
+                <td className="p-4 font-bold text-teal-800 bg-teal-50/40">10-second smartphone camera scan with automated error quarantine</td>
+              </tr>
+              <tr>
+                <td className="p-4 font-semibold text-slate-900">Dropout &amp; Churn Notice</td>
+                <td className="p-4 text-slate-500">Discovered after student stops attending &amp; monthly fee bounces</td>
+                <td className="p-4 font-bold text-teal-800 bg-teal-50/40">4–6 weeks early-warning alert based on attendance &amp; concept trends</td>
+              </tr>
+              <tr>
+                <td className="p-4 font-semibold text-slate-900">Student Scoring Metric</td>
+                <td className="p-4 text-slate-500">Misleading raw total percentages &amp; public rank shaming</td>
+                <td className="p-4 font-bold text-teal-800 bg-teal-50/40">2PL IRT concept mastery ($\theta$) + supportive growth trajectories</td>
+              </tr>
+              <tr>
+                <td className="p-4 font-semibold text-slate-900">Remedial Action</td>
+                <td className="p-4 text-slate-500">Generic extra classes repeating the full syllabus</td>
+                <td className="p-4 font-bold text-teal-800 bg-teal-50/40">Automated 15-minute 3-tier worksheets targeting specific mistakes</td>
+              </tr>
+              <tr>
+                <td className="p-4 font-semibold text-slate-900">Parent Communication</td>
+                <td className="p-4 text-slate-500">Noisy WhatsApp broadcast groups &amp; defensive quarterly meetings</td>
+                <td className="p-4 font-bold text-teal-800 bg-teal-50/40">Bilingual weekly WhatsApp digests (English/Hindi) with constructive tips</td>
+              </tr>
+              <tr>
+                <td className="p-4 font-semibold text-slate-900">DPDP Act Compliance</td>
+                <td className="p-4 text-slate-500">Unencrypted spreadsheets on faculty laptops</td>
+                <td className="p-4 font-bold text-teal-800 bg-teal-50/40">Section 9 verifiable guardian consent + strict VPC tenant isolation</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </section>
 
-      {/* 6. ROLE-BASED VALUE PROPOSITIONS */}
-      <section id="roles" className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-xs space-y-6 scroll-mt-20">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-teal-600 block">
-              Dedicated Workflows
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
-              Built For Every Stakeholder in the Coaching Ecosystem
-            </h2>
-          </div>
 
-        </div>
-
-        {/* Role Tabs */}
-        <div className="flex flex-wrap gap-2 border-b border-slate-200 pb-2 text-xs font-semibold">
-          <button
-            onClick={() => setActiveRoleTab('owner')}
-            className={`px-4 py-2 rounded-xl transition cursor-pointer ${
-              activeRoleTab === 'owner'
-                ? 'bg-teal-600 text-white font-bold shadow-xs'
-                : 'text-slate-600 hover:bg-slate-100'
-            }`}
-          >
-            Institute Owner
-          </button>
-          <button
-            onClick={() => setActiveRoleTab('teacher')}
-            className={`px-4 py-2 rounded-xl transition cursor-pointer ${
-              activeRoleTab === 'teacher'
-                ? 'bg-teal-600 text-white font-bold shadow-xs'
-                : 'text-slate-600 hover:bg-slate-100'
-            }`}
-          >
-            Teacher & Academic Head
-          </button>
-          <button
-            onClick={() => setActiveRoleTab('student')}
-            className={`px-4 py-2 rounded-xl transition cursor-pointer ${
-              activeRoleTab === 'student'
-                ? 'bg-teal-600 text-white font-bold shadow-xs'
-                : 'text-slate-600 hover:bg-slate-100'
-            }`}
-          >
-            Student (Growth View)
-          </button>
-          <button
-            onClick={() => setActiveRoleTab('parent')}
-            className={`px-4 py-2 rounded-xl transition cursor-pointer ${
-              activeRoleTab === 'parent'
-                ? 'bg-teal-600 text-white font-bold shadow-xs'
-                : 'text-slate-600 hover:bg-slate-100'
-            }`}
-          >
-            Parent (Bilingual Digest)
-          </button>
-        </div>
-
-        {/* Tab Content Display */}
-        <div className="pt-2">
-          {activeRoleTab === 'owner' && (
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-              <div className="md:col-span-7 space-y-4">
-                <div className="inline-flex items-center space-x-2 text-xs font-semibold text-teal-700 bg-teal-50 border border-teal-200 px-3 py-1 rounded-full">
-                  <Building2 className="w-3.5 h-3.5" />
-                  <span>Executive Operations & Financial Retention</span>
-                </div>
-                <h3 className="text-xl font-bold text-slate-900">
-                  Protect Institute Revenue with Early-Warning Churn Prevention
-                </h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Institute owners get an executive overview of all 1,200 students across 4 active batches. Track attendance trends, monitor batch-level health, and quantify retained fee revenue through proactive faculty triage.
-                </p>
-                <ul className="space-y-1.5 text-xs text-slate-700">
-                  <li className="flex items-center space-x-2">
-                    <CheckCircle2 className="w-4 h-4 text-teal-600" />
-                    <span>Institute fee revenue protection calculator (Sheet 2 benchmark)</span>
-                  </li>
-                  <li className="flex items-center space-x-2">
-                    <CheckCircle2 className="w-4 h-4 text-teal-600" />
-                    <span>Cross-batch attendance and milestone test trendline charts</span>
-                  </li>
-                  <li className="flex items-center space-x-2">
-                    <CheckCircle2 className="w-4 h-4 text-teal-600" />
-                    <span>Active faculty intervention ledger with recovery timestamps</span>
-                  </li>
-                </ul>
-                <div className="pt-2">
-                  <button
-                    onClick={() => handleLaunchRole('owner')}
-                    className="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold transition inline-flex items-center shadow-md cursor-pointer"
-                  >
-                    <PlayCircle className="w-4 h-4 mr-2" />
-                    <span>Launch Institute Owner Interactive Demo</span>
-                  </button>
-                </div>
-              </div>
-
-              <div className="md:col-span-5 bg-slate-900 text-white p-5 rounded-2xl border border-slate-800 space-y-3">
-                <div className="text-xs font-bold uppercase tracking-wider text-teal-400">Executive Telemetry</div>
-                <div className="grid grid-cols-2 gap-3 text-xs">
-                  <div className="p-3 rounded-xl bg-slate-800/70">
-                    <span className="text-slate-400 block text-[10px]">Revenue Protected</span>
-                    <span className="text-lg font-black text-emerald-400 font-mono">₹28.50 L</span>
-                  </div>
-                  <div className="p-3 rounded-xl bg-slate-800/70">
-                    <span className="text-slate-400 block text-[10px]">ROI Multiple</span>
-                    <span className="text-lg font-black text-teal-400 font-mono">18.3x</span>
-                  </div>
-                  <div className="p-3 rounded-xl bg-slate-800/70">
-                    <span className="text-slate-400 block text-[10px]">Active Batches</span>
-                    <span className="text-lg font-black text-white font-mono">4 Cohorts</span>
-                  </div>
-                  <div className="p-3 rounded-xl bg-slate-800/70">
-                    <span className="text-slate-400 block text-[10px]">Dropout Trend</span>
-                    <span className="text-lg font-black text-emerald-400 font-mono">12.8% &rarr; 5.7%</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {activeRoleTab === 'teacher' && (
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-              <div className="md:col-span-7 space-y-4">
-                <div className="inline-flex items-center space-x-2 text-xs font-semibold text-teal-700 bg-teal-50 border border-teal-200 px-3 py-1 rounded-full">
-                  <Brain className="w-3.5 h-3.5" />
-                  <span>Pedagogical Diagnostics & Remedial Generator</span>
-                </div>
-                <h3 className="text-xl font-bold text-slate-900">
-                  Know Exactly Which Concepts Need Remediation Before Next Class
-                </h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Teachers can filter by assigned batches (Achievers Top-30, Foundation 11th, NEET Achievers) to inspect BKT topic mastery heatmaps and generate instant 15-minute remedial worksheets for student misconceptions.
-                </p>
-                <ul className="space-y-1.5 text-xs text-slate-700">
-                  <li className="flex items-center space-x-2">
-                    <CheckCircle2 className="w-4 h-4 text-teal-600" />
-                    <span>Micro-topic BKT mastery heatmaps across Physics, Chemistry, Maths</span>
-                  </li>
-                  <li className="flex items-center space-x-2">
-                    <CheckCircle2 className="w-4 h-4 text-teal-600" />
-                    <span>1-click 15-minute 3-tier remedial worksheet generator (Gemini 3.8-Flash)</span>
-                  </li>
-                  <li className="flex items-center space-x-2">
-                    <CheckCircle2 className="w-4 h-4 text-teal-600" />
-                    <span>Early-warning support triage queue with logged mentorship</span>
-                  </li>
-                </ul>
-                <div className="pt-2">
-                  <button
-                    onClick={() => handleLaunchRole('teacher')}
-                    className="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold transition inline-flex items-center shadow-md cursor-pointer"
-                  >
-                    <PlayCircle className="w-4 h-4 mr-2" />
-                    <span>Launch Teacher & Academic Head Demo</span>
-                  </button>
-                </div>
-              </div>
-
-              <div className="md:col-span-5 bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3">
-                <div className="text-xs font-bold uppercase tracking-wider text-slate-600">Sample Remedial Preview</div>
-                <div className="p-3.5 rounded-xl bg-white border border-slate-200 space-y-2 text-xs">
-                  <div className="font-bold text-slate-900">Rotational Dynamics 15-Min Worksheet</div>
-                  <div className="text-[11px] text-slate-500">Targeting: Moment of Inertia on Tilted Planes</div>
-                  <div className="p-2 bg-slate-50 rounded text-[11px] font-mono text-slate-700">
-                    Q1: Hollow cylinder rolling without slipping... (Foundational)
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {activeRoleTab === 'student' && (
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-              <div className="md:col-span-7 space-y-4">
-                <div className="inline-flex items-center space-x-2 text-xs font-semibold text-teal-700 bg-teal-50 border border-teal-200 px-3 py-1 rounded-full">
-                  <Award className="w-3.5 h-3.5" />
-                  <span>Supportive, Growth-Mindset Learning</span>
-                </div>
-                <h3 className="text-xl font-bold text-slate-900">
-                  Personal Growth Trajectories Without Public Shaming
-                </h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Students see their strengths clearly celebrated alongside constructive practice topics. No public rank boards or shaming labels — only calibrated percentile ranges and weekly personal focus drills.
-                </p>
-                <ul className="space-y-1.5 text-xs text-slate-700">
-                  <li className="flex items-center space-x-2">
-                    <CheckCircle2 className="w-4 h-4 text-teal-600" />
-                    <span>Personal mastery breakdown across concepts and topics</span>
-                  </li>
-                  <li className="flex items-center space-x-2">
-                    <CheckCircle2 className="w-4 h-4 text-teal-600" />
-                    <span>Calibrated percentile intervals [P₁₀, P₉₀] with conformal coverage</span>
-                  </li>
-                  <li className="flex items-center space-x-2">
-                    <CheckCircle2 className="w-4 h-4 text-teal-600" />
-                    <span>Supportive 7-day recommended practice roadmap</span>
-                  </li>
-                </ul>
-                <div className="pt-2">
-                  <button
-                    onClick={() => handleLaunchRole('student')}
-                    className="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold transition inline-flex items-center shadow-md cursor-pointer"
-                  >
-                    <PlayCircle className="w-4 h-4 mr-2" />
-                    <span>Launch Student Growth Demo</span>
-                  </button>
-                </div>
-              </div>
-
-              <div className="md:col-span-5 bg-gradient-to-br from-teal-900 to-slate-900 text-white p-5 rounded-2xl border border-teal-700/50 space-y-3">
-                <div className="text-xs font-bold uppercase tracking-wider text-teal-300">Student Growth Card</div>
-                <div className="space-y-2 text-xs">
-                  <div className="flex justify-between items-center">
-                    <span className="text-slate-300">Kinematics:</span>
-                    <span className="text-emerald-400 font-bold font-mono">91% (Solid Anchor)</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-slate-300">Rotational Dynamics:</span>
-                    <span className="text-amber-300 font-bold font-mono">44% (Focus Drill)</span>
-                  </div>
-                  <div className="pt-2 border-t border-slate-700 text-[11px] text-teal-200">
-                    &quot;Your problem-solving speed has improved 18% in the last 2 milestone tests.&quot;
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {activeRoleTab === 'parent' && (
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-              <div className="md:col-span-7 space-y-4">
-                <div className="inline-flex items-center space-x-2 text-xs font-semibold text-teal-700 bg-teal-50 border border-teal-200 px-3 py-1 rounded-full">
-                  <GraduationCap className="w-3.5 h-3.5" />
-                  <span>Bilingual Trust & WhatsApp Delivery</span>
-                </div>
-                <h3 className="text-xl font-bold text-slate-900">
-                  Instant English & Hindi Weekly Progress Digests
-                </h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Parents receive deterministic, supportive progress summaries in English and Hindi (हिन्दी) via WhatsApp. Gain complete transparency into attendance, topic strengths, and actionable home support tips.
-                </p>
-                <ul className="space-y-1.5 text-xs text-slate-700">
-                  <li className="flex items-center space-x-2">
-                    <CheckCircle2 className="w-4 h-4 text-teal-600" />
-                    <span>1-click instant live toggle between English and Hindi (हिन्दी)</span>
-                  </li>
-                  <li className="flex items-center space-x-2">
-                    <CheckCircle2 className="w-4 h-4 text-teal-600" />
-                    <span>Realistic WhatsApp delivery preview with direct share action</span>
-                  </li>
-                  <li className="flex items-center space-x-2">
-                    <CheckCircle2 className="w-4 h-4 text-teal-600" />
-                    <span>Faculty mentor notes and constructive home study suggestions</span>
-                  </li>
-                </ul>
-                <div className="pt-2">
-                  <button
-                    onClick={() => handleLaunchRole('parent')}
-                    className="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold transition inline-flex items-center shadow-md cursor-pointer"
-                  >
-                    <PlayCircle className="w-4 h-4 mr-2" />
-                    <span>Launch Parent Bilingual Demo</span>
-                  </button>
-                </div>
-              </div>
-
-              <div className="md:col-span-5 bg-emerald-950/90 text-white p-5 rounded-2xl border border-emerald-700/50 space-y-3">
-                <div className="text-xs font-bold uppercase tracking-wider text-emerald-400">
-                  WhatsApp Digest Sample (हिन्दी)
-                </div>
-                <div className="p-3 bg-emerald-900/60 rounded-xl text-xs space-y-1.5 border border-emerald-800 text-emerald-100 leading-relaxed font-sans">
-                  <p className="font-bold text-white">अपेक्स अकादमी, पटना — साप्ताहिक प्रगति रिपोर्ट</p>
-                  <p>प्रिय अभिभावक, आरव शर्मा की इस सप्ताह 96% उपस्थिति रही।</p>
-                  <p className="text-emerald-300">मजबूत विषय: गतिज विज्ञान (Kinematics)</p>
-                  <p className="text-amber-300">अभ्यास की आवश्यकता: घूर्णन गति (Rotational Dynamics)</p>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* 7. FINANCIAL ROI CALCULATOR */}
-      <section className="bg-slate-900 text-white rounded-3xl p-6 sm:p-10 border border-slate-800 shadow-xl space-y-8">
+      {/* 5. INTERACTIVE FINANCIAL ROI CALCULATOR (TEACHMINT VALUE PROVING SECTION) */}
+      <section className="bg-[#0B1F3A] text-white rounded-3xl p-6 sm:p-12 border border-blue-900/80 shadow-2xl space-y-8">
         <div className="max-w-2xl">
           <div className="inline-flex items-center space-x-2 bg-teal-500/20 text-teal-300 border border-teal-500/30 px-3 py-1 rounded-full text-xs font-semibold mb-2">
             <Sliders className="w-3.5 h-3.5" />
             <span>Interactive Financial Model • Institute Director ROI</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
-            Calculate Your Institute&apos;s Fee Retention Protection
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight">
+            Calculate Your Fee Retention Protection
           </h2>
-          <p className="text-xs sm:text-sm text-slate-400 mt-1">
+          <p className="text-xs sm:text-sm text-slate-300 mt-1">
             See how early-warning retention analytics directly protects student fees and delivers 18x+ ROI for coaching institutes.
           </p>
         </div>
@@ -888,286 +757,220 @@ export default function HomePage() {
           {/* Sliders Column */}
           <div className="lg:col-span-7 space-y-5 text-xs">
             {/* Slider 1: Student Count */}
-            <div className="p-4 bg-slate-800/60 rounded-2xl border border-slate-700/60 space-y-2">
+            <div className="p-4 bg-blue-950/70 rounded-2xl border border-blue-800/60 space-y-2">
               <div className="flex justify-between items-center">
                 <span className="font-semibold text-slate-200">Total Enrolled JEE/NEET Students:</span>
-                <span className="font-mono text-base font-bold text-teal-400">{roiStudents.toLocaleString('en-IN')} Students</span>
+                <span className="font-mono text-base font-bold text-teal-300">{roiStudents.toLocaleString('en-IN')} Students</span>
               </div>
               <input
                 type="range"
-                min="300"
-                max="5000"
-                step="50"
+                min="100"
+                max="3000"
+                step="25"
                 value={roiStudents}
                 onChange={(e) => setRoiStudents(Number(e.target.value))}
-                className="w-full accent-teal-500 cursor-pointer"
+                className="w-full accent-teal-400 cursor-pointer"
               />
               <div className="flex justify-between text-[10px] text-slate-400">
-                <span>300 (Single Centre)</span>
-                <span>1,200 (Apex Benchmark)</span>
-                <span>5,000 (Multi-Branch)</span>
+                <span>100 (Single Center)</span>
+                <span>400 (Case B Benchmark)</span>
+                <span>3,000 (Multi-Branch)</span>
               </div>
             </div>
 
             {/* Slider 2: Annual Fee */}
-            <div className="p-4 bg-slate-800/60 rounded-2xl border border-slate-700/60 space-y-2">
+            <div className="p-4 bg-blue-950/70 rounded-2xl border border-blue-800/60 space-y-2">
               <div className="flex justify-between items-center">
                 <span className="font-semibold text-slate-200">Average Annual Fee Per Student:</span>
-                <span className="font-mono text-base font-bold text-teal-400">₹{roiAnnualFee.toLocaleString('en-IN')} / year</span>
+                <span className="font-mono text-base font-bold text-teal-300">₹{roiAnnualFee.toLocaleString('en-IN')} / year</span>
               </div>
               <input
                 type="range"
-                min="40000"
+                min="30000"
                 max="150000"
                 step="5000"
                 value={roiAnnualFee}
                 onChange={(e) => setRoiAnnualFee(Number(e.target.value))}
-                className="w-full accent-teal-500 cursor-pointer"
+                className="w-full accent-teal-400 cursor-pointer"
               />
               <div className="flex justify-between text-[10px] text-slate-400">
-                <span>₹40,000 (Tier-3 Foundation)</span>
-                <span>₹75,000 (Patna Flagship)</span>
+                <span>₹30,000 (Tier-3 Foundation)</span>
+                <span>₹60,000 (Patna Flagship)</span>
                 <span>₹1,50,000 (Kota Intensive)</span>
               </div>
             </div>
 
             {/* Slider 3: Retention Efficiency */}
-            <div className="p-4 bg-slate-800/60 rounded-2xl border border-slate-700/60 space-y-2">
+            <div className="p-4 bg-blue-950/70 rounded-2xl border border-blue-800/60 space-y-2">
               <div className="flex justify-between items-center">
-                <span className="font-semibold text-slate-200">Retention Intervention Efficiency:</span>
-                <span className="font-mono text-base font-bold text-teal-400">{roiRetentionEfficiency}% Churn Prevented</span>
+                <span className="font-semibold text-slate-200">Retention Prevention Efficiency:</span>
+                <span className="font-mono text-base font-bold text-teal-300">{roiRetentionEfficiency}% Churn Prevented</span>
               </div>
               <input
                 type="range"
-                min="30"
-                max="75"
+                min="10"
+                max="40"
                 step="5"
                 value={roiRetentionEfficiency}
                 onChange={(e) => setRoiRetentionEfficiency(Number(e.target.value))}
-                className="w-full accent-teal-500 cursor-pointer"
+                className="w-full accent-teal-400 cursor-pointer"
               />
               <div className="flex justify-between text-[10px] text-slate-400">
-                <span>30% (Minimal Intervention)</span>
-                <span>55% (Platform Average)</span>
-                <span>75% (Dedicated Mentorship)</span>
+                <span>10% (Minimal Intervention)</span>
+                <span>15% (Standard Baseline)</span>
+                <span>40% (Active Faculty Triage)</span>
               </div>
             </div>
           </div>
 
-          {/* Results Card */}
-          <div className="lg:col-span-5 bg-gradient-to-br from-teal-950/80 to-slate-950 p-6 sm:p-8 rounded-3xl border border-teal-500/30 space-y-5 shadow-2xl">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-teal-400 block">
-              Financial Model Output (Sheet 2)
-            </span>
-
-            <div>
-              <span className="text-xs text-slate-400 block">Annual Tuition Fees Recovered:</span>
-              <span className="text-3xl sm:text-4xl font-black text-white font-mono mt-1 block">
-                ₹{(revenueProtected / 100000).toFixed(2)} Lakhs
-              </span>
-              <span className="text-[11px] text-teal-300 mt-1 block">
-                From {studentsSaved} at-risk students retained (out of {dropoutsWithoutPlatform} at-risk)
-              </span>
+          {/* Results Summary Box */}
+          <div className="lg:col-span-5 bg-gradient-to-br from-teal-950/80 to-blue-950/90 p-6 rounded-3xl border border-teal-500/40 shadow-xl space-y-4">
+            <div className="text-xs font-bold uppercase tracking-wider text-teal-300">
+              Projected Annual Financial Impact
             </div>
 
-            <div className="pt-4 border-t border-slate-800 grid grid-cols-2 gap-3 text-xs">
-              <div>
-                <span className="text-[10px] text-slate-400 uppercase font-semibold block">Platform Cost (10 mos)</span>
-                <span className="text-base font-bold text-slate-200 font-mono mt-0.5 block">
-                  ₹{(platformAnnualCost / 100000).toFixed(2)} Lakhs
+            <div className="space-y-3">
+              <div className="p-3.5 bg-black/30 rounded-xl border border-teal-500/20">
+                <span className="text-[11px] text-slate-300 block">Annual Revenue Protected:</span>
+                <span className="text-2xl font-black text-emerald-400 font-mono">
+                  ₹{revenueProtected.toLocaleString('en-IN')}
                 </span>
-                <span className="text-[10px] text-slate-400">₹{monthlyPlatformCost.toLocaleString()} / mo</span>
-              </div>
-
-              <div>
-                <span className="text-[10px] text-slate-400 uppercase font-semibold block">Institute Net ROI</span>
-                <span className="text-2xl font-black text-emerald-400 font-mono mt-0.5 block">
-                  {netRoiRatio}x
+                <span className="text-[10px] text-slate-400 block mt-0.5">
+                  ({studentsSaved} at-risk students retained × ₹{lostFeePerDropout.toLocaleString('en-IN')} fees)
                 </span>
-                <span className="text-[10px] text-emerald-300">Breakeven at {breakevenThreshold} students</span>
+              </div>
+
+              <div className="p-3.5 bg-black/30 rounded-xl border border-teal-500/20">
+                <span className="text-[11px] text-slate-300 block">Net Profit Protected:</span>
+                <span className="text-2xl font-black text-teal-300 font-mono">
+                  ₹{netProfitProtected.toLocaleString('en-IN')}
+                </span>
+                <span className="text-[10px] text-slate-400 block mt-0.5">
+                  After annual platform cost of ₹{platformAnnualCost.toLocaleString('en-IN')}
+                </span>
               </div>
             </div>
 
-            <div className="pt-2 space-y-2">
-              <Link
-                href="/owner"
-                className="w-full py-3 bg-teal-500 hover:bg-teal-600 text-white rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 shadow-md"
-              >
-                <span>Launch 5-Sheet Revenue Model Portal</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-
-              <div className="grid grid-cols-2 gap-2">
-                <Link
-                  href="/model-report"
-                  className="py-2.5 bg-slate-800 hover:bg-slate-700 text-teal-300 border border-slate-700 rounded-xl text-xs font-semibold transition text-center"
-                >
-                  <span>ML Rigour Suite</span>
-                </Link>
-                <a
-                  href="/2_Excel_Nextute_Case_B_Financial_Model.xlsx"
-                  download
-                  className="py-2.5 bg-emerald-600/30 hover:bg-emerald-600/50 text-emerald-300 border border-emerald-500/40 rounded-xl text-xs font-semibold transition text-center"
-                >
-                  <span>Download Excel</span>
-                </a>
-              </div>
+            <div className="pt-2 flex justify-between items-center text-xs border-t border-teal-500/20">
+              <span className="text-slate-300">Breakeven Threshold:</span>
+              <span className="font-bold text-teal-300 font-mono">{breakevenThreshold} Students Retained</span>
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* 8. RESPONSIBLE AI & PRIVACY SECTION */}
-      <section className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-xs space-y-6">
-        <div className="max-w-2xl">
-          <span className="text-xs font-bold uppercase tracking-wider text-teal-600 block">
-            Responsible AI & Privacy Protection
-          </span>
-          <h2 className="text-xl sm:text-2xl font-black text-slate-900 mt-0.5">
-            Built for DPDP Act 2023 & MoE Coaching Guidelines 2024
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Student data requires strict ethical standards. Intelliprivart is built around transparency, non-shaming indicators, and verifiable consent.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 text-xs">
-          <div className="p-5 rounded-2xl border border-slate-200 bg-slate-50/70 space-y-2.5">
-            <ShieldCheck className="w-5 h-5 text-teal-600" />
-            <h3 className="font-bold text-slate-900 text-sm">Probabilistic Estimates, Not Labels</h3>
-            <p className="text-slate-600 leading-relaxed">
-              Predictions are always presented as calibrated percentile intervals $[P_{10}, P_{90}]$ with uncertainty explained. Students are never branded with fixed limits or predetermined outcomes.
-            </p>
-          </div>
-
-          <div className="p-5 rounded-2xl border border-slate-200 bg-slate-50/70 space-y-2.5">
-            <Award className="w-5 h-5 text-teal-600" />
-            <h3 className="font-bold text-slate-900 text-sm">Supportive, Non-Punitive Triage</h3>
-            <p className="text-slate-600 leading-relaxed">
-              Early-warning indicators exist solely to trigger supportive faculty mentorship and tailored remedial worksheets. We strictly prohibit public ranking boards or shame-based metrics.
-            </p>
-          </div>
-
-          <div className="p-5 rounded-2xl border border-slate-200 bg-slate-50/70 space-y-2.5">
-            <Lock className="w-5 h-5 text-teal-600" />
-            <h3 className="font-bold text-slate-900 text-sm">Verifiable Consent & VPC Isolation</h3>
-            <p className="text-slate-600 leading-relaxed">
-              Full compliance with Section 9 of the DPDP Act 2023. Student records are cryptographically isolated per institute, with zero commercial tracking and verifiable guardian consent management.
-            </p>
-          </div>
-        </div>
-
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-slate-100 text-xs text-slate-500">
-          <div className="flex items-center space-x-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-            <span>DPDP Act 2023 Sec 9 Child Privacy • Ministry of Education 2024 Compliant</span>
-          </div>
-          <div className="flex items-center space-x-3">
-            <Link href="/privacy-policy" className="text-teal-600 font-bold hover:underline">
-              Read Privacy Policy &rarr;
-            </Link>
-            <span>•</span>
-            <Link href="/terms" className="text-teal-600 font-bold hover:underline">
-              Terms of Service &rarr;
+            <Link
+              href="/owner"
+              className="w-full py-2.5 bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-xs rounded-xl flex items-center justify-center space-x-1.5 transition shadow-md"
+            >
+              <span>View Full Case B Financial Model</span>
+              <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
         </div>
       </section>
 
-      {/* 9. CLOSING CALL TO ACTION */}
-      <section className="bg-gradient-to-r from-teal-600 to-emerald-600 rounded-3xl p-8 sm:p-12 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+
+      {/* 6. TEACHMINT-STYLE CLOSING CALL TO ACTION BANNER */}
+      <section className="bg-gradient-to-r from-teal-600 via-teal-700 to-blue-900 rounded-3xl p-8 sm:p-14 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="max-w-xl space-y-2 text-center md:text-left">
-          <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
-            Ready to Turn Coaching Data Into Better Outcomes?
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight">
+            Ready to Modernize Your Coaching Operations?
           </h2>
           <p className="text-xs sm:text-sm text-teal-100 leading-relaxed">
-            Experience the interactive four-role prototype with pre-calibrated benchmark data, or register your coaching institute to begin.
+            Join forward-looking JEE &amp; NEET coaching institutes. Sign in to your dedicated role portal or register your institute to experience pre-calibrated benchmark intelligence.
           </p>
         </div>
 
         <div className="flex flex-wrap gap-3 shrink-0">
           <Link
             href="/login"
-            className="px-6 py-3.5 bg-white text-teal-900 rounded-xl font-bold text-xs sm:text-sm hover:bg-slate-100 transition shadow-lg flex items-center space-x-2"
+            className="px-6 py-3.5 bg-white text-slate-900 rounded-xl font-bold text-xs sm:text-sm hover:bg-slate-100 transition shadow-lg flex items-center space-x-2"
           >
-            <LogIn className="w-4 h-4 text-teal-700" />
+            <LogIn className="w-4 h-4 text-teal-600" />
             <span>Sign In to Portal</span>
           </Link>
           <Link
             href="/register"
-            className="px-6 py-3.5 bg-teal-800/80 hover:bg-teal-900 text-white rounded-xl font-semibold text-xs sm:text-sm transition border border-teal-300/40 flex items-center space-x-2"
+            className="px-6 py-3.5 bg-teal-950/70 hover:bg-teal-950 text-white rounded-xl font-semibold text-xs sm:text-sm transition border border-teal-300/40 flex items-center space-x-2"
           >
-            <Building2 className="w-4 h-4 text-teal-200" />
+            <Building2 className="w-4 h-4 text-teal-300" />
             <span>Register Institute</span>
           </Link>
         </div>
       </section>
 
-      {/* 10. COMPREHENSIVE PUBLIC FOOTER */}
-      <footer className="pt-10 border-t border-slate-200 text-xs text-slate-500 space-y-6">
+
+      {/* 7. COMPREHENSIVE TEACHMINT-INSPIRED FOOTER */}
+      <footer className="pt-10 border-t border-slate-200 text-xs text-slate-500 space-y-8">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
-          <div className="col-span-2 space-y-2.5">
+          {/* Brand Info */}
+          <div className="col-span-2 space-y-3">
             <div className="flex items-center space-x-2.5">
-              <div className="w-7 h-7 rounded-lg bg-teal-600 text-white flex items-center justify-center font-black text-xs">
+              <div className="w-8 h-8 rounded-xl bg-teal-500 text-white flex items-center justify-center font-black text-sm shadow-sm">
                 IP
               </div>
-              <span className="font-extrabold text-slate-900 tracking-tight text-sm">
+              <span className="font-extrabold text-slate-900 tracking-tight text-base">
                 INTELLIPRIVART
               </span>
             </div>
-            <p className="text-slate-500 text-xs max-w-sm leading-relaxed">
-              AI-Powered Coaching Institute Intelligence System. Converting fragmented test, attendance, and academic records into actionable topic mastery and supportive interventions.
+            <p className="text-xs text-slate-500 leading-relaxed max-w-sm">
+              The AI-Powered Connected Intelligence Platform for JEE &amp; NEET Coaching Institutes. Built for Case B: The Data Moat.
             </p>
-            <div className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-md bg-slate-100 text-[10px] text-slate-600 font-mono">
-              <span className="w-2 h-2 rounded-full bg-teal-500" />
-              <span>Demo Prototype • Benchmark Data Active</span>
+            <div className="text-[11px] text-slate-400 space-y-1">
+              <div>Nextute EdTech Pvt. Ltd. • Registered Partner</div>
+              <div className="text-teal-700 font-semibold">DPDP Act 2023 Section 9 VPC Certified</div>
             </div>
           </div>
 
+          {/* Stakeholder Portals */}
           <div className="space-y-2">
-            <strong className="text-slate-900 block font-bold">Product & Demo</strong>
-            <ul className="space-y-1.5 text-slate-600">
-              <li><button onClick={() => handleLaunchRole('owner')} className="hover:text-teal-600 text-left cursor-pointer">Institute Owner Demo</button></li>
-              <li><button onClick={() => handleLaunchRole('teacher')} className="hover:text-teal-600 text-left cursor-pointer">Teacher Demo</button></li>
-              <li><button onClick={() => handleLaunchRole('student')} className="hover:text-teal-600 text-left cursor-pointer">Student Growth Demo</button></li>
-              <li><button onClick={() => handleLaunchRole('parent')} className="hover:text-teal-600 text-left cursor-pointer">Parent Bilingual Demo</button></li>
-              <li><Link href="/demo" className="hover:text-teal-600 font-semibold text-teal-700">Demo Role Hub</Link></li>
+            <span className="font-bold text-slate-900 uppercase text-[10px] tracking-wider block">
+              Stakeholder Portals
+            </span>
+            <ul className="space-y-1.5 text-xs text-slate-600">
+              <li><Link href="/login?role=owner" className="hover:text-teal-600">Institute Owner Portal</Link></li>
+              <li><Link href="/login?role=teacher" className="hover:text-teal-600">Teacher Workspace</Link></li>
+              <li><Link href="/login?role=student" className="hover:text-teal-600">Student Growth View</Link></li>
+              <li><Link href="/login?role=parent" className="hover:text-teal-600">Parent Bilingual Digest</Link></li>
             </ul>
           </div>
 
+          {/* Academic Modules */}
           <div className="space-y-2">
-            <strong className="text-slate-900 block font-bold">Capabilities</strong>
-            <ul className="space-y-1.5 text-slate-600">
-              <li><Link href="/upload" className="hover:text-teal-600">Data Import & Ingest</Link></li>
-              <li><Link href="/mastery" className="hover:text-teal-600">Topic Mastery (BKT)</Link></li>
-              <li><Link href="/risk" className="hover:text-teal-600">Early-Warning Triage</Link></li>
-              <li><Link href="/predict" className="hover:text-teal-600">Conformal Predictions</Link></li>
-              <li><Link href="/reports" className="hover:text-teal-600">Bilingual Reports</Link></li>
+            <span className="font-bold text-slate-900 uppercase text-[10px] tracking-wider block">
+              Intelligence Modules
+            </span>
+            <ul className="space-y-1.5 text-xs text-slate-600">
+              <li><Link href="/mastery" className="hover:text-teal-600">2PL IRT Topic Mastery</Link></li>
+              <li><Link href="/risk" className="hover:text-teal-600">Early-Warning Retention</Link></li>
               <li><Link href="/ai-assistant" className="hover:text-teal-600">AI Teaching Copilot</Link></li>
+              <li><Link href="/upload" className="hover:text-teal-600">Camera OMR Ingestion</Link></li>
+              <li><Link href="/owner" className="hover:text-teal-600">Executive ROI Model</Link></li>
             </ul>
           </div>
 
+          {/* Legal & Compliance */}
           <div className="space-y-2">
-            <strong className="text-slate-900 block font-bold">Compliance & Legal</strong>
-            <ul className="space-y-1.5 text-slate-600">
-              <li><Link href="/privacy-policy" className="hover:text-teal-600 font-semibold text-teal-700">Privacy Policy (DPDP)</Link></li>
-              <li><Link href="/terms" className="hover:text-teal-600 font-semibold text-teal-700">Terms of Service</Link></li>
-              <li><Link href="/privacy" className="hover:text-teal-600">Consent Ledger</Link></li>
-              <li><Link href="/login" className="hover:text-teal-600">Institute Sign In</Link></li>
-              <li><Link href="/register" className="hover:text-teal-600">Register Institute</Link></li>
+            <span className="font-bold text-slate-900 uppercase text-[10px] tracking-wider block">
+              Governance &amp; Trust
+            </span>
+            <ul className="space-y-1.5 text-xs text-slate-600">
+              <li><Link href="/privacy" className="hover:text-teal-600">DPDP Consent Register</Link></li>
+              <li><Link href="/privacy-policy" className="hover:text-teal-600">Privacy Policy</Link></li>
+              <li><Link href="/terms" className="hover:text-teal-600">Terms of Service</Link></li>
+              <li><Link href="/model-report" className="hover:text-teal-600">ML Rigour &amp; Audit Card</Link></li>
             </ul>
           </div>
         </div>
 
-        <div className="pt-6 border-t border-slate-200 flex flex-wrap items-center justify-between gap-4 text-[11px] text-slate-400">
-          <span>&copy; {new Date().getFullYear()} Intelliprivart EdTech. All rights reserved.</span>
+        <div className="pt-6 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-center text-[11px] text-slate-400 gap-2">
+          <span>&copy; {new Date().getFullYear()} Intelliprivart • All Rights Reserved.</span>
           <div className="flex items-center space-x-3">
-            <span>DPDP Act 2023 Compliant</span>
+            <span>Nextute × Finance Club, IIT Patna 2026</span>
             <span>•</span>
-            <span>Ministry of Education 2024 Guidelines</span>
+            <span className="text-teal-600 font-semibold">2PL IRT + BKT + Conformal GBDT</span>
           </div>
         </div>
       </footer>
+
     </div>
   );
 }
