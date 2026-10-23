@@ -564,6 +564,164 @@ export default function HomePage() {
       </section>
 
 
+      {/* 2.5 THE STRATEGIC FOUNDATION: WHY CHOOSE A DATA MOAT? */}
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#08172c] via-[#0B1F3A] to-[#040D1A] text-white p-6 sm:p-12 md:p-14 border border-blue-900/80 shadow-2xl space-y-10">
+        {/* Subtle Background Glows */}
+        <div className="absolute -top-32 -left-32 w-80 h-80 bg-teal-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-32 -right-32 w-80 h-80 bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />
+
+        {/* Section Header */}
+        <div className="relative z-10 max-w-3xl space-y-3">
+          <div className="inline-flex items-center space-x-2 bg-teal-500/15 text-teal-300 border border-teal-500/30 px-3.5 py-1.5 rounded-full text-xs font-semibold backdrop-blur-md">
+            <ShieldCheck className="w-3.5 h-3.5 text-teal-400" />
+            <span>The Core Strategic Imperative • Case B: The Data Moat</span>
+          </div>
+
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-tight">
+            Why Choose a Data Moat?
+          </h2>
+
+          <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-normal">
+            Study material gets duplicated on Telegram. Star teachers can be poached by competitors. National EdTech conglomerates undercut fees.
+            <strong> The only truly unassailable asset a coaching institute can build is a proprietary Student Learning Data Moat.</strong>
+          </p>
+        </div>
+
+        {/* 4 Pillars of the Data Moat Grid */}
+        <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-5">
+          {/* Pillar 1: Institutional Memory vs Faculty Poaching */}
+          <div className="p-6 rounded-2xl bg-slate-900/80 border border-blue-900/60 hover:border-teal-500/50 transition space-y-3 group backdrop-blur-xs">
+            <div className="w-10 h-10 rounded-xl bg-blue-500/15 text-teal-300 border border-blue-500/30 flex items-center justify-center font-bold">
+              <Building2 className="w-5 h-5 text-teal-400" />
+            </div>
+            <h3 className="text-base font-bold text-white group-hover:text-teal-300 transition">
+              1. Institutional Memory Over Individual Charisma
+            </h3>
+            <p className="text-xs text-slate-300 leading-relaxed">
+              When star faculty get poached, their lecture notes walk away. But with Intelliprivart, student latent ability ($\theta$), topic failure heatmaps, and remedial intervention histories remain the permanent property of your coaching institute. Even if faculty rotates, student progress diagnosis never breaks.
+            </p>
+            <div className="pt-1 text-[11px] text-teal-400 font-semibold flex items-center space-x-1">
+              <span>Retain institutional continuity across coaching cycles</span>
+              <Check className="w-3.5 h-3.5" />
+            </div>
+          </div>
+
+          {/* Pillar 2: The Compounding Flywheel */}
+          <div className="p-6 rounded-2xl bg-slate-900/80 border border-blue-900/60 hover:border-teal-500/50 transition space-y-3 group backdrop-blur-xs">
+            <div className="w-10 h-10 rounded-xl bg-teal-500/15 text-teal-300 border border-teal-500/30 flex items-center justify-center font-bold">
+              <Zap className="w-5 h-5 text-teal-400" />
+            </div>
+            <h3 className="text-base font-bold text-white group-hover:text-teal-300 transition">
+              2. The Compounding Local Intelligence Flywheel
+            </h3>
+            <p className="text-xs text-slate-300 leading-relaxed">
+              Generic EdTech apps rely on national averages that ignore your regional curriculum sequence and batch temperament. Every bubble sheet scanned via mobile camera and every practice drill solved calibrates your localized 2PL IRT item curves. With each cohort, your diagnostic accuracy compounds beyond anything an outside competitor can copy.
+            </p>
+            <div className="pt-1 text-[11px] text-teal-400 font-semibold flex items-center space-x-1">
+              <span>Cohort-over-cohort predictive superiority</span>
+              <Check className="w-3.5 h-3.5" />
+            </div>
+          </div>
+
+          {/* Pillar 3: High Switching Costs & Family Trust */}
+          <div className="p-6 rounded-2xl bg-slate-900/80 border border-blue-900/60 hover:border-teal-500/50 transition space-y-3 group backdrop-blur-xs">
+            <div className="w-10 h-10 rounded-xl bg-amber-500/15 text-amber-300 border border-amber-500/30 flex items-center justify-center font-bold">
+              <HeartHandshake className="w-5 h-5 text-amber-400" />
+            </div>
+            <h3 className="text-base font-bold text-white group-hover:text-teal-300 transition">
+              3. Deep Switching Costs &amp; Generational Family Trust
+            </h3>
+            <p className="text-xs text-slate-300 leading-relaxed">
+              Parents receiving weekly bilingual WhatsApp digests (English/Hindi) see transparent attendance and concept milestones without toxic rank shaming. Leaving your institute means losing their child&apos;s longitudinal diagnostic baseline. The data moat transforms transactional coaching into generational family loyalty.
+            </p>
+            <div className="pt-1 text-[11px] text-teal-400 font-semibold flex items-center space-x-1">
+              <span>Parental transparency turns families into vocal ambassadors</span>
+              <Check className="w-3.5 h-3.5" />
+            </div>
+          </div>
+
+          {/* Pillar 4: Predictive Financial Retention Moat */}
+          <div className="p-6 rounded-2xl bg-slate-900/80 border border-blue-900/60 hover:border-teal-500/50 transition space-y-3 group backdrop-blur-xs">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 flex items-center justify-center font-bold">
+              <TrendingUp className="w-5 h-5 text-emerald-400" />
+            </div>
+            <h3 className="text-base font-bold text-white group-hover:text-teal-300 transition">
+              4. Predictive Retention vs. Silent Fee Leakage (18.3x ROI)
+            </h3>
+            <p className="text-xs text-slate-300 leading-relaxed">
+              Coaching centers lose 12–15% of enrolled students between Month 3 and Month 6—realized only after installment cheques bounce. Our data moat catches attendance dips and concept slumps 4–6 weeks early, protecting ₹28.50 Lakhs in retained tuition fees and delivering an auditable 18.3x net ROI.
+            </p>
+            <div className="pt-1 text-[11px] text-teal-400 font-semibold flex items-center space-x-1">
+              <span>Predictive retention pays for the platform 18 times over</span>
+              <Check className="w-3.5 h-3.5" />
+            </div>
+          </div>
+        </div>
+
+        {/* The Data Moat Flywheel Process Bar */}
+        <div className="relative z-10 p-5 rounded-2xl bg-blue-950/80 border border-blue-800/80 space-y-3">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <span className="text-xs font-bold uppercase tracking-wider text-teal-300">
+              The Data Moat Compounding Flywheel
+            </span>
+            <span className="text-[10px] text-slate-400 font-mono">Continuous Self-Reinforcing Cycle</span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
+            <div className="p-3 rounded-xl bg-slate-900/70 border border-blue-900/50">
+              <div className="text-[10px] text-teal-400 font-bold font-mono">01. CAPTURE</div>
+              <div className="font-semibold text-white mt-0.5">Zero-Friction Ingest</div>
+              <div className="text-[11px] text-slate-400 mt-1">Phone OMR scans + attendance registers without manual typing</div>
+            </div>
+
+            <div className="p-3 rounded-xl bg-slate-900/70 border border-blue-900/50">
+              <div className="text-[10px] text-teal-400 font-bold font-mono">02. MODEL</div>
+              <div className="font-semibold text-white mt-0.5">2PL IRT + BKT</div>
+              <div className="text-[11px] text-slate-400 mt-1">Estimates latent ability ($\theta$) isolating item difficulty from guessing</div>
+            </div>
+
+            <div className="p-3 rounded-xl bg-slate-900/70 border border-blue-900/50">
+              <div className="text-[10px] text-teal-400 font-bold font-mono">03. ACT</div>
+              <div className="font-semibold text-white mt-0.5">Remedials &amp; WhatsApp</div>
+              <div className="text-[11px] text-slate-400 mt-1">15-min focused worksheets &amp; proactive bilingual family progress updates</div>
+            </div>
+
+            <div className="p-3 rounded-xl bg-slate-900/70 border border-blue-900/50">
+              <div className="text-[10px] text-teal-400 font-bold font-mono">04. DEFEND</div>
+              <div className="font-semibold text-white mt-0.5">High Switching Moat</div>
+              <div className="text-[11px] text-slate-400 mt-1">Fee retention protected, churn slashed from 12.8% to 5.7%</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Action Links */}
+        <div className="relative z-10 pt-2 flex flex-wrap gap-4 items-center justify-between text-xs border-t border-blue-900/60">
+          <div className="flex items-center space-x-2 text-slate-300">
+            <Lock className="w-4 h-4 text-teal-400 shrink-0" />
+            <span>Strict Section 9 DPDP Act Child Privacy VPC — Your Data Never Trains External LLMs.</span>
+          </div>
+
+          <div className="flex items-center space-x-3">
+            <Link
+              href="/owner"
+              className="text-teal-300 font-bold hover:text-white transition flex items-center space-x-1"
+            >
+              <span>Explore Financial ROI Model</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+            <span className="text-slate-600">•</span>
+            <Link
+              href="/model-report"
+              className="text-teal-300 font-bold hover:text-white transition flex items-center space-x-1"
+            >
+              <span>Inspect ML Rigour Suite</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+
       {/* 3. SIX PILLARS OF INTELLIPRIVART (TEACHMINT CONNECTED SUITE CARDS) */}
       <section id="capabilities" className="space-y-8 scroll-mt-20">
         <div className="text-center max-w-3xl mx-auto space-y-2">
