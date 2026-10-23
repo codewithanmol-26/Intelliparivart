@@ -15,8 +15,30 @@ import {
   RecomputeStatus,
 } from './types';
 
-const RAW_API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api';
-const API_BASE = RAW_API_BASE.replace(/\/+$/, '');
+export function getApiBaseUrl(): string {
+  const envUrl = process.env.NEXT_PUBLIC_API_URL;
+  
+  // If running in browser
+  if (typeof window !== 'undefined') {
+    const hostname = window.location.hostname;
+    const isLocal = hostname === 'localhost' || hostname === '127.0.0.1';
+
+    // If on a remote deployment (e.g. *.vercel.app, *.pages.dev, etc.)
+    if (!isLocal) {
+      // If no envUrl or if envUrl was accidentally configured as localhost in Vercel settings
+      if (!envUrl || envUrl.includes('127.0.0.1') || envUrl.includes('localhost')) {
+        return 'https://intelliparivart.onrender.com/api';
+      }
+      return envUrl.replace(/\/+$/, '');
+    }
+  }
+
+  // Local development fallback
+  if (envUrl) {
+    return envUrl.replace(/\/+$/, '');
+  }
+  return 'http://127.0.0.1:8000/api';
+}
 
 function getStoredToken(): string | null {
   if (typeof window !== 'undefined') {
@@ -31,7 +53,7 @@ async function request<T>(
   tenantId: string = 'INST_PATNA_01'
 ): Promise<T> {
   const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
-  const url = `${API_BASE}${cleanEndpoint}`;
+  const url = `${getApiBaseUrl()}${cleanEndpoint}`;
   const headers = new Headers(options.headers || {});
   headers.set('X-Tenant-ID', tenantId);
 
@@ -364,7 +386,7 @@ export const api = {
 
   // Exports
   getExportUrl(type: 'mastery' | 'risk-alerts' | 'interventions' | 'audit-logs', tenantId: string): string {
-    return `${API_BASE}/exports/${type}.csv?tenant_id=${encodeURIComponent(tenantId)}`;
+    return `${getApiBaseUrl()}/exports/${type}.csv?tenant_id=${encodeURIComponent(tenantId)}`;
   },
 
   async resetData(tenantId: string): Promise<any> {
