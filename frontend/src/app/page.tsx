@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useApp } from '../context/AppContext';
+import { getApiBaseUrl } from '../lib/api';
 import {
   TrendingUp,
   ShieldCheck,
@@ -52,7 +53,7 @@ export default function HomePage() {
   const netRoiRatio = platformAnnualCost > 0 ? (revenueProtected / platformAnnualCost).toFixed(1) : '28.5';
 
   useEffect(() => {
-    const apiBase = (process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api').replace(/\/+$/, '');
+    const apiBase = getApiBaseUrl();
     fetch(`${apiBase}/health`)
       .then((res) => {
         if (res.ok) setBackendStatus('online');

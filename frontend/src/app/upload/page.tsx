@@ -380,7 +380,7 @@ export default function UploadPage() {
     } catch (err: any) {
       const msg = err.message || '';
       if (msg.includes('fetch') || msg.includes('Failed') || msg.includes('NetworkError')) {
-        setOmrError("Backend connection offline (Failed to fetch). If running locally, ensure backend is running at http://127.0.0.1:8000. You can also click any of the 1-Click Benchmark buttons above to evaluate instantly.");
+        setOmrError("Backend connection offline (Failed to fetch). Connecting to deployed backend at https://intelliparivart.onrender.com. Please allow 15-30s if Render is spinning up, or click any of the 1-Click Benchmark buttons above to evaluate instantly.");
       } else {
         setOmrError(msg || 'Failed to scan OMR image.');
       }

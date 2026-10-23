@@ -17,27 +17,12 @@ import {
 
 export function getApiBaseUrl(): string {
   const envUrl = process.env.NEXT_PUBLIC_API_URL;
-  
-  // If running in browser
-  if (typeof window !== 'undefined') {
-    const hostname = window.location.hostname;
-    const isLocal = hostname === 'localhost' || hostname === '127.0.0.1';
-
-    // If on a remote deployment (e.g. *.vercel.app, *.pages.dev, etc.)
-    if (!isLocal) {
-      // If no envUrl or if envUrl was accidentally configured as localhost in Vercel settings
-      if (!envUrl || envUrl.includes('127.0.0.1') || envUrl.includes('localhost')) {
-        return 'https://intelliparivart.onrender.com/api';
-      }
-      return envUrl.replace(/\/+$/, '');
-    }
-  }
-
-  // Local development fallback
-  if (envUrl) {
+  // If explicitly provided and not pointing to old local host, use it
+  if (envUrl && !envUrl.includes('127.0.0.1') && !envUrl.includes('localhost')) {
     return envUrl.replace(/\/+$/, '');
   }
-  return 'http://127.0.0.1:8000/api';
+  // Production deployed Render API endpoint
+  return 'https://intelliparivart.onrender.com/api';
 }
 
 function getStoredToken(): string | null {
