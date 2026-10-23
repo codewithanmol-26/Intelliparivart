@@ -10,4 +10,4 @@ echo Launching Next.js Frontend on http://127.0.0.1:3000...
 start "Intelliprivart Frontend" cmd /k "cd frontend && npm run dev"
 
 echo Both services launched!
-echo Open your browser at http://localhost:3000
+echo Open your browser at https://intelliprivart.vercel.app/ (or http://localhost:3000 locally)

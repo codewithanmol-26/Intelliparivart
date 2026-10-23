@@ -35,7 +35,7 @@ python -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 --reload
 # Terminal 2:
 cd frontend && npm run dev
 ```
-Open **`http://localhost:3000`** in your browser.
+Open **`https://intelliprivart.vercel.app/`** (or `http://localhost:3000` if running locally) in your browser.
 
 *(On Windows, you can also simply double-click `run.bat`)*
 

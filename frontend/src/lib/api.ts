@@ -24,11 +24,6 @@ import {
 } from './types';
 
 export function getApiBaseUrl(): string {
-  // Use the local API during local development unless explicitly configured.
-  if (typeof window !== 'undefined' && ['localhost', '127.0.0.1'].includes(window.location.hostname)) {
-    return process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, '') || 'http://127.0.0.1:8000/api';
-  }
-
   // 1. In browser or build client bundle, check public framework variable if defined
   const publicUrl = process.env.NEXT_PUBLIC_API_URL;
   if (publicUrl && !publicUrl.includes('127.0.0.1') && !publicUrl.includes('localhost')) {
