@@ -7,7 +7,11 @@ and webhook handling under DPDP Act Section 9 guidelines.
 from fastapi import APIRouter, Depends, Header, HTTPException, Query, Body
 from pydantic import BaseModel, Field
 from typing import Optional, List, Dict, Any
+from sqlalchemy.orm import Session
 import datetime
+
+from backend.app.database import get_db
+from backend.app.models import Student
 
 from backend.app.services.whatsapp_service import (
     get_whatsapp_config,
@@ -20,7 +24,7 @@ router = APIRouter(prefix="", tags=["WhatsApp Business API"])
 
 class SendWhatsAppRequest(BaseModel):
     recipient_phone: str = Field(..., example="+91 98765 43210")
-    student_id: Optional[str] = "STD_PAT_001"
+    student_id: Optional[str] = None
     student_name: Optional[str] = "Ananya Pandey"
     guardian_name: Optional[str] = "Mahesh Prasad"
     attendance_pct: Optional[float] = 92.5
@@ -43,14 +47,14 @@ def get_whatsapp_status():
     logs = get_whatsapp_logs()
     total_sent = len(logs)
     return {
-        "status": "online",
+        "status": "configured" if config["has_live_token"] and config["phone_number_id"] else ("invalid_configuration" if config["has_live_token"] else "simulation_only"),
         "provider": config["provider"],
         "mode": config["mode"],
         "has_live_token": config["has_live_token"],
         "phone_number_id": config["phone_number_id"],
-        "total_messages_sent": total_sent,
-        "utility_delivery_rate": "99.4%",
-        "dpdp_section_9_compliance": "Active Verifiable Consent Required"
+        "total_messages_logged": total_sent,
+        "delivery_rate": None,
+        "dpdp_section_9_compliance": "Consent is checked against the student record before individual sends"
     }
 
 @router.post("/whatsapp/send")
@@ -58,13 +62,24 @@ def get_whatsapp_status():
 def send_parent_report_whatsapp(
     payload: SendWhatsAppRequest,
     tenant_id: Optional[str] = None,
-    x_tenant_id: Optional[str] = Header(None, alias="X-Tenant-ID")
+    x_tenant_id: Optional[str] = Header(None, alias="X-Tenant-ID"),
+    db: Session = Depends(get_db),
 ):
     """
     Sends an empathetic weekly parent progress report via WhatsApp.
     Automatically generates bilingual formatting with zero numerical hallucinations.
     """
     tid = tenant_id or x_tenant_id or "INST_PATNA_01"
+    if not payload.student_id:
+        raise HTTPException(status_code=422, detail="student_id is required to verify guardian consent before sending.")
+    student = db.query(Student).filter(
+        Student.id == payload.student_id,
+        Student.tenant_id == tid,
+    ).first()
+    if not student:
+        raise HTTPException(status_code=404, detail="Student not found in this institute roster.")
+    if not student.parent_contact_consent:
+        raise HTTPException(status_code=403, detail="Parent contact consent is required before sending WhatsApp messages.")
 
     if payload.custom_message:
         message_body = payload.custom_message
@@ -79,18 +94,25 @@ def send_parent_report_whatsapp(
             language=payload.language or "en"
         )
 
-    res = send_whatsapp_message(
-        to_phone=payload.recipient_phone,
-        message_text=message_body,
-        student_id=payload.student_id or "STD_PAT_001",
-        student_name=payload.student_name or "Student",
-        tenant_id=tid,
-        message_type="PARENT_DIGEST"
-    )
+    try:
+        res = send_whatsapp_message(
+            to_phone=payload.recipient_phone,
+            message_text=message_body,
+            student_id=payload.student_id or "STD_PAT_001",
+            student_name=payload.student_name or "Student",
+            tenant_id=tid,
+            message_type="PARENT_DIGEST"
+        )
+    except (RuntimeError, ValueError) as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
 
     return {
-        "status": "success",
-        "message": f"WhatsApp progress digest successfully delivered to {payload.recipient_phone}",
+        "status": res.get("status", "unknown"),
+        "message": (
+            f"WhatsApp progress digest sent to {payload.recipient_phone}"
+            if res.get("status") == "success"
+            else f"Simulation only: no WhatsApp message was sent to {payload.recipient_phone}. Configure Meta credentials to enable delivery."
+        ),
         "delivery_details": res
     }
 
@@ -106,43 +128,14 @@ def broadcast_whatsapp_batch(
     """
     tid = tenant_id or x_tenant_id or "INST_PATNA_01"
     
-    # Batch cohort students
-    cohort = [
-        ("STD_PAT_001", "Ananya Pandey", "Rajesh Pandey", "+91 98765 43210", 94.2, "93.5 - 96.0"),
-        ("STD_PAT_002", "Shaurya Pandey", "Rajesh Pandey", "+91 98765 11223", 92.0, "95.0 - 98.2"),
-        ("STD_PAT_003", "Khushi Sen", "Dr. A. K. Sen", "+91 98765 99887", 88.5, "91.0 - 94.0"),
-        ("STD_PAT_004", "Advait Chatterjee", "Sunil Chatterjee", "+91 98765 55443", 95.0, "88.0 - 92.5"),
-        ("STD_PAT_005", "Varun Kumar", "Sanjay Kumar", "+91 98765 66778", 91.0, "89.5 - 93.0"),
-    ]
-
-    dispatched = []
-    for sid, sname, gname, phone, att, pr in cohort:
-        msg = format_parent_digest_message(
-            student_name=sname,
-            guardian_name=gname,
-            attendance_pct=att,
-            percentile_range=pr,
-            weak_topics=["Rotational Dynamics"],
-            strong_topics=["Electrostatics"],
-            language=payload.language or "en"
-        )
-        res = send_whatsapp_message(
-            to_phone=phone,
-            message_text=msg,
-            student_id=sid,
-            student_name=sname,
-            tenant_id=tid,
-            message_type="BATCH_BROADCAST"
-        )
-        dispatched.append(res)
-
+    # Live broadcasts require guardian phone numbers and consented, verified reports.
+    # Neither is available in the current student schema, so do not send to a hard-coded cohort.
     return {
-        "status": "success",
+        "status": "unavailable",
         "batch_id": payload.batch_id,
-        "total_dispatched": len(dispatched),
-        "successful_deliveries": len(dispatched),
-        "cost_inr": round(len(dispatched) * 0.275, 2),
-        "dispatches": dispatched
+        "total_dispatched": 0,
+        "message": "Batch broadcast is unavailable until guardian phone numbers and report facts are stored per student with consent.",
+        "dispatches": [],
     }
 
 @router.get("/whatsapp/logs")

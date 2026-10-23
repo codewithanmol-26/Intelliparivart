@@ -601,7 +601,33 @@ def commit_omr_results(
         Test.id == req.test_id,
         Test.tenant_id == tenant_id,
     ).first()
-    test_date = test.test_date if test else datetime.date.today()
+    if not test:
+        batch_id = req.batch_id or student.batch_id
+        batch = db.query(Batch).filter(
+            Batch.id == batch_id,
+            Batch.tenant_id == tenant_id,
+        ).first()
+        if not batch:
+            db.rollback()
+            raise HTTPException(status_code=400, detail="A valid institute batch is required to create this test.")
+        try:
+            test = Test(
+                id=req.test_id,
+                tenant_id=tenant_id,
+                batch_id=batch.id,
+                test_number=db.query(Test).filter(Test.tenant_id == tenant_id).count() + 1,
+                title=f"OMR scan {req.test_id}",
+                test_date=datetime.date.today(),
+                total_questions=len(req.answers),
+                max_score=float(len(req.answers) * 4),
+                exam_type="JEE Main",
+            )
+            db.add(test)
+            db.flush()
+        except Exception as exc:
+            db.rollback()
+            raise HTTPException(status_code=400, detail=f"Could not create test record: {exc}") from exc
+    test_date = test.test_date
 
     committed = 0
     for question_ref, answer in req.answers.items():

@@ -9,6 +9,7 @@ Provides automated, DPDP Act Section 9 compliant parent communications:
 """
 
 import os
+import re
 import time
 import uuid
 import datetime
@@ -21,8 +22,8 @@ WHATSAPP_DELIVERY_LOGS: List[Dict[str, Any]] = []
 def get_whatsapp_config() -> Dict[str, Any]:
     """Retrieves WhatsApp API credentials from environment."""
     token = os.getenv("WHATSAPP_API_TOKEN") or os.getenv("META_WHATSAPP_TOKEN")
-    phone_id = os.getenv("WHATSAPP_PHONE_NUMBER_ID") or "109283746519283"
-    account_id = os.getenv("WHATSAPP_BUSINESS_ACCOUNT_ID") or "293847561029384"
+    phone_id = os.getenv("WHATSAPP_PHONE_NUMBER_ID")
+    account_id = os.getenv("WHATSAPP_BUSINESS_ACCOUNT_ID")
     return {
         "has_live_token": bool(token),
         "api_token": token,
@@ -83,19 +84,52 @@ def send_whatsapp_message(
     tenant_id: str = "INST_PATNA_01",
     message_type: str = "PARENT_DIGEST"
 ) -> Dict[str, Any]:
-    """
-    Sends WhatsApp message via Meta Graph API or Verification Gateway.
-    Records immutable delivery audit log.
-    """
+    """Send via Meta when configured; otherwise record an explicit simulation."""
     config = get_whatsapp_config()
-    clean_phone = to_phone.replace(" ", "").replace("-", "")
+    clean_phone = re.sub(r"[\s()-]", "", to_phone)
     if not clean_phone.startswith("+"):
         clean_phone = "+91" + clean_phone if len(clean_phone) == 10 else "+" + clean_phone
+    if not clean_phone[1:].isdigit() or not 8 <= len(clean_phone[1:]) <= 15:
+        raise ValueError("Recipient phone must be a valid international number (8–15 digits).")
 
     message_id = f"wamid.HBgL{uuid.uuid4().hex[:12].upper()}="
     timestamp = datetime.datetime.utcnow().isoformat() + "Z"
 
-    # If real Meta API token exists, call Graph API
+    # Without Meta credentials, make the simulation explicit; never claim a real delivery.
+    if not config["has_live_token"]:
+        delivery_record = {
+            "id": f"WA_MSG_{uuid.uuid4().hex[:8].upper()}",
+            "message_id": None,
+            "tenant_id": tenant_id,
+            "student_id": student_id,
+            "student_name": student_name,
+            "recipient_phone": clean_phone,
+            "message_type": message_type,
+            "content_preview": message_text[:120] + "...",
+            "full_text": message_text,
+            "status": "SIMULATED",
+            "read_receipt": False,
+            "sent_at": timestamp,
+            "delivery_time_ms": None,
+            "cost_inr": 0.0,
+            "dpdp_consent_verified": None,
+        }
+        WHATSAPP_DELIVERY_LOGS.insert(0, delivery_record)
+        del WHATSAPP_DELIVERY_LOGS[50:]
+        return {
+            "status": "simulated",
+            "message_id": None,
+            "delivery_status": "SIMULATED",
+            "recipient": clean_phone,
+            "timestamp": timestamp,
+            "provider": config["provider"],
+            "mode": config["mode"],
+        }
+
+    if not config["phone_number_id"]:
+        raise ValueError("WHATSAPP_PHONE_NUMBER_ID is required when a Meta API token is configured.")
+
+    # Send through Meta Graph API when credentials are configured.
     if config["has_live_token"]:
         url = f"https://graph.facebook.com/v20.0/{config['phone_number_id']}/messages"
         headers = {
@@ -110,15 +144,23 @@ def send_whatsapp_message(
             "text": {"preview_url": True, "body": message_text}
         }
         try:
-            with httpx.Client(timeout=10.0) as client:
+            with httpx.Client(timeout=15.0) as client:
                 res = client.post(url, json=payload, headers=headers)
-                if res.status_code == 200:
-                    api_data = res.json()
-                    message_id = api_data.get("messages", [{}])[0].get("id", message_id)
-        except Exception:
-            pass
+                if res.is_error:
+                    try:
+                        detail = res.json().get("error", {}).get("message", res.text)
+                    except (ValueError, AttributeError):
+                        detail = res.text
+                    raise RuntimeError(f"Meta WhatsApp API returned {res.status_code}: {detail}")
+                api_data = res.json()
+                messages = api_data.get("messages") or []
+                if not messages or not messages[0].get("id"):
+                    raise RuntimeError("Meta WhatsApp API response did not include a message ID.")
+                message_id = messages[0]["id"]
+        except httpx.HTTPError as exc:
+            raise RuntimeError(f"Could not connect to Meta WhatsApp API: {exc}") from exc
 
-    # Record delivery record in audit ledger
+    # Record the API acknowledgement as sent, not delivered; delivery receipts come by webhook.
     delivery_record = {
         "id": f"WA_MSG_{uuid.uuid4().hex[:8].upper()}",
         "message_id": message_id,
@@ -129,11 +171,11 @@ def send_whatsapp_message(
         "message_type": message_type,
         "content_preview": message_text[:120] + "...",
         "full_text": message_text,
-        "status": "DELIVERED",
-        "read_receipt": True,
+        "status": "SENT",
+        "read_receipt": False,
         "sent_at": timestamp,
-        "delivery_time_ms": 340,
-        "cost_inr": 0.275,  # Utility template standard Meta pricing in India
+        "delivery_time_ms": None,
+        "cost_inr": None,
         "dpdp_consent_verified": True
     }
 
@@ -145,7 +187,7 @@ def send_whatsapp_message(
     return {
         "status": "success",
         "message_id": message_id,
-        "delivery_status": "DELIVERED",
+        "delivery_status": "SENT",
         "recipient": clean_phone,
         "timestamp": timestamp,
         "provider": config["provider"],
@@ -154,33 +196,4 @@ def send_whatsapp_message(
 
 def get_whatsapp_logs(tenant_id: str = "INST_PATNA_01") -> List[Dict[str, Any]]:
     """Returns recent WhatsApp delivery audit logs."""
-    if not WHATSAPP_DELIVERY_LOGS:
-        # Pre-seed realistic delivery logs
-        seed_students = [
-            ("STD_PAT_001", "Ananya Pandey", "+91 98765 43210", "DELIVERED"),
-            ("STD_PAT_002", "Shaurya Pandey", "+91 98765 11223", "READ"),
-            ("STD_PAT_003", "Khushi Sen", "+91 98765 99887", "DELIVERED"),
-            ("STD_PAT_004", "Advait Chatterjee", "+91 98765 55443", "READ"),
-            ("STD_PAT_005", "Varun Kumar", "+91 98765 66778", "DELIVERED"),
-        ]
-        now = datetime.datetime.utcnow()
-        for idx, (sid, sname, phone, st) in enumerate(seed_students):
-            WHATSAPP_DELIVERY_LOGS.append({
-                "id": f"WA_MSG_SEED_{idx:03d}",
-                "message_id": f"wamid.HBgL{uuid.uuid4().hex[:12].upper()}=",
-                "tenant_id": tenant_id,
-                "student_id": sid,
-                "student_name": sname,
-                "recipient_phone": phone,
-                "message_type": "PARENT_DIGEST",
-                "content_preview": f"Namaste! Weekly academic progress digest for {sname}...",
-                "full_text": f"Weekly progress update for {sname} from Apex JEE Academy.",
-                "status": st,
-                "read_receipt": st == "READ",
-                "sent_at": (now - datetime.timedelta(hours=idx * 4)).isoformat() + "Z",
-                "delivery_time_ms": 280 + idx * 30,
-                "cost_inr": 0.275,
-                "dpdp_consent_verified": True
-            })
-
-    return [log for log in WHATSAPP_DELIVERY_LOGS if log.get("tenant_id") == tenant_id or True]
+    return [log for log in WHATSAPP_DELIVERY_LOGS if log.get("tenant_id") == tenant_id]

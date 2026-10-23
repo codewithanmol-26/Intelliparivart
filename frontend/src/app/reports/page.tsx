@@ -115,9 +115,13 @@ export default function ReportsPage() {
         language: lang,
       }, tenantId);
       setWhatsAppDeliveryResult(res);
-      notifyRecomputed(undefined, `WhatsApp digest sent to ${recipientPhone}`);
+      if (res.status === 'simulated') {
+        setBroadcastNotice('Simulation only — no message was sent. Configure WHATSAPP_API_TOKEN and WHATSAPP_PHONE_NUMBER_ID on the backend for live delivery.');
+      } else {
+        notifyRecomputed(undefined, `WhatsApp message accepted by Meta for ${recipientPhone}`);
+      }
     } catch (err: any) {
-      alert('WhatsApp dispatch failed. Running in fallback verification mode.');
+      alert(err.message || 'WhatsApp dispatch failed. Check the backend status and Meta credentials.');
     } finally {
       setIsSendingWhatsApp(false);
     }
@@ -130,10 +134,12 @@ export default function ReportsPage() {
         batch_id: 'INST_PATNA_01_B1_JEE_12',
         language: lang,
       }, tenantId);
-      setBroadcastNotice(`✓ Dispatched ${res.total_dispatched} WhatsApp parent digests for 12th Achievers Top-30 (Cost: ₹${res.cost_inr})`);
-      notifyRecomputed(undefined, `Batch WhatsApp dispatch complete (${res.total_dispatched} parents)`);
-    } catch {
-      setBroadcastNotice('✓ Broadcast simulation complete (5 parents delivered)');
+      setBroadcastNotice(res.message || `Batch broadcast status: ${res.status}`);
+      if (res.total_dispatched > 0) {
+        notifyRecomputed(undefined, `Batch WhatsApp dispatch accepted (${res.total_dispatched} parents)`);
+      }
+    } catch (err: any) {
+      setBroadcastNotice(err.message || 'Batch WhatsApp broadcast failed.');
     } finally {
       setIsBroadcasting(false);
     }
@@ -164,9 +170,9 @@ export default function ReportsPage() {
             <h1 className="text-2xl font-bold text-slate-900">
               Automated Parent Progress Digest (Bilingual)
             </h1>
-            <span className="hidden sm:inline-flex items-center space-x-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
-              <MessageSquare className="w-3 h-3 text-emerald-600" />
-              <span>WhatsApp Cloud API Active</span>
+            <span className="hidden sm:inline-flex items-center space-x-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300">
+              <MessageSquare className="w-3 h-3 text-amber-600" />
+              <span>WhatsApp availability shown at send time</span>
             </span>
           </div>
           <p className="mt-1 text-xs text-slate-500">
@@ -231,7 +237,7 @@ export default function ReportsPage() {
             className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-xs transition"
           >
             <Send className="w-3.5 h-3.5" />
-            <span>{isBroadcasting ? 'Broadcasting...' : 'Batch Broadcast to Batch (25 Parents)'}</span>
+            <span>{isBroadcasting ? 'Checking broadcast...' : 'Batch Broadcast (not configured)'}</span>
           </button>
 
           <button
@@ -424,7 +430,7 @@ export default function ReportsPage() {
                     <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block" />
                   </div>
                   <span className="text-[11px] text-teal-100 block">
-                    Meta Verified WhatsApp Cloud API
+                    WhatsApp Cloud API dispatch
                   </span>
                 </div>
               </div>
@@ -488,13 +494,17 @@ export default function ReportsPage() {
                 <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-900 space-y-1">
                   <div className="font-bold flex items-center space-x-1.5">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                    <span>WhatsApp Delivery Confirmed!</span>
+                    <span>{whatsAppDeliveryResult.status === 'simulated' ? 'Simulation only — not sent' : 'Accepted by Meta for sending'}</span>
                   </div>
                   <div className="text-[10px] font-mono text-emerald-800">
-                    Message ID: {whatsAppDeliveryResult.delivery_details?.message_id}
+                    {whatsAppDeliveryResult.delivery_details?.message_id
+                      ? `Message ID: ${whatsAppDeliveryResult.delivery_details.message_id}`
+                      : 'No Meta message ID (simulation mode)'}
                   </div>
                   <div className="text-[10px] text-emerald-700">
-                    Delivery Speed: 340ms • Utility Cost: ₹0.275 (Standard Meta Tariff)
+                    {whatsAppDeliveryResult.status === 'simulated'
+                      ? 'Configure Meta WhatsApp credentials to send real messages.'
+                      : 'Message accepted by Meta; delivery status is not yet confirmed.'}
                   </div>
                 </div>
               )}

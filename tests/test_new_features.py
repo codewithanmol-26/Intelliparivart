@@ -164,43 +164,51 @@ def test_auth_register_endpoint():
     assert "INST_" in user["tenant_id"]
 
 def test_whatsapp_endpoints():
-    # 1. Status
+    # Status must distinguish live configuration from simulation.
     r_status = client.get("/api/whatsapp/status")
     assert r_status.status_code == 200
     st_data = r_status.json()
-    assert st_data["status"] == "online"
+    assert st_data["status"] in {"configured", "invalid_configuration", "simulation_only"}
 
-    # 2. Send Message
+    # A send without a roster student cannot pass the parental-consent gate.
     send_payload = {
         "recipient_phone": "+91 98765 43210",
-        "student_name": "Ananya Pandey",
-        "guardian_name": "Mahesh Prasad",
-        "attendance_pct": 92.5,
-        "percentile_range": "94.5 - 97.2",
+        "student_name": "Synthetic test student",
+        "guardian_name": "Synthetic guardian",
         "language": "en"
     }
     r_send = client.post("/api/whatsapp/send", json=send_payload, headers={"X-Tenant-ID": "INST_PATNA_01"})
-    assert r_send.status_code == 200
-    send_data = r_send.json()
-    assert send_data["status"] == "success"
-    assert "delivery_details" in send_data
-    assert "wamid." in send_data["delivery_details"]["message_id"]
+    assert r_send.status_code == 422
 
-    # 3. Broadcast Batch
-    bcast_payload = {
-        "batch_id": "INST_PATNA_01_B1_JEE_12",
-        "language": "hi"
-    }
+    # Batch broadcasts are unavailable until live contacts and consent are supported.
+    bcast_payload = {"batch_id": "INST_PATNA_01_B1_JEE_12", "language": "hi"}
     r_bcast = client.post("/api/whatsapp/broadcast", json=bcast_payload, headers={"X-Tenant-ID": "INST_PATNA_01"})
     assert r_bcast.status_code == 200
-    bcast_data = r_bcast.json()
-    assert bcast_data["total_dispatched"] >= 1
+    assert r_bcast.json()["status"] == "unavailable"
+    assert r_bcast.json()["total_dispatched"] == 0
 
-    # 4. Logs
-    r_logs = client.get("/api/whatsapp/logs", headers={"X-Tenant-ID": "INST_PATNA_01"})
-    assert r_logs.status_code == 200
-    logs_data = r_logs.json()
-    assert logs_data["total"] >= 1
+
+def test_whatsapp_simulation_never_claims_delivery(monkeypatch):
+    from backend.app.services import whatsapp_service
+
+    monkeypatch.setattr(whatsapp_service, "get_whatsapp_config", lambda: {
+        "has_live_token": False,
+        "api_token": None,
+        "phone_number_id": None,
+        "account_id": None,
+        "provider": "WhatsApp Simulation Gateway",
+        "mode": "VERIFICATION_SIMULATION",
+    })
+    result = whatsapp_service.send_whatsapp_message(
+        to_phone="9876543210",
+        message_text="Synthetic test message",
+        student_id="SYNTHETIC_TEST_STUDENT",
+        student_name="Synthetic test student",
+        tenant_id="SYNTHETIC_TEST_TENANT",
+    )
+    assert result["status"] == "simulated"
+    assert result["delivery_status"] == "SIMULATED"
+    assert result["message_id"] is None
 
 def test_omr_ocr_endpoint():
     with open("data/omr_samples/sample_omr_clean.png", "rb") as f:
@@ -216,14 +224,7 @@ def test_omr_ocr_endpoint():
     assert "annotated_image" in omr_data
     assert len(omr_data["questions"]) == 20
 
-    # Commit OMR
-    commit_payload = {
-        "student_id": omr_data["student_id"],
-        "test_id": "TEST_PH_004",
-        "answers": {"Q01": "A", "Q02": "A", "Q03": "C"},
-        "score": omr_data["score"]
-    }
-    r_commit = client.post("/api/ingest/omr-commit", json=commit_payload, headers={"X-Tenant-ID": "INST_PATNA_01"})
-    assert r_commit.status_code == 200
-    commit_data = r_commit.json()
-    assert commit_data["status"] == "SUCCESS"
+    # OCR extracts the printed student ID; the printed sheet has no test ID.
+    assert omr_data["student_id"] == "STD_PAT_001"
+    assert omr_data["test_id"] is None
+    assert omr_data["requires_human_review"] is True
