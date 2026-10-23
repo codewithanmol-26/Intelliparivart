@@ -715,6 +715,10 @@ export const api = {
 
   // Generative AI Layer
   async getGenAiStatus(): Promise<any> {
+    try {
+      const localRes = await fetch('/api/genai/status');
+      if (localRes.ok) return await localRes.json();
+    } catch {}
     return request<any>('/genai/status');
   },
 
@@ -725,6 +729,17 @@ export const api = {
     student_name?: string;
     weakness_reason?: string;
   }, tenantId?: string): Promise<any> {
+    try {
+      const localRes = await fetch('/api/genai/worksheet', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (localRes.ok) {
+        const data = await localRes.json();
+        if (data && data.worksheet) return data;
+      }
+    } catch {}
     return request<any>('/genai/worksheet', {
       method: 'POST',
       body: JSON.stringify(payload),
@@ -732,6 +747,17 @@ export const api = {
   },
 
   async askAiCopilot(prompt: string, context?: string, tenantId?: string): Promise<any> {
+    try {
+      const localRes = await fetch('/api/genai/copilot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt, context }),
+      });
+      if (localRes.ok) {
+        const data = await localRes.json();
+        if (data && data.answer) return data;
+      }
+    } catch {}
     return request<any>('/genai/copilot', {
       method: 'POST',
       body: JSON.stringify({ prompt, context }),
