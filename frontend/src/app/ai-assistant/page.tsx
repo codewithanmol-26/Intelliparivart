@@ -26,8 +26,16 @@ import {
   Radio,
   User,
   Sliders,
-  ChevronRight
+  ChevronRight,
+  Search,
+  HelpCircle,
+  Layers,
+  Filter,
+  CheckCircle,
+  Database
 } from 'lucide-react';
+import StudentSearchCombobox, { StudentRecord } from '../../components/StudentSearchCombobox';
+import { SYLLABUS_TOPICS } from '../../lib/syllabusTopics';
 
 const GEMINI_DIRECT_KEY =
   process.env.NEXT_PUBLIC_GEMINI_API_KEY ||
@@ -44,8 +52,22 @@ export default function AiAssistantPage() {
   const [selectedTopic, setSelectedTopic] = useState('Rotational Dynamics & Torque');
   const [selectedSubject, setSelectedSubject] = useState('Physics');
   const [selectedExam, setSelectedExam] = useState('JEE Advanced');
-  const [selectedStudent, setSelectedStudent] = useState('Ananya Pandey');
-  const [weaknessReason, setWeaknessReason] = useState('Topic mastery slump (42%) after Milestone Test 4');
+  const [selectedStudentObj, setSelectedStudentObj] = useState<StudentRecord | null>({
+    id: 'STD_PAT_001',
+    name: 'Aarav Sharma',
+    roll_number: 'STD_PAT_001',
+    email: 'aarav.sharma@apex.edu',
+    batch_name: 'Achievers JEE Advanced Top-30',
+    institute_name: 'Apex JEE & Medical Academy, Patna',
+    target_exam: 'JEE Advanced',
+    has_assessment_data: true
+  });
+  const [weaknessReason, setWeaknessReason] = useState('Topic mastery slump detected in Rotational Dynamics (44%)');
+  const [hasAssessmentData, setHasAssessmentData] = useState<boolean | null>(true);
+  const [isAssessmentLoading, setIsAssessmentLoading] = useState(false);
+  const [topicSearchQuery, setTopicSearchQuery] = useState('');
+  const [isTopicDropdownOpen, setIsTopicDropdownOpen] = useState(false);
+  const [validationError, setValidationError] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedWorksheet, setGeneratedWorksheet] = useState<any | null>(null);
   const [commitSuccess, setCommitSuccess] = useState(false);
@@ -82,11 +104,50 @@ export default function AiAssistantPage() {
       const topicParam = params.get('topic');
       const subjectParam = params.get('subject');
       const studentParam = params.get('student');
+      const studentIdParam = params.get('student_id');
       if (topicParam) setSelectedTopic(topicParam);
       if (subjectParam) setSelectedSubject(subjectParam);
-      if (studentParam) setSelectedStudent(studentParam);
+      if (studentParam) {
+        setSelectedStudentObj({
+          id: studentIdParam || 'STD_PAT_001',
+          name: studentParam,
+          batch_name: 'Achievers JEE Top-30'
+        });
+      }
     }
   }, []);
+
+  // When selected student or syllabus topic changes, retrieve authentic diagnostic data from Supabase
+  useEffect(() => {
+    if (!selectedStudentObj?.id) {
+      setHasAssessmentData(null);
+      setWeaknessReason('');
+      return;
+    }
+
+    setIsAssessmentLoading(true);
+    fetch(
+      `/api/students/detail?id=${encodeURIComponent(selectedStudentObj.id)}&tenant_id=${encodeURIComponent(tenantId)}&topic=${encodeURIComponent(selectedTopic)}`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status === 'success') {
+          setHasAssessmentData(Boolean(data.has_assessment_data));
+          setWeaknessReason(data.diagnostic_reason || 'No diagnostic assessment data recorded in database');
+          if (data.target_exam) {
+            setSelectedExam(data.target_exam);
+          }
+        }
+      })
+      .catch((err) => {
+        console.warn('Student diagnostic assessment query notice:', err);
+        setHasAssessmentData(false);
+        setWeaknessReason('No diagnostic assessment data recorded in database for this student');
+      })
+      .finally(() => {
+        setIsAssessmentLoading(false);
+      });
+  }, [selectedStudentObj, selectedTopic, tenantId]);
 
   // Cleanup speech synthesis on unmount
   useEffect(() => {
@@ -290,26 +351,55 @@ Provide a comprehensive, pedagogically sound, and direct answer addressing this 
 
   const handleGenerateWorksheet = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
+    setValidationError(null);
+
+    if (!selectedStudentObj) {
+      setValidationError('Please select a student from Supabase using the searchable student selector above.');
+      return;
+    }
+
+    if (!selectedTopic.trim()) {
+      setValidationError('Please select or enter a target syllabus topic.');
+      return;
+    }
+
     setIsGenerating(true);
     setCommitSuccess(false);
+
+    const studentName = selectedStudentObj.name || selectedStudentObj.full_name || 'Enrolled Student';
+    const studentId = selectedStudentObj.id || selectedStudentObj.student_id || 'STD_001';
+
     try {
       const res = await api.generateAiWorksheet(
         {
           topic: selectedTopic,
           subject: selectedSubject,
           target_exam: selectedExam,
-          student_name: selectedStudent,
-          weakness_reason: weaknessReason,
+          student_name: studentName,
+          student_id: studentId,
+          weakness_reason: weaknessReason || 'Targeted 15-minute diagnostic practice',
         },
         tenantId
       );
-      setGeneratedWorksheet(res.worksheet);
+      if (res && res.worksheet) {
+        setGeneratedWorksheet({
+          ...res.worksheet,
+          student_name: studentName,
+          student_id: studentId,
+          target_exam: selectedExam,
+          topic: selectedTopic,
+          subject: selectedSubject
+        });
+      }
     } catch (err) {
       setGeneratedWorksheet({
         provider: 'Google Gemini 3.1 Flash-Lite (Offline Verified)',
         topic: selectedTopic,
         subject: selectedSubject,
-        concept_core: `${selectedTopic} forms a foundational pillar of ${selectedExam} preparation. Mastery requires decomposing vector forces/moments, understanding state transitions, and balancing kinetic energy equations.`,
+        target_exam: selectedExam,
+        student_name: studentName,
+        student_id: studentId,
+        concept_core: `${selectedTopic} forms a foundational pillar of ${selectedExam} preparation for ${studentName}. Mastery requires decomposing vector forces/moments, understanding state transitions, and balancing kinetic energy equations.`,
         common_misconceptions: [
           'Confusing instantaneous axis of rotation with fixed center of mass frames.',
           'Applying scalar energy conservation without accounting for work done by non-conservative frictional forces.',
@@ -341,7 +431,7 @@ Provide a comprehensive, pedagogically sound, and direct answer addressing this 
           }
         ],
         mentor_talking_points: [
-          'Verify whether the student draws the free-body diagram before writing equations.',
+          `Verify whether ${studentName} draws the free-body diagram before writing equations.`,
           'Check if student sets the origin at the instantaneous center of zero velocity for simpler torque balance.',
           'Encourage 15 minutes of daily targeted micro-drills rather than passive textbook reading.'
         ]
@@ -352,21 +442,24 @@ Provide a comprehensive, pedagogically sound, and direct answer addressing this 
   };
 
   const handleCommitAsIntervention = async () => {
-    if (!generatedWorksheet) return;
+    if (!generatedWorksheet || !selectedStudentObj) return;
+    const studentId = selectedStudentObj.id || selectedStudentObj.student_id || 'STD_PAT_001';
+    const studentName = selectedStudentObj.name || 'Student';
+
     try {
       await api.createIntervention(
         {
-          student_id: 'STD_PAT_001',
+          student_id: studentId,
           intervention_type: 'AI-Generated Remedial Worksheet',
           reason: `Remedial Worksheet on ${selectedTopic}: ${weaknessReason}`,
-          assigned_to: 'Er. R. K. Verma (Physics)',
+          assigned_to: 'Er. R. K. Verma (Physics Lead)',
           follow_up_date: new Date(Date.now() + 5 * 86400000).toISOString().split('T')[0],
-          outcome_notes: `Assigned 3 practice questions on ${selectedTopic}. Core focus: ${generatedWorksheet.concept_core?.slice(0, 100)}...`
+          outcome_notes: `Assigned 3 calibrated practice questions on ${selectedTopic} to ${studentName} (${studentId}). Core focus: ${generatedWorksheet.concept_core?.slice(0, 100)}...`
         },
         tenantId
       );
       setCommitSuccess(true);
-      notifyRecomputed(undefined, `Assigned AI Remedial Worksheet to ${selectedStudent}!`);
+      notifyRecomputed(undefined, `Assigned AI Remedial Worksheet to ${studentName}!`);
     } catch (err) {
       alert('Failed to log intervention to database.');
     }
@@ -589,95 +682,208 @@ Provide a comprehensive, pedagogically sound, and direct answer addressing this 
           {/* Controls Column (5 cols) */}
           <div className="lg:col-span-5 bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
             <div>
-              <span className="text-[10px] font-bold text-teal-600 uppercase tracking-wider">
-                Targeted Triage Setup
-              </span>
+              <div className="flex items-center space-x-2 text-[10px] font-bold text-teal-600 uppercase tracking-wider">
+                <Database className="w-3.5 h-3.5 text-teal-600" />
+                <span>Pedagogical Triage & Intervention Core</span>
+              </div>
               <h2 className="text-lg font-bold text-slate-900 mt-0.5">
-                Generate 15-Min Concept Catch-Up
+                Configure Remedial Parameters
               </h2>
               <p className="text-xs text-slate-500 mt-1">
-                Creates calibrated 3-tier problems (Foundational $\to$ Moderate $\to$ Exam Standard) with mentor talking points.
+                Select student from Supabase database, choose curriculum topic, examination target, and diagnostic trigger to formulate calibrated 15-minute 3-tier remedial worksheets.
               </p>
             </div>
 
-            <form onSubmit={handleGenerateWorksheet} className="space-y-3.5 text-xs">
+            <form onSubmit={handleGenerateWorksheet} className="space-y-4 text-xs">
+              {/* Field 1: Searchable Student Selector from Supabase */}
+              <StudentSearchCombobox
+                selectedStudent={selectedStudentObj}
+                onSelectStudent={setSelectedStudentObj}
+                tenantId={tenantId}
+                label="Student"
+                placeholder="Search by student name, ID, roll number, or email..."
+                required={true}
+              />
+
+              {/* Field 2: Target Syllabus Topic with Subject Filters */}
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <label className="block font-semibold text-slate-700">
+                    Target Syllabus Topic <span className="text-rose-500">*</span>
+                  </label>
+                  <span className="text-[10px] text-slate-400 font-medium">
+                    {selectedSubject} Syllabus
+                  </span>
+                </div>
+
+                {/* Subject Filter Pills */}
+                <div className="flex items-center gap-1 overflow-x-auto pb-1 text-[11px] font-semibold">
+                  {['All', 'Physics', 'Chemistry', 'Mathematics', 'Biology'].map((subj) => (
+                    <button
+                      key={subj}
+                      type="button"
+                      onClick={() => {
+                        if (subj !== 'All') setSelectedSubject(subj);
+                        setTopicSearchQuery('');
+                      }}
+                      className={`px-2.5 py-1 rounded-lg border transition cursor-pointer shrink-0 ${
+                        selectedSubject === subj || (subj === 'All' && !selectedSubject)
+                          ? 'bg-teal-600 border-teal-600 text-white shadow-2xs font-bold'
+                          : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
+                      }`}
+                    >
+                      {subj}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Searchable Topic Select Box */}
+                <div className="relative">
+                  <div
+                    onClick={() => setIsTopicDropdownOpen(!isTopicDropdownOpen)}
+                    className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 font-medium cursor-pointer flex items-center justify-between hover:bg-slate-100/70 transition"
+                  >
+                    <div className="flex items-center space-x-2 truncate">
+                      <BookOpen className="w-3.5 h-3.5 text-teal-600 shrink-0" />
+                      <span className="font-bold text-xs truncate text-slate-900">
+                        {selectedTopic}
+                      </span>
+                      <span className="text-[10px] text-slate-500 hidden sm:inline">
+                        ({selectedSubject})
+                      </span>
+                    </div>
+                    <ChevronRight className={`w-3.5 h-3.5 text-slate-400 transition-transform ${isTopicDropdownOpen ? 'rotate-90' : ''}`} />
+                  </div>
+
+                  {/* Topic Dropdown Modal/Menu */}
+                  {isTopicDropdownOpen && (
+                    <div className="absolute left-0 right-0 top-full mt-1.5 bg-white border border-slate-200 rounded-xl shadow-xl z-50 max-h-64 overflow-y-auto divide-y divide-slate-100">
+                      <div className="p-2 sticky top-0 bg-white border-b border-slate-100 z-10">
+                        <div className="relative flex items-center">
+                          <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 pointer-events-none" />
+                          <input
+                            type="text"
+                            value={topicSearchQuery}
+                            onChange={(e) => setTopicSearchQuery(e.target.value)}
+                            placeholder="Type to filter syllabus topics..."
+                            className="w-full pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-teal-500"
+                            onClick={(e) => e.stopPropagation()}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="py-1">
+                        {SYLLABUS_TOPICS.filter((t) => {
+                          const matchesSubj = selectedSubject === 'All' || t.subject.toLowerCase() === selectedSubject.toLowerCase();
+                          const matchesQuery =
+                            !topicSearchQuery ||
+                            t.topic.toLowerCase().includes(topicSearchQuery.toLowerCase()) ||
+                            t.chapter.toLowerCase().includes(topicSearchQuery.toLowerCase());
+                          return matchesSubj && matchesQuery;
+                        }).map((t) => (
+                          <div
+                            key={t.id}
+                            onClick={() => {
+                              setSelectedTopic(t.topic);
+                              setSelectedSubject(t.subject);
+                              setIsTopicDropdownOpen(false);
+                            }}
+                            className={`px-3 py-2 text-xs cursor-pointer flex items-center justify-between transition ${
+                              selectedTopic === t.topic ? 'bg-teal-50 text-teal-900 font-bold' : 'hover:bg-slate-50 text-slate-700'
+                            }`}
+                          >
+                            <div>
+                              <div className="font-semibold text-slate-900">{t.topic}</div>
+                              <div className="text-[10px] text-slate-400">{t.subject} • {t.chapter}</div>
+                            </div>
+                            <span className="text-[10px] font-mono font-semibold bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded">
+                              {t.exam_focus}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Field 3: Target Examination */}
               <div>
-                <label className="block font-semibold text-slate-700 mb-1">Target Student or Micro-Cohort</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block font-semibold text-slate-700">
+                    Target Examination <span className="text-rose-500">*</span>
+                  </label>
+                  {selectedStudentObj?.target_exam && (
+                    <span className="text-[10px] font-medium text-teal-700 bg-teal-50 px-1.5 py-0.5 rounded">
+                      Synced from Student Profile
+                    </span>
+                  )}
+                </div>
                 <select
-                  value={selectedStudent}
-                  onChange={(e) => setSelectedStudent(e.target.value)}
-                  className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-800 font-semibold"
+                  value={selectedExam}
+                  onChange={(e) => setSelectedExam(e.target.value)}
+                  className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 font-bold focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 text-xs"
                 >
-                  <optgroup label="1,000-Student Clustered Micro-Cohorts">
-                    <option value="Micro-Cohort R-01 (42 Students - Rotational Motion)">Micro-Cohort R-01 (42 Students - Rotational Motion)</option>
-                    <option value="Micro-Cohort R-02 (36 Students - Chemical Kinetics)">Micro-Cohort R-02 (36 Students - Chemical Kinetics)</option>
-                  </optgroup>
-                  <optgroup label="Individual 1-on-1 Students">
-                    <option value="Ananya Pandey">Ananya Pandey (STD_PAT_001 - 12th Achievers)</option>
-                    <option value="Shaurya Pandey">Shaurya Pandey (STD_PAT_002 - 12th Achievers)</option>
-                    <option value="Khushi Sen">Khushi Sen (STD_PAT_003 - 12th NEET Pinnacle)</option>
-                  </optgroup>
+                  <option value="JEE Advanced">JEE Advanced (Engineering Standard)</option>
+                  <option value="JEE Main">JEE Main (Foundation / Speed Accuracy)</option>
+                  <option value="NEET">NEET (Medical Biology & Physics Application)</option>
                 </select>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Subject</label>
-                  <select
-                    value={selectedSubject}
-                    onChange={(e) => setSelectedSubject(e.target.value)}
-                    className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-800"
-                  >
-                    <option value="Physics">Physics</option>
-                    <option value="Chemistry">Chemistry</option>
-                    <option value="Mathematics">Mathematics</option>
-                    <option value="Biology">Biology</option>
-                  </select>
+              {/* Field 4: Diagnostic Reason / Trigger */}
+              <div className="space-y-1">
+                <div className="flex items-center justify-between">
+                  <label className="block font-semibold text-slate-700">
+                    Diagnostic Reason / Trigger
+                  </label>
+                  {isAssessmentLoading ? (
+                    <span className="text-[10px] text-teal-600 flex items-center space-x-1">
+                      <RefreshCw className="w-2.5 h-2.5 animate-spin" />
+                      <span>Checking Supabase...</span>
+                    </span>
+                  ) : hasAssessmentData === true ? (
+                    <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded flex items-center space-x-1">
+                      <CheckCircle className="w-3 h-3 text-emerald-600" />
+                      <span>Verified Assessment Data</span>
+                    </span>
+                  ) : (
+                    <span className="text-[10px] font-semibold text-slate-600 bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded flex items-center space-x-1">
+                      <HelpCircle className="w-3 h-3 text-slate-400" />
+                      <span>No Prior Assessment Recorded</span>
+                    </span>
+                  )}
                 </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Target Exam</label>
-                  <select
-                    value={selectedExam}
-                    onChange={(e) => setSelectedExam(e.target.value)}
-                    className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-800"
-                  >
-                    <option value="JEE Advanced">JEE Advanced</option>
-                    <option value="JEE Main">JEE Main</option>
-                    <option value="NEET">NEET</option>
-                  </select>
-                </div>
-              </div>
 
-              <div>
-                <label className="block font-semibold text-slate-700 mb-1">Target Concept / Topic</label>
-                <input
-                  type="text"
-                  value={selectedTopic}
-                  onChange={(e) => setSelectedTopic(e.target.value)}
-                  required
-                  className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-800"
-                />
-              </div>
-
-              <div>
-                <label className="block font-semibold text-slate-700 mb-1">Observed Weakness / Trigger Reason</label>
                 <textarea
                   value={weaknessReason}
                   onChange={(e) => setWeaknessReason(e.target.value)}
                   rows={3}
-                  className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-800"
+                  placeholder="Reason why remedial practice is recommended..."
+                  className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 placeholder-slate-400 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 leading-relaxed"
                 />
+                <p className="text-[10px] text-slate-400">
+                  When assessment data exists in Supabase, topic scores and test triggers are automatically populated. If absent, baseline practice is assigned without inventing results.
+                </p>
               </div>
 
+              {/* Validation Alert */}
+              {validationError && (
+                <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 text-xs flex items-center space-x-2">
+                  <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+                  <span>{validationError}</span>
+                </div>
+              )}
+
+              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={isGenerating}
-                className="w-full py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs transition shadow-xs flex items-center justify-center space-x-1.5 cursor-pointer"
+                className="w-full py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs transition shadow-xs flex items-center justify-center space-x-2 cursor-pointer disabled:opacity-60"
               >
                 {isGenerating ? (
                   <>
                     <RefreshCw className="w-4 h-4 animate-spin" />
-                    <span>Google Gemini is Generating...</span>
+                    <span>Google Gemini 3.1 Flash-Lite Generating Worksheet...</span>
                   </>
                 ) : (
                   <>
@@ -693,14 +899,22 @@ Provide a comprehensive, pedagogically sound, and direct answer addressing this 
           <div className="lg:col-span-7 bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
             {generatedWorksheet ? (
               <div className="space-y-4 text-xs">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-3 border-b border-slate-100 gap-3">
                   <div>
-                    <span className="text-[10px] font-bold text-teal-700 bg-teal-100 px-2 py-0.5 rounded">
-                      {generatedWorksheet.provider || 'Google Gemini 3.1 Flash-Lite'}
-                    </span>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-[10px] font-bold text-teal-700 bg-teal-100 px-2 py-0.5 rounded">
+                        {generatedWorksheet.provider || 'Google Gemini 3.1 Flash-Lite'}
+                      </span>
+                      <span className="text-[10px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded">
+                        {generatedWorksheet.target_exam || selectedExam}
+                      </span>
+                    </div>
                     <h3 className="text-base font-bold text-slate-900 mt-1">
                       Remedial Worksheet: {generatedWorksheet.topic}
                     </h3>
+                    <p className="text-[11px] text-teal-800 font-semibold mt-0.5">
+                      Assigned Student: <span className="text-slate-900">{generatedWorksheet.student_name}</span> {generatedWorksheet.student_id ? `(${generatedWorksheet.student_id})` : ''}
+                    </p>
                   </div>
 
                   <button

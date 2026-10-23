@@ -727,6 +727,7 @@ export const api = {
     subject: string;
     target_exam?: string;
     student_name?: string;
+    student_id?: string;
     weakness_reason?: string;
   }, tenantId?: string): Promise<any> {
     try {

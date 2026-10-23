@@ -15,8 +15,10 @@ from datetime import datetime, date
 from backend.app.database import get_db
 from backend.app.models import (
     Student, Batch, TestResponse, Test, Attendance, Engagement,
-    ComputedMastery, ComputedRisk, Intervention, RecomputeRun
+    ComputedMastery, ComputedRisk, Intervention, RecomputeRun,
+    User, Institute
 )
+from sqlalchemy import or_
 
 router = APIRouter(prefix="", tags=["Student Analytics"])
 
@@ -46,16 +48,78 @@ def get_students(
     elif effective_tenant == "INST003":
         effective_tenant = "INST_LUCKNOW_03"
 
-    # Base student query
+    # Base student query (searches students table)
     st_query = db.query(Student).filter(Student.tenant_id == effective_tenant)
     if batch_id and batch_id != "all":
         st_query = st_query.filter(Student.batch_id == batch_id)
     if search:
         s_term = f"%{search.strip()}%"
-        st_query = st_query.filter((Student.name.ilike(s_term)) | (Student.id.ilike(s_term)))
+        st_query = st_query.filter(
+            or_(
+                Student.name.ilike(s_term),
+                Student.id.ilike(s_term),
+                Student.pseudonymous_code.ilike(s_term)
+            )
+        )
 
     all_students = st_query.all()
+    
+    # If students table has no records or no matches, search the users table where role = 'student'
+    # (Matches user accounts in Supabase database schema)
     if not all_students:
+        u_query = db.query(User).filter(
+            User.tenant_id == effective_tenant,
+            User.role.in_(["student", "Student"])
+        )
+        if search:
+            s_term = f"%{search.strip()}%"
+            u_query = u_query.filter(
+                or_(
+                    User.full_name.ilike(s_term),
+                    User.id.ilike(s_term),
+                    User.email.ilike(s_term),
+                    User.student_id.ilike(s_term)
+                )
+            )
+        matched_users = u_query.all()
+        if matched_users:
+            inst = db.query(Institute).filter(Institute.id == effective_tenant).first()
+            inst_name = inst.name if inst else "Apex JEE & Medical Academy, Patna"
+            u_results = []
+            for u in matched_users:
+                sid = u.student_id or u.id
+                u_results.append({
+                    "id": sid,
+                    "student_id": sid,
+                    "user_id": u.id,
+                    "name": u.full_name,
+                    "full_name": u.full_name,
+                    "email": u.email,
+                    "roll_number": sid,
+                    "batch_id": "BATCH_CORE",
+                    "batch_name": "Standard Enrolled Cohort",
+                    "tenant_id": u.tenant_id,
+                    "institute_name": inst_name,
+                    "target_exam": "JEE Advanced",
+                    "attendance_rate_pct": None,
+                    "latest_score_pct": None,
+                    "overall_mastery_pct": None,
+                    "risk_category": "Pending Assessment",
+                    "risk_score": 0.0,
+                    "primary_driver": "No diagnostic assessment data in database",
+                    "recommended_action": "Initial Diagnostic Remedial Session",
+                    "has_active_intervention": False,
+                    "has_assessment_data": False,
+                    "parent_contact_consent": True,
+                    "source": "supabase_users_table"
+                })
+            return {
+                "tenant_id": effective_tenant,
+                "total": len(u_results),
+                "limit": limit,
+                "offset": offset,
+                "students": u_results[offset : offset + limit]
+            }
         return {"tenant_id": effective_tenant, "total": 0, "students": []}
 
     # Fetch reference maps
@@ -209,7 +273,39 @@ def get_student_detail(
     ).first()
 
     if not st:
-        raise HTTPException(status_code=404, detail=f"Student {student_id} not found in active tenant")
+        user = db.query(User).filter(
+            or_(User.student_id == student_id, User.id == student_id),
+            User.tenant_id == effective_tenant
+        ).first()
+        if not user:
+            raise HTTPException(status_code=404, detail=f"Student {student_id} not found in active tenant")
+
+        inst = db.query(Institute).filter(Institute.id == effective_tenant).first()
+        inst_name = inst.name if inst else "Apex JEE & Medical Academy, Patna"
+        return {
+            "student_id": user.student_id or user.id,
+            "id": user.student_id or user.id,
+            "user_id": user.id,
+            "name": user.full_name,
+            "full_name": user.full_name,
+            "email": user.email,
+            "roll_number": user.student_id or user.id,
+            "batch_name": "Standard Enrolled Cohort",
+            "institute_name": inst_name,
+            "target_exam": "JEE Advanced",
+            "overview": {
+                "student_id": user.student_id or user.id,
+                "name": user.full_name,
+                "email": user.email,
+                "tenant_id": user.tenant_id,
+                "diagnostic_status": "No diagnostic assessment data recorded in database"
+            },
+            "test_history": [],
+            "topic_mastery": [],
+            "attendance_rate_pct": None,
+            "has_assessment_data": False,
+            "diagnostic_trigger": "No diagnostic assessment data recorded in database"
+        }
 
     batch = db.query(Batch).filter(Batch.id == st.batch_id).first()
     batch_name = batch.name if batch else "Standard Batch"
@@ -245,15 +341,6 @@ def get_student_detail(
                 "percentage": pct,
                 "batch_average_pct": 68.0
             })
-    else:
-        # Realistic sample chronological test progression
-        test_history = [
-            {"test_id": "TEST_01", "title": "Unit Test 1 (Mechanics & Kinematics)", "date": "2025-04-12", "student_score": 76, "max_score": 100, "percentage": 76.0, "batch_average_pct": 68.5},
-            {"test_id": "TEST_02", "title": "Unit Test 2 (Thermodynamics & Bonding)", "date": "2025-04-26", "student_score": 72, "max_score": 100, "percentage": 72.0, "batch_average_pct": 67.0},
-            {"test_id": "TEST_03", "title": "Unit Test 3 (Calculus & Coordinate Geom)", "date": "2025-05-10", "student_score": 68, "max_score": 100, "percentage": 68.0, "batch_average_pct": 66.0},
-            {"test_id": "TEST_04", "title": "Cumulative Milestone Exam 1", "date": "2025-05-24", "student_score": 64, "max_score": 100, "percentage": 64.0, "batch_average_pct": 65.5},
-            {"test_id": "TEST_05", "title": "Full Syllabus Simulation Paper", "date": "2025-06-07", "student_score": 71, "max_score": 100, "percentage": 71.0, "batch_average_pct": 64.0},
-        ]
 
     # Tab 3: Topic Mastery Breakdown
     mastery_records = db.query(ComputedMastery).filter(
@@ -275,15 +362,6 @@ def get_student_detail(
                 "standard_error": round(m.standard_error, 2) if m.standard_error else 0.12,
                 "status": status
             })
-    else:
-        topic_mastery = [
-            {"topic_id": "TOPIC_PHY_KIN", "subject": "Physics", "topic_name": "Kinematics & Projectile Motion", "bkt_mastery_pct": 84.0, "irt_theta": 0.82, "standard_error": 0.08, "status": "Mastered"},
-            {"topic_id": "TOPIC_PHY_ROT", "subject": "Physics", "topic_name": "Rotational Dynamics & Torque", "bkt_mastery_pct": 42.0, "irt_theta": -0.65, "standard_error": 0.16, "status": "Struggling"},
-            {"topic_id": "TOPIC_CHEM_BOND", "subject": "Chemistry", "topic_name": "Chemical Bonding & Hybridization", "bkt_mastery_pct": 79.0, "irt_theta": 0.68, "standard_error": 0.09, "status": "Mastered"},
-            {"topic_id": "TOPIC_CHEM_THERMO", "subject": "Chemistry", "topic_name": "Thermodynamics & Enthalpy", "bkt_mastery_pct": 46.0, "irt_theta": -0.52, "standard_error": 0.14, "status": "Struggling"},
-            {"topic_id": "TOPIC_MATH_CALC", "subject": "Mathematics", "topic_name": "Calculus: Limits & Continuity", "bkt_mastery_pct": 86.0, "irt_theta": 0.95, "standard_error": 0.07, "status": "Mastered"},
-            {"topic_id": "TOPIC_MATH_INT", "subject": "Mathematics", "topic_name": "Integral Calculus & Areas", "bkt_mastery_pct": 58.0, "irt_theta": 0.10, "standard_error": 0.12, "status": "In Progress"},
-        ]
 
     # Tab 4: Attendance & Engagement
     att_records = db.query(Attendance).filter(
@@ -344,8 +422,17 @@ def get_student_detail(
             "created_at": item.created_at.strftime("%Y-%m-%d") if item.created_at else "2025-06-01"
         })
 
+    has_data = len(test_history) > 0 or len(topic_mastery) > 0
+    diagnostic_trigger = (
+        f"Topic mastery slump detected in {topic_mastery[0]['topic_name']} ({topic_mastery[0]['bkt_mastery_pct']}%)"
+        if topic_mastery and topic_mastery[0]['bkt_mastery_pct'] < 50
+        else ("No diagnostic assessment data recorded in database" if not has_data else "Performance stable across milestone evaluations")
+    )
+
     return {
         "tenant_id": effective_tenant,
+        "has_assessment_data": has_data,
+        "diagnostic_trigger": diagnostic_trigger,
         "overview": {
             "student_id": st.id,
             "name": st.name,
@@ -358,7 +445,8 @@ def get_student_detail(
             "faculty_lead": faculty_lead,
             "parent_contact_consent": st.parent_contact_consent,
             "streak_days": 14,
-            "wellbeing_mode": "Growth-First Learning (DPDP Act 2023 Compliant)"
+            "wellbeing_mode": "Growth-First Learning (DPDP Act 2023 Compliant)",
+            "diagnostic_status": diagnostic_trigger
         },
         "test_history": test_history,
         "topic_mastery": topic_mastery,
@@ -372,3 +460,53 @@ def get_student_detail(
         "recommendations": recommendations,
         "intervention_history": int_history
     }
+
+@router.get("/syllabus-topics")
+@router.get("/api/syllabus-topics")
+def get_syllabus_topics(
+    subject: Optional[str] = Query(None, description="Filter by subject"),
+    search: Optional[str] = Query(None, description="Search topic name or chapter"),
+    db: Session = Depends(get_db)
+):
+    """Returns list of all verified syllabus topics from database/curriculum bank."""
+    from backend.app.models import SyllabusTopic
+    from pathlib import Path
+    import pandas as pd
+
+    topics = []
+    try:
+        db_topics = db.query(SyllabusTopic).all()
+        if db_topics:
+            for t in db_topics:
+                topics.append({
+                    "id": t.id,
+                    "subject": t.subject,
+                    "chapter": t.chapter,
+                    "topic": t.topic,
+                    "exam_focus": t.exam_focus
+                })
+    except Exception:
+        pass
+
+    if not topics:
+        # Fallback to curriculum CSV
+        csv_path = Path(__file__).resolve().parent.parent.parent.parent / "data" / "syllabus_topics.csv"
+        if csv_path.exists():
+            df = pd.read_csv(csv_path)
+            for _, r in df.iterrows():
+                topics.append({
+                    "id": r["id"],
+                    "subject": r["subject"],
+                    "chapter": r["chapter"],
+                    "topic": r["topic"],
+                    "exam_focus": r.get("exam_focus", "JEE/NEET")
+                })
+
+    if subject and subject.lower() != "all":
+        topics = [t for t in topics if t["subject"].lower() == subject.lower()]
+
+    if search:
+        s_term = search.strip().lower()
+        topics = [t for t in topics if s_term in t["topic"].lower() or s_term in t["chapter"].lower() or s_term in t["subject"].lower()]
+
+    return {"total": len(topics), "topics": topics}

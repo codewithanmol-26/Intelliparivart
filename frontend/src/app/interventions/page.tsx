@@ -29,6 +29,7 @@ import {
   HelpCircle,
   Building2
 } from 'lucide-react';
+import StudentSearchCombobox, { StudentRecord } from '../../components/StudentSearchCombobox';
 
 // Clustered Remedial Micro-Cohorts derived dynamically for a 1,000-student cohort
 const ENTERPRISE_MICRO_COHORTS = [
@@ -194,6 +195,12 @@ export default function InterventionsPage() {
   // New Intervention Modal State (Standard View)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newStudentId, setNewStudentId] = useState('STD_PAT_001');
+  const [newStudentObj, setNewStudentObj] = useState<StudentRecord | null>({
+    id: 'STD_PAT_001',
+    name: 'Aarav Sharma',
+    roll_number: 'STD_PAT_001',
+    batch_name: '12th Achievers Top-30'
+  });
   const [newType, setNewType] = useState('1-on-1 Faculty Mentorship');
   const [newReason, setNewReason] = useState('Rotational Dynamics slump (-28% score drop)');
   const [newMentor, setNewMentor] = useState('Er. R. K. Verma (Physics)');
@@ -920,20 +927,17 @@ export default function InterventionsPage() {
             </div>
 
             <form onSubmit={handleCreate} className="space-y-3.5 text-xs">
-              <div>
-                <label className="block font-semibold text-slate-700 mb-1">Student Identifier</label>
-                <select
-                  value={newStudentId}
-                  onChange={(e) => setNewStudentId(e.target.value)}
-                  className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-800"
-                >
-                  <option value="STD_PAT_001">STD_PAT_001 — Ananya Pandey (12th Achievers)</option>
-                  <option value="STD_PAT_002">STD_PAT_002 — Shaurya Pandey (12th Achievers)</option>
-                  <option value="STD_PAT_003">STD_PAT_003 — Khushi Sen (12th NEET Pinnacle)</option>
-                  <option value="STD_PAT_004">STD_PAT_004 — Advait Chatterjee (11th Foundation)</option>
-                  <option value="STD_PAT_005">STD_PAT_005 — Varun Kumar (12th Achievers)</option>
-                </select>
-              </div>
+              <StudentSearchCombobox
+                selectedStudent={newStudentObj}
+                onSelectStudent={(s) => {
+                  setNewStudentObj(s);
+                  setNewStudentId(s?.id || s?.student_id || '');
+                }}
+                tenantId={tenantId}
+                label="Student (Searchable Supabase Records)"
+                placeholder="Search by student name, ID, roll number, or email..."
+                required={true}
+              />
 
               <div>
                 <label className="block font-semibold text-slate-700 mb-1">Intervention Type</label>

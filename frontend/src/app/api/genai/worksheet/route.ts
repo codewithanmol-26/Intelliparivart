@@ -18,6 +18,7 @@ export async function POST(req: Request) {
     const subject = body.subject || 'Physics';
     const targetExam = body.target_exam || 'JEE Advanced';
     const studentName = body.student_name || 'Student';
+    const studentId = body.student_id || '';
     const weaknessReason = body.weakness_reason || 'Concept friction identified in milestone evaluation';
 
     const systemInstruction = `You are an elite IIT-JEE and NEET senior faculty mentor at an Indian coaching institute.
@@ -37,11 +38,11 @@ Respond ONLY with valid JSON with these exact keys:
 }`;
 
     const userPrompt = `Create a 15-minute remedial concept worksheet for:
-Student: ${studentName}
+Student: ${studentName} ${studentId ? `(${studentId})` : ''}
 Subject: ${subject}
 Topic: ${topic}
 Target Exam: ${targetExam}
-Observed Weakness: ${weaknessReason}
+Observed Weakness / Trigger: ${weaknessReason}
 
 Return pure JSON.`;
 
@@ -79,6 +80,9 @@ Return pure JSON.`;
             parsed.provider = `Google Gemini 3.1 Flash-Lite (Live API)`;
             parsed.topic = topic;
             parsed.subject = subject;
+            parsed.student_name = studentName;
+            parsed.student_id = studentId;
+            parsed.target_exam = targetExam;
             return NextResponse.json({ status: 'success', worksheet: parsed });
           }
         }
@@ -94,6 +98,9 @@ Return pure JSON.`;
         provider: 'Pedagogical Expert Engine (Deterministic Fallback)',
         topic,
         subject,
+        student_name: studentName,
+        student_id: studentId,
+        target_exam: targetExam,
         concept_core: `${topic} forms a foundational pillar of ${targetExam} preparation. Mastery requires decomposing vector forces/moments, understanding state transitions, and balancing kinetic energy equations.`,
         common_misconceptions: [
           'Confusing instantaneous axis of rotation with fixed center of mass frames.',
