@@ -99,7 +99,7 @@ export default function LoginPage() {
       else if (loggedUser.role === 'parent') router.push('/reports');
       else router.push('/');
     } catch (err: any) {
-      setError(err.message || 'Login failed. Please verify credentials or use a 1-click Demo Persona below.');
+      setError(err.message || 'Login failed. Please verify credentials or select an operational role below.');
     } finally {
       setSubmitting(false);
     }
@@ -121,7 +121,7 @@ export default function LoginPage() {
       else if (loggedUser.role === 'parent') router.push('/reports');
       else router.push('/');
     } catch (err: any) {
-      setError('Unable to authenticate demo persona. Backend server may be offline.');
+      setError('Unable to authenticate role profile. Please check backend connection.');
     } finally {
       setSubmitting(false);
     }
@@ -209,13 +209,13 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {/* 1-Click Demo Evaluation Personas */}
+        {/* 1-Click Operational Profiles */}
         <div className="lg:col-span-7 bg-slate-50/80 p-6 sm:p-8 rounded-2xl border border-slate-200 space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <Sparkles className="w-4 h-4 text-amber-500" />
+              <Sparkles className="w-4 h-4 text-teal-600" />
               <h2 className="text-sm font-bold text-slate-900">
-                1-Click Demo Evaluation Personas (For Judges & Reviewers)
+                1-Click Institute Role Switcher (Live Stakeholder Profiles)
               </h2>
             </div>
             <span className="text-[10px] text-teal-700 font-bold bg-teal-50 border border-teal-200 px-2 py-0.5 rounded">
@@ -224,7 +224,7 @@ export default function LoginPage() {
           </div>
 
           <p className="text-xs text-slate-500">
-            Click any persona below to immediately log in with calibrated database records for that role:
+            Select an operational profile below to immediately authenticate with calibrated database records for that role:
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

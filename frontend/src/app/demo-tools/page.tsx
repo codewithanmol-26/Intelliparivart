@@ -106,11 +106,11 @@ export default function DemoToolsPage() {
   };
 
   const handleResetData = async () => {
-    if (confirm('Reset synthetic database back to pristine benchmark state?')) {
+    if (confirm('Reset database back to clean baseline state?')) {
       try {
         await api.resetData(tenantId);
-        setScenarioOutput('Database successfully reset to clean seeded benchmark state (1,200 students).');
-        notifyRecomputed(undefined, 'Database reset to clean benchmark state');
+        setScenarioOutput('Database successfully reset to clean baseline state.');
+        notifyRecomputed(undefined, 'Database reset to clean baseline state');
       } catch {
         setScenarioOutput('Data reset simulation complete.');
       }
@@ -121,13 +121,13 @@ export default function DemoToolsPage() {
     <div className="space-y-8">
       <div>
         <div className="flex items-center space-x-2">
-          <Sparkles className="w-5 h-5 text-amber-500" />
+          <Sparkles className="w-5 h-5 text-teal-600" />
           <h1 className="text-2xl font-bold text-slate-900">
-            Judge Curveball Sandbox & Live Parameter Playground
+            Scenario Simulator & Real-Time Stress Testing
           </h1>
         </div>
         <p className="mt-1 text-xs text-slate-500">
-          Built for competition evaluators to test dynamic adaptation, edge cases, and real-time database mutations on the 2PL IRT + BKT + GBDT pipeline.
+          Simulate real-time academic perturbations, edge cases, and live database mutations on the 2PL IRT + BKT + GBDT pipeline.
         </p>
       </div>
 

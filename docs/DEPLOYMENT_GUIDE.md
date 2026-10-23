@@ -92,7 +92,7 @@ python scripts/seed_supabase.py "postgresql://postgres:[PASSWORD]@db.[PROJECT-RE
 6. Click **"Deploy Web Service"**.
 7. Render will build and deploy the backend. Once active, copy your Render URL:
    `https://intelliprivart-backend.onrender.com`
-   *(Verify by visiting `https://intelliprivart-backend.onrender.com/api/health` — it will return `{"status": "online"}`)*
+   *(Verify by visiting `https://intelliparivart.onrender.com/api/health` — it will return `{"status": "online"}`)*
 
 ---
 
@@ -109,12 +109,12 @@ python scripts/seed_supabase.py "postgresql://postgres:[PASSWORD]@db.[PROJECT-RE
 5. Open the **Environment Variables** section and add:
    | Key | Value |
    | :--- | :--- |
-   | `NEXT_PUBLIC_API_URL` | `https://intelliprivart-backend.onrender.com/api` |
+   | `NEXT_PUBLIC_API_URL` | `https://intelliparivart.onrender.com/api` |
 
    *(Replace with your actual Render URL from Step 2, appending `/api`)*
 
 6. Click **"Deploy"**.
-7. Vercel will install dependencies, compile the 16 pages, and assign an SSL URL (e.g. `https://intelliprivart.vercel.app`).
+7. Vercel will install dependencies, compile all 19 static routes, and assign an SSL URL (e.g. `https://intelliprivart.vercel.app`).
 
 ---
 

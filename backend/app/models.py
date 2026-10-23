@@ -185,6 +185,7 @@ class Intervention(Base):
     assigned_to = Column(String(150), default="Er. R. K. Verma")
     status = Column(String(50), default="ASSIGNED") # ASSIGNED, IN_PROGRESS, COMPLETED
     follow_up_date = Column(Date, nullable=True)
+    outcome_notes = Column(Text, nullable=True)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
 class ReviewQueueItem(Base):

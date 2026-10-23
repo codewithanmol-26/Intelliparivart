@@ -1,0 +1,176 @@
+'use client';
+
+import React from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useApp } from '../context/AppContext';
+import {
+  LayoutDashboard,
+  UploadCloud,
+  AlertTriangle,
+  Users,
+  Layers,
+  ShieldAlert,
+  LineChart,
+  GraduationCap,
+  CheckCircle2,
+  Download,
+  Lock,
+  Sparkles,
+  FileSpreadsheet,
+  FileCheck2,
+  ChevronRight,
+  Database,
+  Building2,
+  X
+} from 'lucide-react';
+
+interface SidebarProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export default function Sidebar({ isOpen, onClose }: SidebarProps) {
+  const pathname = usePathname();
+  const { tenantId, role, offlineQueueCount, isOnline } = useApp();
+
+  const primaryNavItems = [
+    { href: '/overview', label: 'Overview', icon: LayoutDashboard },
+    { href: '/upload', label: 'Data Import', icon: UploadCloud },
+    { href: '/review-queue', label: 'Review Queue', icon: AlertTriangle },
+    { href: '/student', label: 'Student Analytics', icon: Users },
+    { href: '/mastery', label: 'Topic Mastery', icon: Layers },
+    { href: '/ai-assistant', label: 'AI Teaching Copilot', icon: Sparkles },
+    { href: '/risk', label: 'Early-Warning Centre', icon: ShieldAlert },
+    { href: '/predict', label: 'Performance Forecast', icon: LineChart },
+    { href: '/reports', label: 'Parent Reports', icon: GraduationCap },
+    { href: '/interventions', label: 'Intervention Tracker', icon: CheckCircle2 },
+    { href: '/exports', label: 'Reports & Exports', icon: Download },
+    { href: '/privacy', label: 'Settings & Privacy', icon: Lock },
+  ];
+
+  const secondaryNavItems = [
+    { href: '/owner', label: 'Executive ROI Model', icon: FileSpreadsheet },
+    { href: '/model-report', label: 'ML Rigour Card', icon: FileCheck2 },
+    { href: '/demo-tools', label: 'Scenario Simulator', icon: Sparkles },
+  ];
+
+  return (
+    <>
+      {/* Mobile Backdrop */}
+      {isOpen && (
+        <div
+          onClick={onClose}
+          className="fixed inset-0 z-40 bg-slate-950/60 backdrop-blur-xs lg:hidden transition-opacity"
+        />
+      )}
+
+      {/* Sidebar Container */}
+      <aside
+        className={`fixed top-0 bottom-0 left-0 z-50 w-64 bg-[#0B1F3A] text-slate-200 border-r border-blue-900/40 flex flex-col transition-transform duration-200 ease-in-out lg:translate-x-0 ${
+          isOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
+        {/* Brand / Logo Area */}
+        <div className="h-16 px-4 flex items-center justify-between border-b border-blue-900/50 bg-[#08172c]">
+          <Link href="/overview" onClick={onClose} className="flex items-center space-x-2.5">
+            <div className="w-8 h-8 rounded-lg bg-teal-500 flex items-center justify-center font-black text-white text-sm shadow-sm shrink-0">
+              IP
+            </div>
+            <div>
+              <span className="text-base font-bold tracking-tight text-white block leading-none">
+                INTELLIPRIVART
+              </span>
+              <span className="text-[9px] tracking-wider text-teal-300 uppercase block font-semibold mt-0.5">
+                Institute Intelligence Platform
+              </span>
+            </div>
+          </Link>
+
+          <button
+            onClick={onClose}
+            className="p-1 rounded text-slate-400 hover:text-white lg:hidden"
+            aria-label="Close Sidebar"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Primary Navigation Menu */}
+        <div className="flex-1 overflow-y-auto px-3 py-4 space-y-6 scrollbar-thin">
+          <div>
+            <span className="px-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
+              Primary Navigation
+            </span>
+            <nav className="space-y-1">
+              {primaryNavItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = pathname === item.href;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={onClose}
+                    className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition ${
+                      isActive
+                        ? 'bg-teal-600 text-white shadow-xs font-bold'
+                        : 'text-slate-300 hover:bg-blue-900/40 hover:text-white'
+                    }`}
+                  >
+                    <div className="flex items-center space-x-2.5">
+                      <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-400'}`} />
+                      <span>{item.label}</span>
+                    </div>
+                    {isActive && <ChevronRight className="w-3.5 h-3.5 text-teal-200" />}
+                  </Link>
+                );
+              })}
+            </nav>
+          </div>
+
+          {/* Secondary Utilities */}
+          <div className="pt-2 border-t border-blue-900/40">
+            <span className="px-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
+              Judge & Analysis Tools
+            </span>
+            <nav className="space-y-1">
+              {secondaryNavItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = pathname === item.href;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={onClose}
+                    className={`flex items-center space-x-2.5 px-3 py-2 rounded-xl text-xs font-medium transition ${
+                      isActive
+                        ? 'bg-teal-600/80 text-white font-bold'
+                        : 'text-slate-400 hover:bg-blue-900/30 hover:text-slate-200'
+                    }`}
+                  >
+                    <Icon className="w-4 h-4 text-slate-400" />
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              })}
+            </nav>
+          </div>
+        </div>
+
+        {/* Sidebar Footer: System Status */}
+        <div className="p-3 border-t border-blue-900/50 bg-[#08172c] text-[11px] text-slate-400 space-y-1.5">
+          <div className="flex items-center justify-between">
+            <span className="text-slate-300 font-medium">Tenant Context:</span>
+            <span className="font-mono text-teal-300 text-[10px] bg-teal-950/70 border border-teal-500/30 px-1.5 py-0.2 rounded">
+              {tenantId}
+            </span>
+          </div>
+          <div className="flex items-center justify-between text-[10px]">
+            <span>DPDP Act 2023</span>
+            <span className="text-emerald-400 font-semibold">Active Sec 9 VPC</span>
+          </div>
+        </div>
+      </aside>
+    </>
+  );
+}

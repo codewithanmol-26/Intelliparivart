@@ -72,18 +72,25 @@ export default function HomePage() {
 
           <div className="mt-6 flex flex-wrap gap-3">
             <Link
-              href="/owner"
-              onClick={() => setRole('owner')}
+              href="/overview"
               className="inline-flex items-center justify-center px-4 py-2.5 rounded-xl bg-teal-500 text-white font-bold text-xs sm:text-sm hover:bg-teal-600 transition shadow-md"
             >
-              <span>Explore Executive ROI Dashboard</span>
+              <span>Launch Operational Overview</span>
               <ArrowRight className="w-4 h-4 ml-2" />
+            </Link>
+
+            <Link
+              href="/owner"
+              onClick={() => setRole('owner')}
+              className="inline-flex items-center justify-center px-4 py-2.5 rounded-xl bg-blue-900/80 text-white font-semibold text-xs sm:text-sm hover:bg-blue-800 transition border border-blue-700/60 shadow-xs"
+            >
+              <span>Executive ROI Model</span>
             </Link>
 
             <Link
               href="/upload"
               onClick={() => setRole('teacher')}
-              className="inline-flex items-center justify-center px-4 py-2.5 rounded-xl bg-blue-900/70 text-blue-100 font-semibold text-xs sm:text-sm hover:bg-blue-800 transition border border-blue-700/60"
+              className="inline-flex items-center justify-center px-4 py-2.5 rounded-xl bg-blue-900/40 text-blue-100 font-semibold text-xs sm:text-sm hover:bg-blue-800 transition border border-blue-700/60"
             >
               <FileSpreadsheet className="w-4 h-4 mr-2" />
               <span>4-Step Ingestion Wizard</span>

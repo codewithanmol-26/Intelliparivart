@@ -237,6 +237,118 @@ export const api = {
     }, tenantId);
   },
 
+  // Overview Dashboard
+  async getOverviewDashboard(tenantId: string): Promise<any> {
+    return request<any>('/overview', {}, tenantId);
+  },
+
+  // Student Analytics
+  async getStudents(
+    tenantId: string,
+    params?: {
+      batch_id?: string;
+      risk_tier?: string;
+      search?: string;
+      sort_by?: string;
+      order?: string;
+      limit?: number;
+      offset?: number;
+    }
+  ): Promise<any> {
+    const query = new URLSearchParams();
+    if (params?.batch_id) query.set('batch_id', params.batch_id);
+    if (params?.risk_tier) query.set('risk_tier', params.risk_tier);
+    if (params?.search) query.set('search', params.search);
+    if (params?.sort_by) query.set('sort_by', params.sort_by);
+    if (params?.order) query.set('order', params.order);
+    if (params?.limit) query.set('limit', String(params.limit));
+    if (params?.offset) query.set('offset', String(params.offset));
+    const qs = query.toString() ? `?${query.toString()}` : '';
+    return request<any>(`/students${qs}`, {}, tenantId);
+  },
+
+  async getStudentDetail(studentId: string, tenantId: string): Promise<any> {
+    return request<any>(`/students/${studentId}`, {}, tenantId);
+  },
+
+  // Intervention Tracker
+  async getInterventions(tenantId: string, status?: string, studentId?: string): Promise<any> {
+    const query = new URLSearchParams();
+    if (status) query.set('status', status);
+    if (studentId) query.set('student_id', studentId);
+    const qs = query.toString() ? `?${query.toString()}` : '';
+    return request<any>(`/interventions${qs}`, {}, tenantId);
+  },
+
+  async createIntervention(
+    payload: {
+      student_id: string;
+      intervention_type: string;
+      reason: string;
+      assigned_to?: string;
+      follow_up_date?: string;
+      outcome_notes?: string;
+    },
+    tenantId: string
+  ): Promise<any> {
+    return request<any>('/interventions', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }, tenantId);
+  },
+
+  async updateIntervention(
+    id: number,
+    payload: {
+      status?: string;
+      follow_up_date?: string;
+      outcome_notes?: string;
+      assigned_to?: string;
+    },
+    tenantId: string
+  ): Promise<any> {
+    return request<any>(`/interventions/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(payload),
+    }, tenantId);
+  },
+
+  async deleteIntervention(id: number, tenantId: string): Promise<any> {
+    return request<any>(`/interventions/${id}`, {
+      method: 'DELETE',
+    }, tenantId);
+  },
+
+  // Generative AI Layer
+  async getGenAiStatus(): Promise<any> {
+    return request<any>('/genai/status');
+  },
+
+  async generateAiWorksheet(payload: {
+    topic: string;
+    subject: string;
+    target_exam?: string;
+    student_name?: string;
+    weakness_reason?: string;
+  }, tenantId?: string): Promise<any> {
+    return request<any>('/genai/worksheet', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }, tenantId);
+  },
+
+  async askAiCopilot(prompt: string, context?: string, tenantId?: string): Promise<any> {
+    return request<any>('/genai/copilot', {
+      method: 'POST',
+      body: JSON.stringify({ prompt, context }),
+    }, tenantId);
+  },
+
+  // Exports
+  getExportUrl(type: 'mastery' | 'risk-alerts' | 'interventions' | 'audit-logs', tenantId: string): string {
+    return `${API_BASE}/exports/${type}.csv?tenant_id=${encodeURIComponent(tenantId)}`;
+  },
+
   async resetData(tenantId: string): Promise<any> {
     return request<any>('/demo/reset', { method: 'POST' }, tenantId);
   },
