@@ -56,8 +56,13 @@ export default function AppShell({ children }: AppShellProps) {
 
   const { user, logout } = useAuth();
   const [recomputingLocal, setRecomputingLocal] = useState(false);
-  const [selectedPeriod, setSelectedPeriod] = useState<'all' | 'm1-3' | 'm4-8'>('all');
-  const [language, setLanguage] = useState<'en' | 'hi'>('en');
+
+  // Synchronize context role with authenticated user's profile
+  React.useEffect(() => {
+    if (user && user.role && user.role !== role) {
+      setRole(user.role);
+    }
+  }, [user, role, setRole]);
 
   const handleManualRecompute = async () => {
     setRecomputingLocal(true);
@@ -331,48 +336,36 @@ export default function AppShell({ children }: AppShellProps) {
               </div>
             </div>
 
-            {/* Right: Role Switcher, Demo Hub, Period, Recompute & Auth */}
+            {/* Right: Authenticated User Pill, Demo Walkthrough, Recompute & Auth */}
             <div className="flex items-center space-x-2 text-xs">
-              {/* Role Switcher */}
-              <div className="flex items-center bg-blue-950/70 border border-blue-800/60 rounded-lg px-2 py-1">
-                <span className="text-slate-400 mr-1 hidden sm:inline">Role:</span>
-                <select
-                  aria-label="Select User Role"
-                  value={role}
-                  onChange={(e) => setRole(e.target.value as UserRole)}
-                  className="bg-transparent text-teal-300 font-semibold focus:outline-none cursor-pointer capitalize text-xs"
-                >
-                  <option value="owner" className="bg-[#0B1F3A] text-white">Institute Owner</option>
-                  <option value="teacher" className="bg-[#0B1F3A] text-white">Teacher / Academic Head</option>
-                  <option value="student" className="bg-[#0B1F3A] text-white">Student (Growth View)</option>
-                  <option value="parent" className="bg-[#0B1F3A] text-white">Parent (Digest View)</option>
-                </select>
-              </div>
+              {/* Authenticated User Badge (Fixed Identity for Logged-in Session) */}
+              {user ? (
+                <div className="flex items-center space-x-2 bg-blue-950/70 border border-blue-800/60 rounded-lg px-2.5 py-1">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0" title="Session Active"></span>
+                  <div className="hidden sm:flex flex-col text-left leading-tight">
+                    <span className="text-slate-200 font-semibold text-xs truncate max-w-[130px]">
+                      {user.full_name || 'Dr. S. K. Narayan'}
+                    </span>
+                    <span className="text-[10px] text-teal-300 font-medium capitalize">
+                      {user.role === 'owner' ? 'Institute Owner' : user.role === 'teacher' ? 'Faculty Lead' : user.role === 'student' ? 'Student' : 'Parent'}
+                    </span>
+                  </div>
+                  <span className="sm:hidden text-teal-300 font-bold bg-teal-950/80 border border-teal-500/40 px-1.5 py-0.5 rounded text-[10px] uppercase">
+                    {user.role === 'owner' ? 'Owner' : user.role}
+                  </span>
+                </div>
+              ) : null}
 
-              {/* Demo Role Walkthrough Trigger */}
+              {/* Dedicated Interactive Demo Walkthrough for Evaluators / Judges */}
               <button
                 onClick={() => setIsDemoModalOpen(true)}
-                className="hidden sm:inline-flex items-center space-x-1 px-2.5 py-1 bg-teal-500/20 text-teal-300 border border-teal-500/40 rounded-lg text-xs font-semibold hover:bg-teal-500/30 transition"
+                className="inline-flex items-center space-x-1.5 px-2.5 py-1.5 bg-teal-500/20 text-teal-300 border border-teal-500/40 rounded-lg text-xs font-semibold hover:bg-teal-500/30 transition shadow-xs"
+                title="Explore 4 Interactive User Personas (Owner, Teacher, Student, Parent)"
               >
                 <PlayCircle className="w-3.5 h-3.5 text-teal-400" />
-                <span>Demo Walkthrough</span>
+                <span className="hidden sm:inline">Demo (4 Roles)</span>
+                <span className="sm:hidden">Demo</span>
               </button>
-
-              {/* Language Switcher */}
-              <div className="flex items-center rounded-lg border border-blue-800/60 overflow-hidden bg-blue-950/70 text-[11px]">
-                <button
-                  onClick={() => setLanguage('en')}
-                  className={`px-2 py-1 transition ${language === 'en' ? 'bg-teal-600 text-white font-bold' : 'text-slate-300 hover:text-white'}`}
-                >
-                  EN
-                </button>
-                <button
-                  onClick={() => setLanguage('hi')}
-                  className={`px-2 py-1 transition ${language === 'hi' ? 'bg-teal-600 text-white font-bold' : 'text-slate-300 hover:text-white'}`}
-                >
-                  हिन्दी
-                </button>
-              </div>
 
               {/* Recompute Action */}
               <button
