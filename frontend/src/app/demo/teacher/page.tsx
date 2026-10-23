@@ -227,9 +227,15 @@ export default function DemoTeacherPage() {
                     onChange={(e) => setWorksheetStudent(e.target.value)}
                     className="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 font-semibold text-slate-800 focus:outline-none"
                   >
-                    {DEMO_STUDENTS.map((s: DemoStudent) => (
-                      <option key={s.id} value={s.name}>{s.name} ({s.rollNumber})</option>
-                    ))}
+                    <optgroup label="1,000-Student Clustered Micro-Cohorts (Scale Mode)">
+                      <option value="Micro-Cohort R-01 (42 Students Across Batches A, B, C)">Micro-Cohort R-01 (42 Students Across Batches A, B, C)</option>
+                      <option value="Micro-Cohort R-02 (36 Students Across Batches Top-30 & NEET)">Micro-Cohort R-02 (36 Students Across Batches Top-30 & NEET)</option>
+                    </optgroup>
+                    <optgroup label="Individual 1-on-1 Focus Students">
+                      {DEMO_STUDENTS.map((s: DemoStudent) => (
+                        <option key={s.id} value={s.name}>{s.name} ({s.rollNumber})</option>
+                      ))}
+                    </optgroup>
                   </select>
                 </div>
                 <div>
