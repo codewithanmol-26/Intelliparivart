@@ -19,7 +19,9 @@ import {
   LogIn,
   LogOut,
   X,
-  CheckCircle2
+  CheckCircle2,
+  Sparkles,
+  ArrowRight
 } from 'lucide-react';
 
 interface AppShellProps {
@@ -55,6 +57,82 @@ export default function AppShell({ children }: AppShellProps) {
     await triggerRecompute();
     setRecomputingLocal(false);
   };
+
+  const isPublicRoute = [
+    '/',
+    '/public',
+    '/privacy-policy',
+    '/terms',
+    '/terms-and-conditions',
+    '/login',
+    '/register',
+  ].includes(pathname);
+
+  if (isPublicRoute) {
+    return (
+      <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans antialiased">
+        {/* Public Sticky Top Header */}
+        <header className="sticky top-0 z-40 bg-[#0B1F3A] text-white shadow-md border-b border-blue-900/60">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            {/* Logo & Platform Brand */}
+            <Link href="/" className="flex items-center space-x-3 group">
+              <div className="w-8 h-8 rounded-xl bg-teal-500 text-white font-black text-sm flex items-center justify-center shadow-md group-hover:bg-teal-400 transition">
+                IP
+              </div>
+              <div>
+                <span className="text-base font-extrabold tracking-tight text-white block leading-none">
+                  INTELLIPRIVART
+                </span>
+                <span className="text-[10px] text-teal-300 font-semibold tracking-wider uppercase block mt-0.5">
+                  Institute Intelligence Platform
+                </span>
+              </div>
+            </Link>
+
+            {/* Public Navigation (Desktop) */}
+            <nav className="hidden md:flex items-center space-x-6 text-xs font-semibold text-slate-200">
+              <Link href="/" className="hover:text-teal-300 transition">Solutions</Link>
+              <Link href="/ai-assistant" className="hover:text-teal-300 transition flex items-center space-x-1">
+                <Sparkles className="w-3.5 h-3.5 text-teal-400" />
+                <span>AI Copilot</span>
+              </Link>
+              <Link href="/owner" className="hover:text-teal-300 transition">ROI Model</Link>
+              <Link href="/privacy-policy" className="hover:text-teal-300 transition">DPDP Privacy</Link>
+              <Link href="/terms" className="hover:text-teal-300 transition">Terms</Link>
+            </nav>
+
+            {/* Action Buttons */}
+            <div className="flex items-center space-x-2 sm:space-x-3 text-xs">
+              <Link
+                href="/login"
+                className="px-3 py-1.5 text-slate-200 hover:text-white font-medium transition"
+              >
+                Sign In
+              </Link>
+              <Link
+                href="/register"
+                className="hidden sm:inline-flex px-3 py-1.5 rounded-lg border border-teal-500/60 text-teal-300 hover:bg-teal-500/10 font-semibold transition"
+              >
+                Register Institute
+              </Link>
+              <Link
+                href="/overview"
+                className="px-3.5 py-1.5 rounded-xl bg-teal-500 hover:bg-teal-600 text-white font-bold transition shadow-sm flex items-center space-x-1.5"
+              >
+                <span>Live Platform</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          </div>
+        </header>
+
+        {/* Public Content Container */}
+        <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+          {children}
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans antialiased">

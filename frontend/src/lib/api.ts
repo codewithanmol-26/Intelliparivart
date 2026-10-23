@@ -66,6 +66,24 @@ export const api = {
     });
   },
 
+  async register(payload: {
+    institute_name: string;
+    admin_name: string;
+    email: string;
+    password: string;
+    phone?: string;
+    city?: string;
+    city_tier?: string;
+    exam_focus?: string;
+    cohort_size?: number;
+    role?: string;
+  }): Promise<{ access_token: string; user: AuthUser }> {
+    return request<{ access_token: string; user: AuthUser }>('/auth/register', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  },
+
   async getMe(): Promise<AuthUser> {
     return request<AuthUser>('/auth/me');
   },

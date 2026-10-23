@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useApp } from '../../context/AppContext';
 import { api } from '../../lib/api';
 import { ConsentRecord } from '../../lib/types';
@@ -13,7 +14,8 @@ import {
   RefreshCw,
   FileText,
   AlertTriangle,
-  Database
+  Database,
+  ExternalLink
 } from 'lucide-react';
 
 export default function PrivacyPage() {
@@ -125,13 +127,23 @@ export default function PrivacyPage() {
           </p>
         </div>
 
-        <button
-          onClick={fetchConsents}
-          className="inline-flex items-center px-3 py-1.5 border border-slate-300 rounded-lg bg-white text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-xs"
-        >
-          <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${loading ? 'animate-spin' : ''}`} />
-          <span>Refresh Registry</span>
-        </button>
+        <div className="flex items-center space-x-2">
+          <Link
+            href="/privacy-policy"
+            target="_blank"
+            className="inline-flex items-center px-3 py-1.5 border border-teal-200 rounded-lg bg-teal-50 text-xs font-semibold text-teal-800 hover:bg-teal-100 shadow-xs"
+          >
+            <ExternalLink className="w-3.5 h-3.5 mr-1.5 text-teal-600" />
+            <span>Public Privacy Policy</span>
+          </Link>
+          <button
+            onClick={fetchConsents}
+            className="inline-flex items-center px-3 py-1.5 border border-slate-300 rounded-lg bg-white text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-xs"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${loading ? 'animate-spin' : ''}`} />
+            <span>Refresh Registry</span>
+          </button>
+        </div>
       </div>
 
       {auditMessage && (

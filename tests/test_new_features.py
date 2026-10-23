@@ -137,3 +137,28 @@ def test_genai_endpoints():
     copilot_data = r_copilot.json()
     assert "reply" in copilot_data
     assert len(copilot_data["reply"]) > 20
+
+def test_auth_register_endpoint():
+    import uuid
+    random_email = f"director_{uuid.uuid4().hex[:6]}@vidyapeeth.edu"
+    payload = {
+        "institute_name": "Vidyapeeth Career Institute, Patna",
+        "admin_name": "Prof. Alok Mukherjee",
+        "email": random_email,
+        "password": "secure_password_123",
+        "phone": "+91 98765 00112",
+        "city": "Patna",
+        "city_tier": "Tier-2",
+        "exam_focus": "JEE Advanced",
+        "cohort_size": 750,
+        "role": "owner"
+    }
+    r_reg = client.post("/api/auth/register", json=payload)
+    assert r_reg.status_code == 200
+    data = r_reg.json()
+    assert "access_token" in data
+    assert data["token_type"] == "Bearer"
+    user = data["user"]
+    assert user["email"] == random_email
+    assert user["full_name"] == "Prof. Alok Mukherjee"
+    assert "INST_" in user["tenant_id"]

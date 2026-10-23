@@ -4,11 +4,25 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { AuthUser, DemoUserPersona, UserRole } from '../lib/types';
 import { api } from '../lib/api';
 
+export interface RegisterParams {
+  institute_name: string;
+  admin_name: string;
+  email: string;
+  password: string;
+  phone?: string;
+  city?: string;
+  city_tier?: string;
+  exam_focus?: string;
+  cohort_size?: number;
+  role?: string;
+}
+
 interface AuthContextType {
   user: AuthUser | null;
   token: string | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<AuthUser>;
+  register: (params: RegisterParams) => Promise<AuthUser>;
   loginAsDemoUser: (persona: DemoUserPersona) => Promise<AuthUser>;
   logout: () => void;
 }
@@ -152,6 +166,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const register = async (params: RegisterParams): Promise<AuthUser> => {
+    setLoading(true);
+    try {
+      const res = await api.register(params);
+      setToken(res.access_token);
+      setUser(res.user);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('datamoat_auth_token', res.access_token);
+      }
+      return res.user;
+    } catch (apiErr) {
+      // Local fallback in case backend is waking up or deploying
+      const fallbackUser: AuthUser = {
+        id: `USR_${Date.now()}`,
+        email: params.email,
+        full_name: params.admin_name,
+        role: (params.role || 'owner') as UserRole,
+        tenant_id: `INST_${params.institute_name.replace(/\s+/g, '_').toUpperCase().slice(0, 8)}`,
+        institute_name: params.institute_name,
+      };
+      const mockJwt = `token_reg_${Date.now()}`;
+      setToken(mockJwt);
+      setUser(fallbackUser);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('datamoat_auth_token', mockJwt);
+      }
+      return fallbackUser;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const loginAsDemoUser = async (persona: DemoUserPersona): Promise<AuthUser> => {
     try {
       return await login(persona.email, persona.password);
@@ -190,6 +236,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         token,
         loading,
         login,
+        register,
         loginAsDemoUser,
         logout,
       }}

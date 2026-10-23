@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../context/AuthContext';
 import { useApp } from '../../context/AppContext';
@@ -93,11 +94,11 @@ export default function LoginPage() {
       if (loggedUser.student_id) setSelectedStudentId(loggedUser.student_id);
 
       // Redirect to appropriate role home
-      if (loggedUser.role === 'owner') router.push('/owner');
+      if (loggedUser.role === 'owner') router.push('/overview');
       else if (loggedUser.role === 'teacher') router.push('/upload');
       else if (loggedUser.role === 'student') router.push('/student');
       else if (loggedUser.role === 'parent') router.push('/reports');
-      else router.push('/');
+      else router.push('/overview');
     } catch (err: any) {
       setError(err.message || 'Login failed. Please verify credentials or select an operational role below.');
     } finally {
@@ -115,11 +116,11 @@ export default function LoginPage() {
       if (loggedUser.student_id) setSelectedStudentId(loggedUser.student_id);
 
       // Redirect according to role
-      if (loggedUser.role === 'owner') router.push('/owner');
+      if (loggedUser.role === 'owner') router.push('/overview');
       else if (loggedUser.role === 'teacher') router.push('/upload');
       else if (loggedUser.role === 'student') router.push('/student');
       else if (loggedUser.role === 'parent') router.push('/reports');
-      else router.push('/');
+      else router.push('/overview');
     } catch (err: any) {
       setError('Unable to authenticate role profile. Please check backend connection.');
     } finally {
@@ -141,6 +142,19 @@ export default function LoginPage() {
         <p className="mt-2 text-xs sm:text-sm text-slate-500">
           Access your role-specific dashboard with cryptographic tenant isolation and real-time database intelligence.
         </p>
+
+        {/* Tab Toggle: Sign In vs Register */}
+        <div className="mt-5 max-w-sm mx-auto bg-slate-200/80 p-1 rounded-xl flex items-center text-xs font-semibold">
+          <div className="flex-1 py-1.5 text-center bg-white text-teal-700 rounded-lg shadow-xs font-bold">
+            Sign In to Portal
+          </div>
+          <Link
+            href="/register"
+            className="flex-1 py-1.5 text-center text-slate-600 hover:text-slate-900 rounded-lg transition"
+          >
+            Register Institute
+          </Link>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -274,6 +288,20 @@ export default function LoginPage() {
               );
             })}
           </div>
+        </div>
+      </div>
+
+      {/* Footer Navigation */}
+      <div className="mt-10 pt-6 border-t border-slate-200 flex flex-wrap items-center justify-between text-xs text-slate-500 gap-4">
+        <span>&copy; {new Date().getFullYear()} Nextute EdTech Pvt. Ltd. • The Data Moat</span>
+        <div className="flex items-center space-x-4">
+          <Link href="/" className="hover:text-teal-600 transition">Public Homepage</Link>
+          <span>•</span>
+          <Link href="/privacy-policy" className="hover:text-teal-600 transition">Privacy Policy (DPDP Act)</Link>
+          <span>•</span>
+          <Link href="/terms" className="hover:text-teal-600 transition">Terms of Service</Link>
+          <span>•</span>
+          <Link href="/register" className="hover:text-teal-600 transition">Register Institute</Link>
         </div>
       </div>
     </div>

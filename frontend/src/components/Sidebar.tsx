@@ -22,6 +22,7 @@ import {
   ChevronRight,
   Database,
   Building2,
+  Globe,
   X
 } from 'lucide-react';
 
@@ -53,6 +54,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     { href: '/owner', label: 'Executive ROI Model', icon: FileSpreadsheet },
     { href: '/model-report', label: 'ML Rigour Card', icon: FileCheck2 },
     { href: '/demo-tools', label: 'Scenario Simulator', icon: Sparkles },
+    { href: '/', label: 'Public Website', icon: Globe },
   ];
 
   return (
@@ -168,6 +170,11 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           <div className="flex items-center justify-between text-[10px]">
             <span>DPDP Act 2023</span>
             <span className="text-emerald-400 font-semibold">Active Sec 9 VPC</span>
+          </div>
+          <div className="pt-1.5 border-t border-blue-900/40 flex items-center justify-between text-[10px] text-slate-500">
+            <Link href="/privacy-policy" className="hover:text-teal-300 transition">Privacy Policy</Link>
+            <span>•</span>
+            <Link href="/terms" className="hover:text-teal-300 transition">Terms</Link>
           </div>
         </div>
       </aside>
