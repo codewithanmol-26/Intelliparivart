@@ -13,6 +13,8 @@ export interface IngestionResult {
   valid_records: number;
   quarantined_records: number;
   status: 'passed' | 'review_required';
+  shape_detected?: string;
+  new_records_inserted?: number;
   auto_remediation_summary: string;
 }
 
@@ -188,6 +190,7 @@ export interface UploadPreviewResult {
   auto_mapping: Record<string, string | null>;
   preview_rows: Record<string, any>[];
   validation_issues: string[];
+  requires_mapping?: string[];
 }
 
 export interface RecomputeStatus {

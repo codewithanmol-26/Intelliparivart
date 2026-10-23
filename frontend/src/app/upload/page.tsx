@@ -173,11 +173,12 @@ export default function UploadPage() {
   const [sources, setSources] = useState<UploadSourceRecord[]>([]);
   const [sourcesLoading, setSourcesLoading] = useState(false);
 
+
   // OMR Scanner State
   const [omrFile, setOmrFile] = useState<File | null>(null);
   const [omrPreview, setOmrPreview] = useState<string | null>(null);
-  const [testId, setTestId] = useState<string>('TEST_PH_004');
-  const [studentIdInput, setStudentIdInput] = useState<string>('STD_PAT_001');
+  const [testId, setTestId] = useState<string>('');
+  const [studentIdInput, setStudentIdInput] = useState<string>('');
   const [isOmrScanning, setIsOmrScanning] = useState(false);
   const [omrResult, setOmrResult] = useState<any | null>(null);
   const [omrError, setOmrError] = useState<string | null>(null);
@@ -217,11 +218,10 @@ export default function UploadPage() {
     try {
       const res = await api.previewUpload(file, tenantId);
       setPreviewData(res);
-      setColumnOverrides(
-        Object.fromEntries(
-          Object.entries(res.auto_mapping).filter(([_, v]) => v !== null) as [string, string][]
-        )
+      const detected = Object.fromEntries(
+        Object.entries(res.auto_mapping).filter(([_, v]) => v !== null) as [string, string][]
       );
+      setColumnOverrides(detected);
       setWizardStep(2);
     } catch (err: any) {
       setPreviewError(err.message || 'Failed to parse file preview.');
@@ -293,7 +293,11 @@ export default function UploadPage() {
     setIngestError(null);
 
     try {
-      const res = await api.uploadCsv(selectedFile, tenantId);
+      const res = await api.uploadCsv(
+        selectedFile,
+        tenantId,
+        Object.fromEntries(Object.entries(columnOverrides).filter(([, source]) => source))
+      );
       setIngestResult(res);
       setWizardStep(4);
       notifyRecomputed(
@@ -358,7 +362,7 @@ export default function UploadPage() {
     setOmrCommitMessage(null);
 
     try {
-      const res = await api.uploadOmr(omrFile, testId, tenantId);
+      const res = await api.uploadOmr(omrFile, testId, tenantId, studentIdInput);
       setOmrResult(res);
       if (res.student_id) setStudentIdInput(res.student_id);
       if (res.test_id) setTestId(res.test_id);
@@ -419,7 +423,7 @@ export default function UploadPage() {
 
           // 2. Try to run real live OpenCV backend scan
           try {
-            scanRes = await api.uploadOmr(file, testId, tenantId);
+            scanRes = await api.uploadOmr(file, testId, tenantId, studentIdInput);
           } catch (backendErr) {
             console.warn('Backend live scan unavailable, loading pre-calibrated benchmark:', backendErr);
           }
@@ -487,8 +491,8 @@ export default function UploadPage() {
     try {
       const res = await api.commitOmr(
         {
-          student_id: studentIdInput || omrResult.student_id || 'STD_PAT_001',
-          test_id: testId || omrResult.test_id || 'TEST_PH_004',
+          student_id: studentIdInput || omrResult.student_id || '',
+          test_id: testId || omrResult.test_id || '',
           answers: answersMap,
           score: omrResult.score ?? 8,
         },
@@ -828,16 +832,18 @@ export default function UploadPage() {
                   </div>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
                     {Object.entries(previewData.auto_mapping).map(([target, matchedCol]) => (
-                      <div key={target} className="bg-white p-2.5 rounded-lg border border-slate-200">
-                        <span className="text-[10px] uppercase font-bold text-slate-400 block">
-                          {target}
-                        </span>
-                        <span className="font-semibold text-slate-800 text-xs">
-                          {matchedCol || (
-                            <span className="text-slate-400 italic">Not in table</span>
-                          )}
-                        </span>
-                      </div>
+                      <label key={target} className="bg-white p-2.5 rounded-lg border border-slate-200 block">
+                        <span className="text-[10px] uppercase font-bold text-slate-400 block">{target}</span>
+                        <select
+                          value={columnOverrides[target] || ''}
+                          onChange={(e) => setColumnOverrides({ ...columnOverrides, [target]: e.target.value })}
+                          className="mt-1 w-full text-xs font-semibold text-slate-800 bg-white border border-slate-200 rounded p-1"
+                        >
+                          <option value="">Not mapped</option>
+                          {previewData.columns.map((col) => <option key={col} value={col}>{col}</option>)}
+                        </select>
+                        {!matchedCol && <span className="text-[10px] text-amber-600">Map if required for this file.</span>}
+                      </label>
                     ))}
                   </div>
                 </div>
@@ -1280,7 +1286,7 @@ export default function UploadPage() {
                       value={testId}
                       onChange={(e) => setTestId(e.target.value)}
                       className="w-full p-2 border border-slate-200 rounded-lg text-xs font-mono bg-slate-50 focus:bg-white focus:outline-none"
-                      placeholder="TEST_PH_004"
+                      placeholder="Enter configured test ID"
                     />
                   </div>
                   <div>
@@ -1292,7 +1298,7 @@ export default function UploadPage() {
                       value={studentIdInput}
                       onChange={(e) => setStudentIdInput(e.target.value)}
                       className="w-full p-2 border border-slate-200 rounded-lg text-xs font-mono bg-slate-50 focus:bg-white focus:outline-none"
-                      placeholder="STD_PAT_001"
+                      placeholder="Enter roster student ID"
                     />
                   </div>
                 </div>

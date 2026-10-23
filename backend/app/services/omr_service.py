@@ -69,7 +69,12 @@ def process_omr_sheet(
             "rejection_reason": quality["reason"],
             "total_detected": 0,
             "score": 0,
-            "questions": []
+            "questions": [],
+            "diagnostics": {
+                "blur_laplacian": quality.get("laplacian_var", 0),
+                "brightness": quality.get("brightness", 0),
+                "skew_angle_deg": 0.0,
+            },
         }
 
     # 2. Preprocessing & Binarization
@@ -84,6 +89,7 @@ def process_omr_sheet(
     
     questions_results = []
     correct_count = 0
+    incorrect_count = 0
 
     for q_idx in range(1, 21):
         is_right_col = q_idx > 10
@@ -111,6 +117,7 @@ def process_omr_sheet(
         # Double mark or faint mark detection
         is_double_mark = (top_density > 0.35 and runner_up_density > 0.30)
         is_faint = (top_density < 0.28)
+        is_blank = top_density < 0.12
         is_flagged = is_double_mark or is_faint
 
         correct_choice = answer_key.get(q_idx, "A")
@@ -120,6 +127,10 @@ def process_omr_sheet(
             correct_count += 1
             # Green circle for correct
             cv2.circle(annotated, (top_x, top_y), 15, (34, 197, 94), 2)
+        elif not is_flagged and not is_blank:
+            incorrect_count += 1
+            # Red circle for incorrect
+            cv2.circle(annotated, (top_x, top_y), 15, (239, 68, 68), 2)
         elif is_flagged:
             # Amber circle for teacher review
             cv2.circle(annotated, (top_x, top_y), 15, (249, 115, 22), 2)
@@ -132,7 +143,7 @@ def process_omr_sheet(
 
         questions_results.append({
             "question_number": q_idx,
-            "detected_option": top_opt if not is_faint else "UNANSWERED",
+            "detected_option": "BLANK" if is_blank else (top_opt if not is_faint else "UNANSWERED"),
             "is_correct": is_correct,
             "confidence": round(conf, 2),
             "flagged": is_flagged
@@ -152,8 +163,13 @@ def process_omr_sheet(
 
     return {
         "quality_status": "CLEAN",
-        "total_detected": 20,
-        "score": correct_count,
+        "total_detected": len(questions_results),
+        "score": correct_count * 4 - incorrect_count,
         "annotated_image": annotated_base64,
-        "questions": questions_results
+        "questions": questions_results,
+        "diagnostics": {
+            "blur_laplacian": quality.get("laplacian_var", 0),
+            "brightness": quality.get("brightness", 0),
+            "skew_angle_deg": 0.0,
+        },
     }

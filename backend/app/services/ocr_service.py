@@ -111,41 +111,34 @@ def run_ocr_on_omr_header(image_bytes: bytes) -> Dict[str, Any]:
 
     detected_student = None
     detected_test = None
-    confidence = 0.85
-    engine_used = "OPENCV_CONTOUR_VISION"
+    confidence = 0.0
+    engine_used = "NO_TEXT_RECOGNIZED"
 
     # 1. Try PyTesseract
     tess_s = run_pytesseract_ocr(student_crop)
     tess_t = run_pytesseract_ocr(test_crop)
     if tess_s and len(tess_s) >= 4:
         # Regex search for STD_...
-        match_s = re.search(r"STD[A-Z0-9_]+", tess_s.replace(" ", ""))
+        match_s = re.search(r"STD[A-Z0-9_:-]+", tess_s.replace(" ", "").upper())
         if match_s:
-            detected_student = match_s.group(0)
+            detected_student = re.sub(r"[-:]", "_", match_s.group(0)).rstrip("_")
             engine_used = "PYTESSERACT_OCR"
             confidence = 0.94
 
     if tess_t and len(tess_t) >= 4:
-        match_t = re.search(r"TEST[A-Z0-9_]+", tess_t.replace(" ", ""))
+        match_t = re.search(r"TEST[A-Z0-9_:-]+", tess_t.replace(" ", "").upper())
         if match_t:
-            detected_test = match_t.group(0)
+            detected_test = re.sub(r"[-:]", "_", match_t.group(0)).rstrip("_")
 
-    # 2. Vision Heuristic Fallback
-    if not detected_student:
-        cand_s, conf_s = run_opencv_heuristic_ocr(student_crop, "STD")
-        if cand_s:
-            detected_student = cand_s
-            confidence = min(confidence, conf_s)
-
-    if not detected_test:
-        cand_t, conf_t = run_opencv_heuristic_ocr(test_crop, "TEST")
-        if cand_t:
-            detected_test = cand_t
-
-    # Fallbacks for demonstration
-    final_student = detected_student or "STD_NA_01_005"
-    final_test = detected_test or "TEST_PH_004"
-    requires_review = confidence < 0.75
+    # Contour geometry cannot identify characters; do not synthesize IDs from it.
+    # Never invent identifiers when text could not be read; let the operator enter them.
+    final_student = detected_student
+    final_test = detected_test
+    if detected_student and detected_test:
+        confidence = min(confidence, 0.94 if engine_used == "PYTESSERACT_OCR" else confidence)
+    else:
+        confidence = min(confidence, 0.60)
+    requires_review = not detected_student or not detected_test or confidence < 0.75
 
     return {
         "student_id": final_student,

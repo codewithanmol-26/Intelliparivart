@@ -18,7 +18,7 @@ import numpy as np
 
 from backend.app.database import get_db, Base
 from backend.app.models import (
-    Student, Batch, Question, SyllabusTopic, TestResponse,
+    Student, Batch, Question, SyllabusTopic, Test, TestResponse,
     Attendance, Fee, Engagement, ReviewQueueItem, AuditLog, UploadSource, RecomputeRun
 )
 from backend.app.schemas import ReviewQueueItemOut, ReviewResolveRequest, OMRScanResult
@@ -35,12 +35,12 @@ def parse_tabular_file(filename: str, contents: bytes) -> pd.DataFrame:
     Tries multiple encodings (utf-8, utf-8-sig, latin1, cp1252) for Windows Excel exports.
     """
     fname_lower = (filename or "").lower()
-    is_excel = False
+    is_excel = fname_lower.endswith((".xlsx", ".xls", ".xlsm", ".xlsb"))
+    if not is_excel and (contents.startswith(b"PK\x03\x04") or contents.startswith(b"\xd0\xcf\x11\xe0")):
+        is_excel = True
 
-    if fname_lower.endswith((".xlsx", ".xls", ".xlsm", ".xlsb")):
-        is_excel = True
-    elif contents.startswith(b"PK\x03\x04") or contents.startswith(b"\xd0\xcf\x11\xe0"):
-        is_excel = True
+    if not contents:
+        raise HTTPException(status_code=400, detail="Uploaded file is empty.")
 
     if is_excel:
         try:
@@ -87,12 +87,18 @@ def detect_file_shape(df: pd.DataFrame) -> str:
     - LONG_RESPONSES: has student_id, test_id, question_id, is_correct
     """
     cols = {str(c).strip().lower().replace(" ", "_").replace("-", "_") for c in df.columns}
-    
+    if "name" not in cols and ("full_name" in cols or "student_name" in cols):
+        cols.add("name")
+    if "batch_id" not in cols and "batch" in cols:
+        cols.add("batch_id")
+    if "student_id" not in cols and any(c in cols for c in ("roll_no", "roll_number", "sid")):
+        cols.add("student_id")
+
     if "present_flag" in cols or ("attendance" in cols and "session_date" in cols):
         return "ATTENDANCE"
     if "payment_status" in cols or "instalment_no" in cols or ("amount" in cols and "due_date" in cols):
         return "FEES"
-    if "difficulty_b" in cols or ("topic_id" in cols and "question_id" in cols and "student_id" not in cols):
+    if "question_id" in cols and "student_id" not in cols and any(c in cols for c in ("correct_option", "answer_key", "answer", "key", "difficulty_b", "topic_id")):
         return "ANSWER_KEY"
     if "name" in cols and "batch_id" in cols and "question_id" not in cols:
         return "ROSTER"
@@ -109,6 +115,7 @@ def detect_file_shape(df: pd.DataFrame) -> str:
 async def ingest_csv(
     file: UploadFile = File(...),
     tenant_id: str = Form("INST_PATNA_01"),
+    column_mapping: str = Form("{}"),
     create_unverified_students: bool = Form(False),
     db: Session = Depends(get_db)
 ):
@@ -126,6 +133,18 @@ async def ingest_csv(
     if df.empty:
         raise HTTPException(status_code=400, detail=f"Uploaded file '{file.filename}' is empty.")
 
+    try:
+        mapping = json.loads(column_mapping or "{}")
+        if not isinstance(mapping, dict):
+            raise ValueError("column_mapping must be an object")
+    except (TypeError, ValueError, json.JSONDecodeError) as exc:
+        raise HTTPException(status_code=400, detail=f"Invalid column mapping: {exc}")
+    if mapping:
+        unknown_columns = set(mapping.values()) - {str(c) for c in df.columns}
+        if unknown_columns:
+            raise HTTPException(status_code=400, detail=f"Mapped columns not found: {', '.join(sorted(unknown_columns))}")
+        df = df.rename(columns={source: target for target, source in mapping.items() if source})
+
     shape = detect_file_shape(df)
 
     # Normalize column names
@@ -140,6 +159,18 @@ async def ingest_csv(
             col_map[col] = "question_id"
         elif c_clean in ["is_correct", "score", "marks", "result", "correct"]:
             col_map[col] = "is_correct"
+        elif c_clean in ["correct_option", "answer_key", "answer", "key"]:
+            col_map[col] = "correct_option"
+        elif c_clean in ["topic_id"]:
+            col_map[col] = "topic_id"
+        elif c_clean in ["subject"]:
+            col_map[col] = "subject"
+        elif c_clean in ["chapter"]:
+            col_map[col] = "chapter"
+        elif c_clean in ["difficulty_b", "difficulty"]:
+            col_map[col] = "difficulty_b"
+        elif c_clean in ["discrimination_a"]:
+            col_map[col] = "discrimination_a"
         elif c_clean in ["time_taken", "time_taken_sec", "duration_sec"]:
             col_map[col] = "time_taken_sec"
         elif c_clean in ["test_date", "date", "session_date", "exam_date"]:
@@ -151,6 +182,17 @@ async def ingest_csv(
         elif c_clean in ["full_name", "name", "student_name"]:
             col_map[col] = "name"
     df = df.rename(columns=col_map)
+    required_by_shape = {
+        "ROSTER": ["student_id", "name"],
+        "ATTENDANCE": ["student_id", "test_date", "present_flag"],
+        "FEES": ["student_id", "amount", "due_date"],
+        "ANSWER_KEY": ["question_id", "correct_option"],
+        "WIDE_MARKS": ["student_id", "test_id"],
+        "LONG_RESPONSES": ["student_id", "test_id", "question_id", "is_correct"],
+    }
+    missing_columns = [field for field in required_by_shape.get(shape, []) if field not in df.columns]
+    if missing_columns:
+        raise HTTPException(status_code=400, detail="Missing required columns: " + ", ".join(missing_columns))
 
     # 1. Fetch valid roster for tenant (NO FAKE ROSTER FALLBACK)
     roster_students = db.query(Student).filter(Student.tenant_id == tenant_id).all()
@@ -173,8 +215,57 @@ async def ingest_csv(
         db.add(default_batch)
         db.flush()
 
+    # --- SHAPE 0: ANSWER KEY IMPORT ---
+    if shape == "ANSWER_KEY":
+        for _, row in df.iterrows():
+            qid = str(row.get("question_id") or "").strip()
+            if not qid:
+                quarantined_count += 1
+                db.add(ReviewQueueItem(
+                    tenant_id=tenant_id, source_type="ANSWER_KEY_UPLOAD",
+                    raw_payload_json=json.dumps(row.to_dict(), default=str),
+                    detected_error="Missing question_id in answer key row.",
+                    suggested_fix="Provide a unique question_id.", status="PENDING",
+                ))
+                continue
+            question = db.query(Question).filter(
+                Question.id == qid,
+                (Question.tenant_id == tenant_id) | (Question.tenant_id.is_(None)),
+            ).first()
+            raw_option = row.get("correct_option")
+            correct_option = "" if raw_option is None or pd.isna(raw_option) else str(raw_option).strip().upper().replace("OPTION_", "")
+            if correct_option not in {"A", "B", "C", "D"}:
+                quarantined_count += 1
+                db.add(ReviewQueueItem(
+                    tenant_id=tenant_id,
+                    source_type="ANSWER_KEY_UPLOAD",
+                    raw_payload_json=json.dumps(row.to_dict(), default=str),
+                    detected_error=f"Invalid or missing correct option for question '{qid}'.",
+                    suggested_fix="Set correct_option to A, B, C, or D.", status="PENDING",
+                ))
+                continue
+            if not question:
+                question = Question(
+                    id=qid, tenant_id=tenant_id,
+                    topic_id=str(row.get("topic_id") or "TOP_01"),
+                    subject=str(row.get("subject") or "Unknown"),
+                    chapter=str(row.get("chapter") or "Untagged"),
+                    topic=str(row.get("topic_id") or "Untagged"),
+                    difficulty_b=float(row.get("difficulty_b") or 0),
+                    discrimination_a=float(row.get("discrimination_a") or 1),
+                    correct_option=f"Option_{correct_option}", tagging_status="UNTAGGED",
+                )
+                db.add(question)
+            else:
+                question.correct_option = f"Option_{correct_option}"
+                if row.get("difficulty_b") is not None:
+                    question.difficulty_b = float(row["difficulty_b"])
+            accepted_count += 1
+            inserted_count += 1
+        db.commit()
+
     # --- SHAPE 1: ROSTER IMPORT ---
-    if shape == "ROSTER":
+    elif shape == "ROSTER":
         for idx, row in df.iterrows():
             sid = str(row.get("student_id", f"STD_{idx+1}")).strip()
             name = str(row.get("name", f"Student {sid}")).strip()
@@ -396,6 +487,8 @@ async def ingest_csv(
 async def ingest_omr(
     file: UploadFile = File(...),
     tenant_id: str = Form("INST_PATNA_01"),
+    test_id: Optional[str] = Form(None),
+    student_id: Optional[str] = Form(None),
     db: Session = Depends(get_db)
 ):
     """
@@ -404,13 +497,45 @@ async def ingest_omr(
     and runs OCR character segmentation on header to identify student and test code.
     """
     contents = await file.read()
+    if not contents:
+        raise HTTPException(status_code=400, detail="Uploaded image is empty.")
+    if len(contents) > 12 * 1024 * 1024:
+        raise HTTPException(status_code=413, detail="Image is too large; maximum upload size is 12 MB.")
+    if file.content_type and not file.content_type.startswith("image/"):
+        raise HTTPException(status_code=415, detail="Please upload a PNG or JPEG image.")
+
     result = process_omr_sheet(contents)
-    
     if "error" in result:
         raise HTTPException(status_code=400, detail=result["error"])
 
-    # Run OCR character recognition on header bounding boxes
+    # OCR metadata supplements explicit operator values; unrecognized IDs stay empty.
     ocr_res = run_ocr_on_omr_header(contents)
+    resolved_student_id = (student_id or "").strip() or ocr_res.get("student_id")
+    resolved_test_id = (test_id or "").strip() or ocr_res.get("test_id")
+    result_questions = result.get("questions", [])
+    requires_review = bool(ocr_res.get("requires_human_review")) or any(q.get("flagged") for q in result_questions)
+    if result.get("quality_status") != "CLEAN":
+        requires_review = True
+    if requires_review:
+        try:
+            Base.metadata.create_all(bind=db.get_bind())
+            db.add(ReviewQueueItem(
+                tenant_id=tenant_id,
+                source_type="OMR_SCAN",
+                raw_payload_json=json.dumps({
+                    "file_name": file.filename,
+                    "student_id": resolved_student_id,
+                    "test_id": resolved_test_id,
+                    "quality_status": result.get("quality_status"),
+                    "questions": result_questions,
+                }),
+                detected_error=(result.get("rejection_reason") or "OMR metadata or bubble marks need human verification."),
+                suggested_fix="Verify candidate/test IDs and ambiguous answers in the OMR review screen.",
+                status="PENDING",
+            ))
+            db.commit()
+        except Exception:
+            db.rollback()
 
     # Safely Log Audit without crashing scan if audit table is pending creation
     try:
@@ -424,8 +549,10 @@ async def ingest_omr(
             details_json=json.dumps({
                 "quality": result.get("quality_status", "UNKNOWN"),
                 "score": result.get("score", 0),
-                "ocr_student": ocr_res.get("student_id"),
-                "ocr_confidence": ocr_res.get("ocr_confidence")
+                "ocr_student": resolved_student_id,
+                "ocr_test": resolved_test_id,
+                "ocr_confidence": ocr_res.get("ocr_confidence"),
+                "requires_human_review": requires_review
             })
         )
         db.add(audit)
@@ -441,23 +568,20 @@ async def ingest_omr(
         "score": result["score"],
         "questions": result["questions"],
         "annotated_image": result.get("annotated_image"),
-        "student_id": ocr_res.get("student_id"),
-        "test_id": ocr_res.get("test_id"),
+        "student_id": resolved_student_id,
+        "test_id": resolved_test_id,
         "ocr_confidence": ocr_res.get("ocr_confidence"),
-        "requires_human_review": ocr_res.get("requires_human_review"),
-        "diagnostics": {
-            "blur_laplacian": 2719.6,
-            "brightness": 246.9,
-            "skew_angle_deg": 0.2
-        }
+        "requires_human_review": requires_review,
+        "rejection_reason": result.get("rejection_reason"),
+        "diagnostics": result.get("diagnostics", {}),
     }
 
 class OMRCommitRequest(BaseModel):
     student_id: str
     test_id: str
-    batch_id: Optional[str] = "INST_PATNA_01_B1_JEE_12"
+    batch_id: Optional[str] = None
     answers: Dict[str, str]
-    score: Optional[int] = 8
+    score: Optional[int] = None
 
 @router.post("/omr-commit")
 def commit_omr_results(
@@ -465,7 +589,55 @@ def commit_omr_results(
     tenant_id: str = Header("INST_PATNA_01", alias="X-Tenant-ID"),
     db: Session = Depends(get_db)
 ):
-    """Commits OMR answers directly into student test records."""
+    """Persists confirmed OMR responses to the tenant gradebook idempotently."""
+    student = db.query(Student).filter(
+        Student.id == req.student_id,
+        Student.tenant_id == tenant_id,
+    ).first()
+    if not student:
+        raise HTTPException(status_code=404, detail="Student not found in this institute roster.")
+
+    test = db.query(Test).filter(
+        Test.id == req.test_id,
+        Test.tenant_id == tenant_id,
+    ).first()
+    test_date = test.test_date if test else datetime.date.today()
+
+    committed = 0
+    for question_ref, answer in req.answers.items():
+        if answer not in {"A", "B", "C", "D", "BLANK", "UNANSWERED"}:
+            raise HTTPException(status_code=400, detail=f"Invalid answer '{answer}' for {question_ref}.")
+        qid = str(question_ref).strip().upper()
+        # Accept Q1/Q_1 aliases while preserving configured database IDs.
+        qid = f"Q_{qid.lstrip('Q_').zfill(3)}" if qid.lstrip("Q_").isdigit() else qid
+        question = db.query(Question).filter(
+            Question.id == qid,
+            (Question.tenant_id == tenant_id) | (Question.tenant_id.is_(None)),
+        ).first()
+        if not question:
+            raise HTTPException(status_code=400, detail=f"Question '{question_ref}' is not configured.")
+        if answer in {"BLANK", "UNANSWERED"}:
+            continue
+        is_correct = int(answer == question.correct_option.replace("Option_", ""))
+        response = db.query(TestResponse).filter(
+            TestResponse.tenant_id == tenant_id,
+            TestResponse.student_id == req.student_id,
+            TestResponse.test_id == req.test_id,
+            TestResponse.question_id == qid,
+        ).first()
+        if response:
+            response.response = f"Option_{answer}"
+            response.is_correct = is_correct
+            response.test_date = test_date
+        else:
+            db.add(TestResponse(
+                id=f"RESP_{tenant_id}_{req.student_id}_{req.test_id}_{qid}"[:50],
+                tenant_id=tenant_id, test_id=req.test_id, student_id=req.student_id,
+                question_id=qid, response=f"Option_{answer}", is_correct=is_correct,
+                time_taken_sec=60, test_date=test_date,
+            ))
+            committed += 1
+
     try:
         Base.metadata.create_all(bind=db.get_bind())
         audit = AuditLog(
@@ -483,15 +655,18 @@ def commit_omr_results(
         )
         db.add(audit)
         db.commit()
-    except Exception:
+    except Exception as exc:
         db.rollback()
+        raise HTTPException(status_code=500, detail=f"Could not commit OMR gradebook entries: {exc}")
 
+    recompute_res = recompute(tenant_id=tenant_id, db=db, source_file=f"omr:{req.test_id}")
     return {
         "status": "SUCCESS",
         "student_id": req.student_id,
         "test_id": req.test_id,
-        "committed_questions": len(req.answers),
+        "committed_questions": committed,
         "total_score": req.score,
+        "run_id": recompute_res.get("run_id") if isinstance(recompute_res, dict) else recompute_res,
         "message": f"Successfully committed OMR gradebook entries for student {req.student_id}."
     }
 
@@ -643,6 +818,11 @@ async def preview_upload(
     mapping["amount"] = find_match(["amount", "fee_amount", "paid_amount", "due_amount"])
     mapping["due_date"] = find_match(["due_date", "payment_date", "due"])
     mapping["name"] = find_match(["name", "student_name", "full_name"])
+    mapping["correct_option"] = find_match(["correct_option", "answer_key", "answer", "key"])
+    mapping["topic_id"] = find_match(["topic_id"])
+    mapping["subject"] = find_match(["subject"])
+    mapping["chapter"] = find_match(["chapter"])
+    mapping["difficulty_b"] = find_match(["difficulty_b", "difficulty"])
 
     # Prepare preview rows (replace NaN with None for clean JSON serialization)
     preview_df = df.head(20).copy()
@@ -652,8 +832,17 @@ async def preview_upload(
     issues = []
     if len(df) == 0:
         issues.append("File contains 0 data rows.")
-    if shape in ["LONG_RESPONSES", "WIDE_MARKS", "ATTENDANCE", "FEES", "ROSTER"] and not mapping["student_id"]:
-        issues.append("Warning: Could not auto-detect student identifier column. Please verify column mapping.")
+    required_by_shape = {
+        "ROSTER": ["student_id", "name"],
+        "ATTENDANCE": ["student_id", "session_date", "present_flag"],
+        "FEES": ["student_id", "amount", "due_date"],
+        "ANSWER_KEY": ["question_id", "correct_option"],
+        "WIDE_MARKS": ["student_id", "test_id"],
+        "LONG_RESPONSES": ["student_id", "test_id", "question_id", "is_correct"],
+    }
+    requires_mapping = [field for field in required_by_shape.get(shape, []) if not mapping.get(field)]
+    if requires_mapping:
+        issues.append("Map required columns before importing: " + ", ".join(requires_mapping))
 
     return {
         "filename": file.filename,
@@ -662,7 +851,8 @@ async def preview_upload(
         "columns": orig_cols,
         "auto_mapping": mapping,
         "preview_rows": preview_rows,
-        "validation_issues": issues
+        "validation_issues": issues,
+        "requires_mapping": requires_mapping,
     }
 
 @router.post("/recompute")

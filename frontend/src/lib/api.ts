@@ -126,10 +126,11 @@ export const api = {
     }, tenantId);
   },
 
-  async uploadCsv(file: File, tenantId: string): Promise<IngestionResult> {
+  async uploadCsv(file: File, tenantId: string, columnMapping?: Record<string, string>): Promise<IngestionResult> {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('tenant_id', tenantId);
+    if (columnMapping) formData.append('column_mapping', JSON.stringify(columnMapping));
     return request<IngestionResult>('/ingest/upload-csv', {
       method: 'POST',
       body: formData,
@@ -164,11 +165,12 @@ export const api = {
     }, tenantId);
   },
 
-  async uploadOmr(file: File, testId: string, tenantId: string): Promise<any> {
+  async uploadOmr(file: File, testId: string, tenantId: string, studentId?: string): Promise<any> {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('test_id', testId);
     formData.append('tenant_id', tenantId);
+    if (studentId) formData.append('student_id', studentId);
     return request<any>('/ingest/omr-scan', {
       method: 'POST',
       body: formData,
