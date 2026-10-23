@@ -131,204 +131,6 @@ export default function HomePage() {
         <div className="absolute right-0 top-0 bottom-0 w-1/2 opacity-15 bg-[radial-gradient(#14B8A6_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
       </section>
 
-      {/* 2. REALISTIC PRODUCT DASHBOARD PREVIEW COMPOSITION */}
-      <section className="space-y-4">
-        <div className="flex flex-wrap items-center justify-between gap-2 px-1">
-          <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-teal-600 block">
-              Live Frontend Component Composition
-            </span>
-            <h2 className="text-xl sm:text-2xl font-black text-slate-900 mt-0.5">
-              Real-Time Academic Intelligence Interface
-            </h2>
-          </div>
-
-        </div>
-
-        {/* Browser Mock Shell */}
-        <div className="rounded-2xl border border-slate-200 bg-white shadow-xl overflow-hidden">
-          {/* Browser header bar */}
-          <div className="bg-slate-100 border-b border-slate-200 px-4 py-3 flex items-center justify-between text-xs text-slate-600">
-            <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 rounded-full bg-rose-400" />
-              <div className="w-3 h-3 rounded-full bg-amber-400" />
-              <div className="w-3 h-3 rounded-full bg-emerald-400" />
-              <span className="text-slate-400 text-[11px] ml-2 font-mono">intelliprivart.vercel.app/overview</span>
-            </div>
-            <div className="flex items-center space-x-3 text-[11px]">
-              <span className="inline-flex items-center px-2 py-0.5 rounded bg-teal-100 text-teal-800 font-bold">
-                Demo Mode — Benchmark Data Active
-              </span>
-              <span className="text-slate-500 hidden sm:inline">Apex JEE & Medical Academy, Patna</span>
-            </div>
-          </div>
-
-          {/* Inner Dashboard Composition */}
-          <div className="p-4 sm:p-6 bg-slate-50/70 space-y-6">
-            {/* Top Stat Row */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-              <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs">
-                <div className="text-[11px] font-semibold text-slate-500 uppercase">Enrolled Students</div>
-                <div className="text-2xl font-black text-slate-900 mt-1">1,200</div>
-                <div className="text-[11px] text-emerald-600 font-medium mt-1 flex items-center">
-                  <TrendingUp className="w-3 h-3 mr-1" /> 94.2% Active Attendance
-                </div>
-              </div>
-
-              <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs">
-                <div className="text-[11px] font-semibold text-slate-500 uppercase">Avg Concept Mastery</div>
-                <div className="text-2xl font-black text-slate-900 mt-1">74.2%</div>
-                <div className="text-[11px] text-teal-600 font-medium mt-1">
-                  Bayesian Knowledge Tracing
-                </div>
-              </div>
-
-              <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs">
-                <div className="text-[11px] font-semibold text-slate-500 uppercase">Support Triage Queue</div>
-                <div className="text-2xl font-black text-amber-600 mt-1">8 Students</div>
-                <div className="text-[11px] text-amber-700 font-medium mt-1">
-                  Early Intervention Required
-                </div>
-              </div>
-
-              <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs">
-                <div className="text-[11px] font-semibold text-slate-500 uppercase">Protected Fee Revenue</div>
-                <div className="text-2xl font-black text-emerald-600 mt-1">₹28.5 Lakhs</div>
-                <div className="text-[11px] text-slate-500 font-medium mt-1">
-                  18.3x Platform ROI
-                </div>
-              </div>
-            </div>
-
-            {/* Split View: Topic Mastery Heatmap & Early-Warning Triage */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-              {/* Left Column: BKT Mastery Progress (7 cols) */}
-              <div className="lg:col-span-7 p-5 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-4">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                  <div>
-                    <h3 className="text-sm font-bold text-slate-900">Topic Mastery Heatmap (2PL IRT + BKT)</h3>
-                    <p className="text-xs text-slate-500">Physics & Chemistry Core Topics • Batch: Achievers Top-30</p>
-                  </div>
-                  <span className="text-[10px] bg-teal-50 text-teal-700 font-semibold px-2 py-0.5 rounded-full border border-teal-200">
-                    Probabilistic Mastery
-                  </span>
-                </div>
-
-                <div className="space-y-3 pt-1 text-xs">
-                  <div>
-                    <div className="flex justify-between items-center mb-1 font-medium">
-                      <span className="text-slate-800 font-semibold">Kinematics & 1D Motion (Physics)</span>
-                      <span className="text-emerald-700 font-bold font-mono">91% Mastered</span>
-                    </div>
-                    <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
-                      <div className="h-full bg-emerald-500 rounded-full" style={{ width: '91%' }} />
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="flex justify-between items-center mb-1 font-medium">
-                      <span className="text-slate-800 font-semibold">Electrostatics & Gauss Law (Physics)</span>
-                      <span className="text-teal-700 font-bold font-mono">76% In Progress</span>
-                    </div>
-                    <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
-                      <div className="h-full bg-teal-500 rounded-full" style={{ width: '76%' }} />
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="flex justify-between items-center mb-1 font-medium">
-                      <span className="text-slate-800 font-semibold">Organic Reaction Mechanisms (Chemistry)</span>
-                      <span className="text-amber-700 font-bold font-mono">48% Needs Practice</span>
-                    </div>
-                    <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
-                      <div className="h-full bg-amber-500 rounded-full" style={{ width: '48%' }} />
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="flex justify-between items-center mb-1 font-medium">
-                      <span className="text-slate-800 font-semibold">Rotational Dynamics & Torque (Physics)</span>
-                      <span className="text-rose-700 font-bold font-mono">44% Critical Remedial</span>
-                    </div>
-                    <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
-                      <div className="h-full bg-rose-500 rounded-full" style={{ width: '44%' }} />
-                    </div>
-                    <div className="mt-1 text-[11px] text-rose-600 font-medium flex items-center">
-                      <AlertTriangle className="w-3 h-3 mr-1" /> 1-on-1 Faculty Mentorship Triggered
-                    </div>
-                  </div>
-                </div>
-
-                <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
-                  <span className="text-slate-500 text-[11px]">Item Difficulty: b=1.42 • Discrimination: a=1.85</span>
-                  <Link href="/mastery" className="text-teal-600 font-bold hover:underline inline-flex items-center">
-                    <span>Full Mastery Matrix</span> &rarr;
-                  </Link>
-                </div>
-              </div>
-
-              {/* Right Column: Early Warning Triage (5 cols) */}
-              <div className="lg:col-span-5 p-5 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-4">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                  <div>
-                    <h3 className="text-sm font-bold text-slate-900">Support Triage Queue</h3>
-                    <p className="text-xs text-slate-500">Non-leaking Early Indicators</p>
-                  </div>
-                  <span className="text-[10px] bg-amber-50 text-amber-700 font-semibold px-2 py-0.5 rounded-full border border-amber-200">
-                    Actionable
-                  </span>
-                </div>
-
-                <div className="space-y-2.5 pt-1">
-                  {/* Student 1 */}
-                  <div className="p-2.5 rounded-xl border border-rose-200 bg-rose-50/50 flex items-center justify-between text-xs">
-                    <div>
-                      <div className="font-bold text-slate-900">Aarav Sharma</div>
-                      <div className="text-[11px] text-slate-500">Achievers Top-30 • 3-Test Slump Streak</div>
-                    </div>
-                    <span className="px-2 py-0.5 rounded bg-rose-100 text-rose-800 text-[10px] font-bold">
-                      High Support
-                    </span>
-                  </div>
-
-                  {/* Student 2 */}
-                  <div className="p-2.5 rounded-xl border border-amber-200 bg-amber-50/50 flex items-center justify-between text-xs">
-                    <div>
-                      <div className="font-bold text-slate-900">Rohan Verma</div>
-                      <div className="text-[11px] text-slate-500">Foundation JEE 11th • Attendance Dip</div>
-                    </div>
-                    <span className="px-2 py-0.5 rounded bg-amber-100 text-amber-800 text-[10px] font-bold">
-                      Medium
-                    </span>
-                  </div>
-
-                  {/* Student 3 */}
-                  <div className="p-2.5 rounded-xl border border-emerald-200 bg-emerald-50/50 flex items-center justify-between text-xs">
-                    <div>
-                      <div className="font-bold text-slate-900">Priya Patel</div>
-                      <div className="text-[11px] text-slate-500">Target NEET Achievers • 96% Mastery</div>
-                    </div>
-                    <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">
-                      On Track
-                    </span>
-                  </div>
-                </div>
-
-                {/* Conformal prediction badge */}
-                <div className="p-3 rounded-xl bg-slate-900 text-white space-y-1 text-xs">
-                  <div className="text-slate-400 text-[10px] font-semibold uppercase">Calibrated Exam Forecast</div>
-                  <div className="flex justify-between items-center">
-                    <span className="font-bold">JEE Percentile Range [P₁₀, P₉₀]:</span>
-                    <span className="font-mono font-bold text-teal-300">88.5% – 93.2%</span>
-                  </div>
-                  <div className="text-[10px] text-slate-400">90% Split-Conformal Coverage Guarantee</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* 3. THE FRAGMENTED DATA PROBLEM */}
       <section className="space-y-8">
         <div className="max-w-2xl">
@@ -478,7 +280,7 @@ export default function HomePage() {
             </div>
             <h3 className="font-bold text-slate-900 text-base">Batch-Level Intelligence</h3>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Equips directors with cross-batch health comparisons, faculty teaching loads, fee retention metrics, and real-time ROI protection tracking across centres.
+              Equips directors with cross-batch health comparisons, faculty teaching loads, fee retention metrics, and ROI protection tracking across centres.
             </p>
             <Link href="/owner" className="text-xs font-bold text-teal-600 hover:text-teal-700 inline-flex items-center pt-1">
               <span>View Executive Model</span> &rarr;
@@ -656,7 +458,7 @@ export default function HomePage() {
                   <span>Executive Operations & Financial Retention</span>
                 </div>
                 <h3 className="text-xl font-bold text-slate-900">
-                  Protect Institute Revenue with Real-Time Churn Prevention
+                  Protect Institute Revenue with Early-Warning Churn Prevention
                 </h3>
                 <p className="text-xs text-slate-600 leading-relaxed">
                   Institute owners get an executive overview of all 1,200 students across 4 active batches. Track attendance trends, monitor batch-level health, and quantify retained fee revenue through proactive faculty triage.
@@ -664,7 +466,7 @@ export default function HomePage() {
                 <ul className="space-y-1.5 text-xs text-slate-700">
                   <li className="flex items-center space-x-2">
                     <CheckCircle2 className="w-4 h-4 text-teal-600" />
-                    <span>Real-time fee revenue protection calculator (₹28.5L baseline saved)</span>
+                    <span>Institute fee revenue protection calculator (Sheet 2 benchmark)</span>
                   </li>
                   <li className="flex items-center space-x-2">
                     <CheckCircle2 className="w-4 h-4 text-teal-600" />
