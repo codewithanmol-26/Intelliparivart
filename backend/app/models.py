@@ -59,6 +59,8 @@ class Student(Base):
     class_level = Column(String(50), nullable=False)
     join_date = Column(Date, nullable=False)
     parent_contact_consent = Column(Boolean, default=True) # DPDP Act Section 9
+    guardian_name = Column(String(150), nullable=True, default="Parent / Guardian")
+    guardian_phone = Column(String(30), nullable=True) # e.g. +919876543210
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
     institute = relationship("Institute", back_populates="students")
@@ -299,3 +301,25 @@ class UploadSource(Base):
     status = Column(String(50), default="ACTIVE") # ACTIVE, REVERTED
     uploaded_by = Column(String(100), default="Teacher")
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+
+class WhatsAppMessageLog(Base):
+    __tablename__ = "whatsapp_message_logs"
+
+    id = Column(String(50), primary_key=True, index=True) # e.g. WA_MSG_xxxx
+    tenant_id = Column(String(50), nullable=False, index=True)
+    student_id = Column(String(50), ForeignKey("students.id"), nullable=False, index=True)
+    student_name = Column(String(150), nullable=False)
+    guardian_name = Column(String(150), nullable=False)
+    recipient_phone = Column(String(30), nullable=False)
+    message_type = Column(String(50), default="PARENT_DIGEST") # PARENT_DIGEST, BATCH_BROADCAST
+    template_name = Column(String(100), default="parent_weekly_progress_digest")
+    language = Column(String(10), default="en")
+    meta_message_id = Column(String(100), nullable=True, index=True)
+    dispatch_state = Column(String(50), default="ACCEPTED") # ACCEPTED, REJECTED, FAILED
+    delivery_status = Column(String(50), default="PENDING") # PENDING, SENT, DELIVERED, READ, FAILED
+    error_message = Column(Text, nullable=True)
+    cost_inr = Column(Float, default=0.275)
+    dpdp_consent_verified = Column(Boolean, default=True)
+    sent_at = Column(DateTime, default=datetime.datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)

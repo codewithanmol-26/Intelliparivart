@@ -46,6 +46,13 @@ def generate_parent_report_endpoint(
         student = db.query(Student).filter(Student.tenant_id == effective_tenant).first()
 
     if not student:
+        from backend.app.routes.whatsapp import seed_default_cohort_if_needed
+        seed_default_cohort_if_needed(db, effective_tenant)
+        student = db.query(Student).filter(Student.id == student_id).first()
+        if not student:
+            student = db.query(Student).filter(Student.tenant_id == effective_tenant).first()
+
+    if not student:
         raise HTTPException(status_code=404, detail="Student not found")
 
     # DPDP Act Section 9 Guardian Consent Verification
@@ -54,6 +61,7 @@ def generate_parent_report_endpoint(
             "status": "consent_withdrawn",
             "student_id": student.id,
             "student_name": student.name,
+            "guardian_phone": getattr(student, "guardian_phone", "+91 98765 43210"),
             "message": "Parent/Guardian communication consent has been withdrawn under DPDP Act 2023 Section 9. Automated report generation is withheld.",
             "report_text": "",
             "audit_check": {"status": "BLOCKED", "violations": ["DPDP Act Section 9: Guardian Consent Withdrawn"]}
@@ -133,6 +141,7 @@ def generate_parent_report_endpoint(
         "predicted_band": pred_band,
         "strong_topic": strong_topic,
         "weak_topic": weak_topic,
+        "guardian_phone": getattr(student, "guardian_phone", "+91 98765 43210"),
         "report_text": report_dict.get("report_text", ""),
         "guardian_salutation": report_dict.get("guardian_salutation", "Dear Parent / Guardian"),
         "supportive_action": report_dict.get("supportive_action", "Focused foundational revision assigned."),

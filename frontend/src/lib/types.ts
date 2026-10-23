@@ -86,18 +86,32 @@ export interface ParentReport {
   batch_name: string;
   target_exam: string;
   language: 'en' | 'hi';
-  generated_at: string;
-  report_digest: string;
-  facts_cited: {
+  generated_at?: string;
+  report_digest?: string;
+  guardian_phone?: string;
+  guardian_salutation?: string;
+  attendance_pct?: number;
+  predicted_band?: string;
+  strong_topic?: string;
+  weak_topic?: string;
+  report_text?: string;
+  supportive_action?: string;
+  audit_check?: {
+    status: string;
+    violations: string[];
+    guardrails_enforced?: string[];
+  };
+  status?: string;
+  facts_cited?: {
     tests_completed: number;
     recent_trend: string;
     strengths: string[];
     priority_revisions: string[];
     attendance_rate: string;
   };
-  audit_status: 'passed' | 'blocked';
-  audit_violations: string[];
-  tone_check: string;
+  audit_status?: 'passed' | 'blocked';
+  audit_violations?: string[];
+  tone_check?: string;
 }
 
 export interface OwnerDashboardData {

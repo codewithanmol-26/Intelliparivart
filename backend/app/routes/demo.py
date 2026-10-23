@@ -11,7 +11,7 @@ import numpy as np
 import os
 
 from backend.app.database import get_db, Base, engine
-from backend.app.models import Institute, Batch, Student, SyllabusTopic, Question, Test, Attendance, Fee, Outcome
+from backend.app.models import Institute, Batch, Student, SyllabusTopic, Question, Test, Attendance, Fee, Outcome, TestResponse
 from backend.app.services.report_service import generate_progress_digest
 
 router = APIRouter(prefix="/demo", tags=["Live Demo & Database Seed"])
