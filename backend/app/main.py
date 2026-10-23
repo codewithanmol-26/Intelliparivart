@@ -34,10 +34,12 @@ def startup_db_init():
 # CORS Configuration allowing local Next.js frontend, PWA and external clients
 app.add_middleware(
     CORSMiddleware,
+    allow_origin_regex=r"^https?://.*",
     allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
 
 # Mount all feature routers under both root and /api for seamless frontend client compatibility
