@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import DemoBanner from '@/components/DemoBanner';
 import DemoRoleModal from '@/components/DemoRoleModal';
+import { SAMPLE_CSV_CONTENT } from '@/lib/demoData';
 import {
   Building2,
   Layers,
@@ -21,6 +22,17 @@ import {
 
 export default function DemoHubPage() {
   const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
+
+  const handleDownloadSampleCsv = () => {
+    const blob = new Blob([SAMPLE_CSV_CONTENT], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'intelliprivart_benchmark_students.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   const roles = [
     {
@@ -103,6 +115,13 @@ export default function DemoHubPage() {
               <FileSpreadsheet className="w-4 h-4 text-teal-600" />
               <span>Test CSV Data Import Wizard</span>
             </Link>
+            <button
+              onClick={handleDownloadSampleCsv}
+              className="px-4 py-2.5 rounded-xl border border-teal-300 bg-teal-50/60 text-teal-800 hover:bg-teal-100 font-semibold text-xs sm:text-sm transition flex items-center space-x-1.5 cursor-pointer"
+            >
+              <Download className="w-4 h-4 text-teal-600" />
+              <span>Download Benchmark CSV</span>
+            </button>
           </div>
         </div>
 

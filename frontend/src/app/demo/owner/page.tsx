@@ -47,6 +47,27 @@ export default function DemoOwnerPage() {
   const [selectedBatch, setSelectedBatch] = useState<string>('all');
   const [timePeriod, setTimePeriod] = useState<string>('m1-m5');
 
+  const handleExportExecutiveBrief = () => {
+    const csvRows = [
+      'metric,value,unit,benchmark_comparison',
+      'total_enrolled,1200,students,+14% YoY',
+      'cohort_attendance,88.6,percent,Stable',
+      'students_requiring_support,8,students,Down from 18 in Month 3',
+      'tuition_protected,2850000,INR,18.3x ROI',
+      'top30_avg_score,78.4,percent,Achievers Top-30',
+      'neet_avg_score,71.2,percent,Target NEET',
+      'foundation_avg_score,64.8,percent,Foundation 11th'
+    ];
+    const blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'apex_academy_executive_brief.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   // Filtered batch statistics
   const filteredBatches = selectedBatch === 'all'
     ? DEMO_BATCHES
@@ -91,13 +112,13 @@ export default function DemoOwnerPage() {
               <span>Full Financial Model</span>
               <ChevronRight className="w-3.5 h-3.5" />
             </Link>
-            <Link
-              href="/exports"
-              className="px-3.5 py-2 rounded-xl bg-teal-600 text-white hover:bg-teal-700 font-bold text-xs transition flex items-center space-x-1.5 shadow-xs"
+            <button
+              onClick={handleExportExecutiveBrief}
+              className="px-3.5 py-2 rounded-xl bg-teal-600 text-white hover:bg-teal-700 font-bold text-xs transition flex items-center space-x-1.5 shadow-xs cursor-pointer"
             >
               <Download className="w-3.5 h-3.5" />
-              <span>Export Executive Brief</span>
-            </Link>
+              <span>Download Executive Brief</span>
+            </button>
           </div>
         </div>
 

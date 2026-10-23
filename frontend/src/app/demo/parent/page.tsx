@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import DemoBanner from '@/components/DemoBanner';
 import DemoRoleModal from '@/components/DemoRoleModal';
-import { DEMO_PARENT_REPORTS, DEMO_STUDENTS } from '@/lib/demoData';
+import { DEMO_PARENT_REPORTS, DEMO_STUDENTS, DemoStudent } from '@/lib/demoData';
 import {
   HeartHandshake,
   Languages,
@@ -18,21 +18,28 @@ import {
   Award,
   Lightbulb,
   FileCheck2,
-  Share2
+  Share2,
+  Printer,
+  Check
 } from 'lucide-react';
 
 export default function DemoParentPage() {
   const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
   const [language, setLanguage] = useState<'en' | 'hi'>('en');
   const [whatsAppSent, setWhatsAppSent] = useState(false);
+  const [selectedStudentId, setSelectedStudentId] = useState<string>('STD_PAT_001');
 
-  // Active student report
+  const student = DEMO_STUDENTS.find(s => s.id === selectedStudentId) || DEMO_STUDENTS[0];
   const rpt = language === 'en' ? DEMO_PARENT_REPORTS.en : DEMO_PARENT_REPORTS.hi;
-  const student = DEMO_STUDENTS[0];
 
   const handleShareWhatsApp = () => {
     setWhatsAppSent(true);
-    setTimeout(() => setWhatsAppSent(false), 5000);
+  };
+
+  const handlePrint = () => {
+    if (typeof window !== 'undefined') {
+      window.print();
+    }
   };
 
   return (
@@ -50,20 +57,34 @@ export default function DemoParentPage() {
               <span>Parent Academic Progress Digest • Guardian View</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-              {language === 'en' ? `Monthly Progress: ${rpt.studentName}` : `मासिक प्रगति रिपोर्ट: ${rpt.studentName}`}
+              {language === 'en' ? `Monthly Progress: ${student.name}` : `मासिक प्रगति रिपोर्ट: ${student.name}`}
             </h1>
             <p className="text-xs sm:text-sm text-slate-500">
-              {rpt.batchName} • Apex JEE Academy, Patna • {rpt.month}
+              {student.batchName} • Apex JEE Academy, Patna • {rpt.month}
             </p>
           </div>
 
-          {/* Bilingual English / Hindi Switcher (Key Requirement) */}
-          <div className="flex items-center space-x-2">
-            <span className="text-xs font-semibold text-slate-500 hidden sm:inline">Report Language:</span>
+          <div className="flex flex-wrap items-center gap-3">
+            {/* Student Persona Switcher */}
+            <div className="flex items-center bg-slate-100 border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-semibold">
+              <span className="text-slate-500 mr-2">Ward:</span>
+              <select
+                aria-label="Select Ward"
+                value={selectedStudentId}
+                onChange={(e) => setSelectedStudentId(e.target.value)}
+                className="bg-transparent text-slate-900 font-bold focus:outline-none cursor-pointer"
+              >
+                {DEMO_STUDENTS.map((s: DemoStudent) => (
+                  <option key={s.id} value={s.id}>{s.name} ({s.targetExam})</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Bilingual English / Hindi Switcher (Key Requirement) */}
             <div className="flex items-center rounded-xl border border-slate-200 bg-slate-100 p-1 text-xs font-bold">
               <button
                 onClick={() => setLanguage('en')}
-                className={`px-3 py-1.5 rounded-lg transition-all ${
+                className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
                   language === 'en'
                     ? 'bg-white text-teal-800 shadow-xs'
                     : 'text-slate-600 hover:text-slate-900'
@@ -73,7 +94,7 @@ export default function DemoParentPage() {
               </button>
               <button
                 onClick={() => setLanguage('hi')}
-                className={`px-3 py-1.5 rounded-lg transition-all ${
+                className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
                   language === 'hi'
                     ? 'bg-white text-teal-800 shadow-xs'
                     : 'text-slate-600 hover:text-slate-900'
@@ -97,21 +118,60 @@ export default function DemoParentPage() {
               </span>
               <span className="text-[11px] text-emerald-800">
                 {language === 'en'
-                  ? 'Delivered every Monday morning to guardian registered mobile (+91 98350 XXXXX)'
-                  : 'अभिभावक के पंजीकृत मोबाइल (+91 98350 XXXXX) पर प्रत्येक सोमवार सुबह भेजा जाता है'}
+                  ? `Delivered every Monday morning to guardian registered mobile (${student.guardianPhone})`
+                  : `अभिभावक के पंजीकृत मोबाइल (${student.guardianPhone}) पर प्रत्येक सोमवार सुबह भेजा जाता है`}
               </span>
             </div>
           </div>
 
-          <button
-            onClick={handleShareWhatsApp}
-            disabled={whatsAppSent}
-            className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold transition shadow-xs flex items-center space-x-1.5 shrink-0 disabled:opacity-50"
-          >
-            <Send className="w-3.5 h-3.5" />
-            <span>{whatsAppSent ? (language === 'en' ? 'Dispatched!' : 'भेज दिया गया!') : (language === 'en' ? 'Simulate WhatsApp Send' : 'व्हाट्सएप पर भेजें')}</span>
-          </button>
+          <div className="flex items-center space-x-2 shrink-0">
+            <button
+              onClick={handleShareWhatsApp}
+              className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold transition shadow-xs flex items-center space-x-1.5 cursor-pointer"
+            >
+              <Send className="w-3.5 h-3.5" />
+              <span>{whatsAppSent ? (language === 'en' ? 'Dispatched (View Below)!' : 'भेज दिया गया (नीचे देखें)!') : (language === 'en' ? 'Simulate WhatsApp Send' : 'व्हाट्सएप पर भेजें')}</span>
+            </button>
+            <button
+              onClick={handlePrint}
+              className="px-3.5 py-1.5 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 font-semibold transition flex items-center space-x-1.5 cursor-pointer"
+            >
+              <Printer className="w-3.5 h-3.5 text-slate-500" />
+              <span>{language === 'en' ? 'Print Digest' : 'प्रिंट करें'}</span>
+            </button>
+          </div>
         </div>
+
+        {/* Live WhatsApp Simulation Message Preview */}
+        {whatsAppSent && (
+          <div className="p-5 rounded-2xl bg-emerald-950 text-white border border-emerald-700/60 shadow-xl space-y-3 animate-fadeIn text-xs">
+            <div className="flex items-center justify-between border-b border-emerald-800 pb-2">
+              <div className="flex items-center space-x-2">
+                <div className="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center font-bold text-[10px]">✓</div>
+                <span className="font-bold text-emerald-200">WhatsApp Delivery Simulation Active</span>
+              </div>
+              <span className="text-[10px] text-emerald-400 font-mono">Delivered to {student.guardianPhone}</span>
+            </div>
+            <div className="bg-emerald-900/80 p-3.5 rounded-xl border border-emerald-800 space-y-2 leading-relaxed text-emerald-100 font-sans">
+              <div className="flex items-center justify-between text-xs font-bold text-white border-b border-emerald-800 pb-1">
+                <span>{language === 'en' ? 'Apex JEE & Medical Academy, Patna' : 'अपेक्स जेईई एवं मेडिकल अकादमी, पटना'}</span>
+                <span className="text-[10px] font-normal text-emerald-300">09:15 AM</span>
+              </div>
+              <p>
+                {language === 'en'
+                  ? `Dear ${student.guardianName}, ${student.name} attended ${student.attendanceRate}% of classes this month. Score trend is strong (${student.overallPercentile}% overall mastery). Recommended home focus: ${student.weakTopics[0] || 'Rotational Dynamics'}.`
+                  : `आदरणीय ${student.guardianName}, ${student.name} ने इस माह ${student.attendanceRate}% कक्षाओं में भाग लिया। कुल दक्षता ${student.overallPercentile}% है। घर पर अभ्यास हेतु अनुशंसित विषय: ${student.weakTopics[0] || 'घूर्णन गतिविज्ञान'}।`}
+              </p>
+              <p className="text-[11px] text-emerald-200 italic">
+                {language === 'en' ? rpt.facultyNote : rpt.facultyNote}
+              </p>
+              <div className="text-[10px] text-teal-300 text-right font-mono flex items-center justify-end space-x-1">
+                <span>Read by Guardian</span>
+                <span className="text-teal-400 font-bold">✓✓</span>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Core Report Content Card */}
         <div className="bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden">
@@ -122,10 +182,10 @@ export default function DemoParentPage() {
                 <span className="text-[11px] font-bold text-teal-300 uppercase tracking-wider block">
                   {language === 'en' ? 'Verified Institute Record' : 'प्रमाणित संस्थान रिकॉर्ड'}
                 </span>
-                <span className="text-xl font-bold text-white mt-0.5 block">{rpt.studentName}</span>
+                <span className="text-xl font-bold text-white mt-0.5 block">{student.name}</span>
               </div>
               <div className="text-right">
-                <span className="text-[11px] text-slate-300 block">{rpt.targetExam}</span>
+                <span className="text-[11px] text-slate-300 block">{student.targetExam} 2026</span>
                 <span className="text-xs font-mono font-bold text-teal-300">Roll: {student.rollNumber}</span>
               </div>
             </div>
@@ -136,13 +196,13 @@ export default function DemoParentPage() {
                 <span className="text-[11px] text-slate-300 block">
                   {language === 'en' ? 'Monthly Attendance Record' : 'मासिक उपस्थिति रिकॉर्ड'}
                 </span>
-                <div className="text-2xl font-black text-white font-mono">{rpt.attendanceRate}%</div>
+                <div className="text-2xl font-black text-white font-mono">{student.attendanceRate}%</div>
                 <div className="text-[11px] text-teal-300 font-semibold">{rpt.attendanceStatus}</div>
               </div>
 
               <div className="p-4 rounded-2xl bg-blue-950/70 border border-blue-800/80 space-y-1">
                 <span className="text-[11px] text-slate-300 block">
-                  {language === 'en' ? 'Calibrated Performance Band' : 'अनुमानित प्रदर्शन दायरा'}
+                  {language === 'en' ? 'Calibrated Percentile Band' : 'अनुमानित पर्सेंटाइल दायरा'}
                 </span>
                 <div className="text-2xl font-black text-teal-300 font-mono">
                   {student.predictedPercentileMin}% – {student.predictedPercentileMax}%
@@ -163,7 +223,7 @@ export default function DemoParentPage() {
                 <span>{language === 'en' ? 'Concept Strengths (Consistently High Accuracy)' : 'सशक्त विषय (लगातार उच्च सटीकता)'}</span>
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-                {rpt.strongAreas.map((area: string, idx: number) => (
+                {student.strongTopics.map((area: string, idx: number) => (
                   <div key={idx} className="p-3 rounded-xl bg-emerald-50/50 border border-emerald-200 text-slate-800 font-medium">
                     {area}
                   </div>
@@ -178,7 +238,7 @@ export default function DemoParentPage() {
                 <span>{language === 'en' ? 'Key Areas for Support & Growth' : 'सुधार एवं अभ्यास के मुख्य क्षेत्र'}</span>
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                {rpt.growthAreas.map((area: string, idx: number) => (
+                {student.weakTopics.map((area: string, idx: number) => (
                   <div key={idx} className="p-3 rounded-xl bg-amber-50/50 border border-amber-200 text-slate-800 font-medium">
                     {area}
                   </div>
@@ -209,34 +269,20 @@ export default function DemoParentPage() {
                   <FileCheck2 className="w-4 h-4 text-teal-700" />
                   <span>{language === 'en' ? 'Direct Faculty Mentor Note' : 'संकाय मेंटर की सीधी टिप्पणी'}</span>
                 </span>
-                <span className="text-[11px] font-semibold text-teal-800">
-                  {language === 'en' ? 'Personal Mentorship Scheduled' : 'व्यक्तिगत मेंटर सत्र निर्धारित'}
+                <span className="text-[10px] font-semibold text-teal-700 bg-teal-100 px-2 py-0.5 rounded">
+                  {language === 'en' ? 'Confidential' : 'गोपनीय'}
                 </span>
               </div>
+
               <p className="text-slate-700 leading-relaxed italic">
-                &ldquo;{rpt.facultyNote}&rdquo;
+                &quot;{rpt.facultyNote}&quot;
               </p>
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pt-2 border-t border-teal-500/20 text-[11px] text-slate-600 gap-2">
-                <div>
-                  <strong>{rpt.mentorName}</strong> • {rpt.mentorRole}
-                </div>
-                <div className="flex items-center space-x-2 text-teal-800 font-semibold">
-                  <Phone className="w-3.5 h-3.5" />
-                  <span>{language === 'en' ? 'Institute Helpline: (0612) 258-XXXX' : 'संस्थान हेल्पलाइन: (0612) 258-XXXX'}</span>
-                </div>
+
+              <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-teal-500/20 text-[11px] text-slate-500">
+                <span>{rpt.mentorName} • {rpt.mentorRole}</span>
+                <span className="text-teal-700 font-semibold">{language === 'en' ? 'Mentor Follow-up Scheduled' : 'मेंटर सत्र निर्धारित'}</span>
               </div>
             </div>
-          </div>
-        </div>
-
-        {/* Ministry of Education 2024 Compliance Note */}
-        <div className="p-4 rounded-2xl bg-white border border-slate-200 text-slate-500 text-xs flex items-start space-x-3">
-          <CheckCircle2 className="w-4 h-4 text-teal-600 shrink-0 mt-0.5" />
-          <div className="space-y-0.5">
-            <span className="font-bold text-slate-700">MoE January 2024 Coaching Guidelines Compliance</span>
-            <p className="text-[11px] text-slate-500">
-              All progress digests focus on constructive support, avoiding comparative public rankings or stigmatizing labels. Guardian communications are delivered with prior consent under India&apos;s DPDP Act 2023.
-            </p>
           </div>
         </div>
       </main>

@@ -37,6 +37,7 @@ export default function DemoTeacherPage() {
   const [selectedTopic, setSelectedTopic] = useState<string>('Rotational Dynamics');
   const [worksheetGenerated, setWorksheetGenerated] = useState<boolean>(false);
   const [worksheetStudent, setWorksheetStudent] = useState<string>('Aarav Sharma');
+  const [isInterventionCommitted, setIsInterventionCommitted] = useState<boolean>(false);
 
   // Filter topics by subject
   const filteredTopics = selectedSubject === 'All'
@@ -282,16 +283,25 @@ export default function DemoTeacherPage() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between pt-1">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-2 border-t border-teal-500/20">
                   <span className="text-[11px] text-slate-500">
                     Faculty 1-on-1 Talking Point: Check if student sets the origin at the instantaneous center of zero velocity.
                   </span>
-                  <button
-                    onClick={() => alert(`Assigned Remedial Worksheet on ${selectedTopic} to ${worksheetStudent}!`)}
-                    className="px-3 py-1.5 rounded-lg bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs"
-                  >
-                    Commit to Intervention Tracker &rarr;
-                  </button>
+                  {isInterventionCommitted ? (
+                    <div className="px-3 py-1.5 bg-emerald-100 text-emerald-900 border border-emerald-300 rounded-lg text-xs font-bold flex items-center space-x-1.5 shrink-0">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                      <span>Committed to Ledger!</span>
+                      <Link href="/interventions" className="text-teal-700 underline ml-1">View &rarr;</Link>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => setIsInterventionCommitted(true)}
+                      className="px-3.5 py-1.5 rounded-lg bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs transition shadow-xs cursor-pointer flex items-center space-x-1 shrink-0"
+                    >
+                      <span>Commit to Intervention Tracker</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  )}
                 </div>
               </div>
             )}

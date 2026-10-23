@@ -38,7 +38,7 @@ def seed_supabase(db_url: str = None):
     from sqlalchemy.orm import sessionmaker
     from backend.app.database import Base
     from backend.app.models import (
-        Institute, Batch, Student, SyllabusTopic, Question, User
+        Institute, Batch, Student, SyllabusTopic, Question, User, Test
     )
     from backend.app.routes.auth import DEMO_PERSONAS
     from backend.app.auth import hash_password
@@ -150,7 +150,65 @@ def seed_supabase(db_url: str = None):
             db.commit()
             print(f"✓ {len(df_q)} Calibrated Questions seeded.")
 
-        # [5/5] Seed Demo User Accounts
+        # [5/7] Seed Students (1,200 Enrolled Cohort)
+        print("[5/7] Seeding 1,200 Enrolled Students...")
+        students_file = data_dir / "students.csv"
+        if students_file.exists():
+            df_std = pd.read_csv(students_file)
+            existing_ids = set(r[0] for r in db.query(Student.id).all())
+            new_students = []
+            for _, r in df_std.iterrows():
+                if r["id"] not in existing_ids:
+                    import datetime as dt
+                    join_d = dt.date.fromisoformat(str(r["join_date"])) if pd.notna(r.get("join_date")) else dt.date(2025, 4, 1)
+                    lastName = str(r['name']).split()[-1] if str(r['name']).split() else 'Family'
+                    phone_tail = str(abs(hash(r['id'])))[-5:]
+                    new_students.append(Student(
+                        id=r["id"],
+                        tenant_id=r["institute_id"],
+                        batch_id=r["batch_id"],
+                        pseudonymous_code=r["pseudonymous_code"],
+                        name=r["name"],
+                        class_level=str(r["class_level"]),
+                        join_date=join_d,
+                        parent_contact_consent=bool(r.get("parent_contact_consent", True)),
+                        guardian_name=lastName + " Guardian",
+                        guardian_phone="+91 98350 " + phone_tail
+                    ))
+            if new_students:
+                db.add_all(new_students)
+                db.commit()
+            print(f"✓ {len(df_std)} Students synchronized in Supabase.")
+
+        # [6/7] Seed Milestone Tests
+        print("[6/7] Seeding Milestone Tests...")
+        tests_file = data_dir / "tests.csv"
+        if tests_file.exists():
+            df_tests = pd.read_csv(tests_file)
+            existing_tests = set(r[0] for r in db.query(Test.id).all())
+            new_tests = []
+            for _, r in df_tests.iterrows():
+                if r["id"] not in existing_tests:
+                    import datetime as dt
+                    t_date = dt.date.fromisoformat(str(r["test_date"])) if pd.notna(r.get("test_date")) else dt.date(2025, 4, 15)
+                    new_tests.append(Test(
+                        id=r["id"],
+                        tenant_id=r["institute_id"],
+                        batch_id=r["batch_id"],
+                        test_number=int(r["test_number"]),
+                        title=r["title"],
+                        test_date=t_date,
+                        academic_month=int(r.get("academic_month", 1)),
+                        total_questions=int(r.get("total_questions", 20)),
+                        max_score=float(r.get("max_score", 80.0)),
+                        exam_type=r.get("exam_type", "JEE Main")
+                    ))
+            if new_tests:
+                db.add_all(new_tests)
+                db.commit()
+            print(f"✓ {len(df_tests)} Milestone Tests seeded in Supabase.")
+
+        # [7/7] Seed Demo User Accounts
         print("[5/5] Seeding Demo User Accounts for Judge Evaluation...")
         for p in DEMO_PERSONAS:
             if not db.query(User).filter(User.email == p["email"]).first():

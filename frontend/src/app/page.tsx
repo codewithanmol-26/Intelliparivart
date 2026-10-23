@@ -393,7 +393,7 @@ export default function HomePage() {
       </section>
 
       {/* 4. SIX CORE CAPABILITIES */}
-      <section className="bg-slate-50/80 rounded-3xl p-6 sm:p-10 border border-slate-200 space-y-8">
+      <section id="capabilities" className="bg-slate-50/80 rounded-3xl p-6 sm:p-10 border border-slate-200 space-y-8 scroll-mt-20">
         <div className="max-w-2xl">
           <span className="text-xs font-bold uppercase tracking-wider text-teal-600 block">
             Engineered For Competitive Test-Prep
@@ -566,7 +566,7 @@ export default function HomePage() {
       </section>
 
       {/* 6. ROLE-BASED VALUE PROPOSITIONS */}
-      <section className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-xs space-y-6">
+      <section id="roles" className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-xs space-y-6 scroll-mt-20">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <span className="text-xs font-bold uppercase tracking-wider text-teal-600 block">
