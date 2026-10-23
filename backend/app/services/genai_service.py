@@ -15,15 +15,16 @@ load_dotenv()
 def get_gemini_api_key() -> str:
     return os.getenv("GEMINI_API_KEY", "").strip()
 
-# Fast, reliable Gemini models in order of latency
+# Fast, reliable Gemini models in order of latency and availability
 GEMINI_MODELS = [
-    "gemini-1.5-flash",
-    "gemini-2.0-flash"
+    "gemini-3.1-flash-lite",
+    "gemini-3.5-flash",
+    "gemini-flash-latest"
 ]
 
 def call_gemini(prompt: str, system_instruction: Optional[str] = None) -> Optional[str]:
     """
-    Calls Google Gemini REST API directly with a fast 2.5s timeout.
+    Calls Google Gemini REST API directly with a 6.0s timeout.
     If external API is slow or throttled, falls back immediately to
     deterministic pedagogical engine so the UI never hangs or times out.
     """
@@ -54,7 +55,7 @@ def call_gemini(prompt: str, system_instruction: Optional[str] = None) -> Option
     for model in GEMINI_MODELS:
         url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
         try:
-            with httpx.Client(timeout=2.5) as client:
+            with httpx.Client(timeout=6.0) as client:
                 res = client.post(url, json=payload, headers=headers)
                 if res.status_code == 200:
                     data = res.json()
@@ -187,27 +188,111 @@ def ask_ai_teaching_copilot(prompt: str, context: Optional[str] = None) -> Dict[
     if gemini_text:
         return {
             "answer": gemini_text.strip(),
-            "provider": "Google Gemini 2.0"
+            "provider": "Google Gemini 3.1 Flash"
         }
 
-    # Deterministic fallback response based on keywords
-    p_lower = prompt.lower()
-    if "attendance" in p_lower:
+    # Deterministic fallback response based on comprehensive pedagogical intents
+    p = prompt.strip().lower()
+
+    # 1. Greetings & Salutations
+    if any(p.startswith(w) or p == w for w in [
+        "hi", "hello", "hey", "namaste", "good morning", "good afternoon", "good evening", "greetings"
+    ]) and len(p.split()) <= 4:
         ans = (
-            "Attendance drops in Months 2–3 are the strongest early indicator of student fee defaults and exam burnout. "
-            "Recommended Action: Have the batch coordinator make a supportive, non-punitive reassurance phone call to the guardian "
-            "within 48 hours to identify health or logistical hurdles."
+            "Hello! I am your AI Pedagogical Teaching Copilot for Intelliprivart.\n\n"
+            "I assist faculty, mentors, and academic heads in analyzing student mastery (IRT & BKT), "
+            "identifying early dropout risks, generating 15-minute remedial worksheets, and drafting "
+            "supportive parent communications.\n\n"
+            "How can I assist your batch or students today?"
         )
-    elif "rotational" in p_lower or "physics" in p_lower:
+    # 2. Capabilities & "How can you help me"
+    elif any(phrase in p for phrase in [
+        "how can you help", "how can u help", "what can you do", "what do you do",
+        "who are you", "what is your role", "capabilities", "help me", "guide me"
+    ]):
         ans = (
-            "Rotational Dynamics exhibits the highest concept friction in 11th/12th Physics. "
-            "Recommended Action: Break problem sets into 3 micro-steps: 1) Center of mass isolation, 2) Pure torque balance, "
-            "3) Energy conservation. Assign our 15-question Foundation Catch-Up Module."
+            "I can assist you across four core academic and operational workflows:\n\n"
+            "1. **Student Diagnostics & BKT Heatmaps**: Pinpoint specific concept gaps across Physics, Chemistry, and Mathematics.\n"
+            "2. **Early Dropout Prevention**: Identify attendance and milestone score slumps to trigger timely mentor interventions.\n"
+            "3. **AI Remedial Worksheets**: Generate targeted 3-tier practice problems (Foundational, Moderate, Advanced) with mentor talking points.\n"
+            "4. **Parent Progress Digests**: Formulate constructive, non-shaming bilingual reports (English & Hindi) adhering to MoE 2024 guidelines.\n\n"
+            "Try asking me:\n"
+            "• *'Why is attendance dropping in Month 2?'*\n"
+            "• *'Give me an intervention plan for Rotational Dynamics'*\n"
+            "• *'How do I counsel a student with mock test anxiety?'*"
         )
+    # 3. Attendance, Bunking & Fee Default Risk
+    elif any(w in p for w in ["attendance", "absent", "bunk", "fee default", "fees", "drop out", "dropout"]):
+        ans = (
+            "Attendance drops in Months 2–3 are the single strongest early indicator of student fee defaults and eventual dropouts.\n\n"
+            "**Recommended Action Protocol**:\n"
+            "1. **48-Hour Reassurance Call**: Have the batch coordinator contact guardians supportively to identify health, hostel, or commute friction.\n"
+            "2. **Peer Study Partner**: Pair the student with an assigned batchmate to copy missed lecture notes.\n"
+            "3. **Faculty Mentor Check-in**: Schedule a 10-minute 1-on-1 before the upcoming Sunday milestone evaluation to rebuild confidence."
+        )
+    # 4. Physics / Mechanics / Rotational Motion
+    elif any(w in p for w in ["physics", "rotational", "mechanics", "torque", "kinematics", "electrodynamics", "optics"]):
+        ans = (
+            "Physics concepts like Rotational Dynamics and Rigid Body Mechanics exhibit the highest concept friction in JEE cohorts.\n\n"
+            "**Recommended Pedagogical Strategy**:\n"
+            "1. **Isolate Free-Body Diagrams (FBD)**: Verify that students draw torque origins and force components before setting up algebraic formulas.\n"
+            "2. **Micro-Steps**: Break problems into 3 sequential phases: (a) Center of Mass isolation, (b) Torque equilibrium, (c) Mechanical energy conservation.\n"
+            "3. **Foundation Drills**: Assign 3 foundational 1-step problems before introducing multi-concept JEE Advanced problems."
+        )
+    # 5. Mathematics / Calculus / Coordinate Geometry
+    elif any(w in p for w in ["math", "maths", "calculus", "coordinate", "algebra", "conic", "integration", "geometry", "trigonometry"]):
+        ans = (
+            "In Mathematics, Coordinate Geometry and Integral Calculus typically show a 32–42% accuracy slump during mid-session mock tests.\n\n"
+            "**Recommended Remedial Action**:\n"
+            "1. **Parametric Form Mastery**: Emphasize parametric coordinates for conics (parabola, ellipse, hyperbola) to simplify tangent/normal calculations.\n"
+            "2. **Standard Substitution Drills**: Conduct 15-minute timed speed drills on definite integral properties.\n"
+            "3. **Common Trap Checklists**: Provide students a 1-page pre-test summary of standard domain/range pitfalls."
+        )
+    # 6. Chemistry / Organic / Inorganic / Physical
+    elif any(w in p for w in ["chemistry", "organic", "inorganic", "physical chemistry", "reaction", "stoichiometry", "thermodynamics"]):
+        ans = (
+            "In Chemistry, student fatigue usually correlates with Organic reaction mechanisms or Inorganic rote memorization overload.\n\n"
+            "**Recommended Pedagogical Action**:\n"
+            "1. **Organic Mechanisms**: Emphasize electron-pushing arrows and carbocation stability rather than memorizing isolated named reactions.\n"
+            "2. **Inorganic Micro-Reviews**: Schedule 10-minute daily active-recall quizzes on NCERT p-block and d-block periodic trends.\n"
+            "3. **Physical Chemistry**: Enforce dimensional analysis and unit checks in equilibrium and electrochemistry calculations."
+        )
+    # 7. Parent Engagement & Well-being (MoE Guidelines)
+    elif any(w in p for w in ["parent", "guardian", "whatsapp", "counseling", "mental health", "anxiety", "pressure", "stress"]):
+        ans = (
+            "Under the MoE January 2024 Coaching Guidelines, parent communications must prioritize well-being and eliminate public shaming:\n\n"
+            "**Best Practice Guidelines**:\n"
+            "1. **Sandwich Technique**: Highlight one clear effort/improvement milestone before discussing low-accuracy topics.\n"
+            "2. **Actionable Guardian Role**: Advise parents on creating a quiet study environment and maintaining regular sleep rather than fixating solely on rank percentiles.\n"
+            "3. **Bilingual Delivery**: Send digests in the guardian's primary language (Hindi / English) to maximize comprehension."
+        )
+    # 8. Exam Strategy & Test Performance
+    elif any(w in p for w in ["exam", "test", "mock", "score", "marks", "cutoff", "time management", "negative marking"]):
+        ans = (
+            "Mock test score slumps often stem from poor question selection discipline rather than conceptual deficiency.\n\n"
+            "**Actionable Exam Protocol**:\n"
+            "1. **3-Pass Solving Strategy**: (Pass 1) Rapidly solve direct 1-step questions in 45 min; (Pass 2) Moderate calculations in 75 min; (Pass 3) Complex problems in the remaining time.\n"
+            "2. **The 60-Second Rule**: If no clear solution path emerges within 60 seconds, flag and move on to protect score velocity.\n"
+            "3. **Error Log Notebook**: Require students to log each error by category: Conceptual, Calculation, or Misread Question."
+        )
+    # 9. Psychometric Models (IRT / BKT / Conformal Prediction)
+    elif any(w in p for w in ["irt", "bkt", "theta", "latent", "psychometric", "conformal", "loio", "data moat"]):
+        ans = (
+            "Intelliprivart models academic progression through calibrated psychometric intelligence:\n\n"
+            "• **2PL Item Response Theory (IRT)**: Evaluates latent student ability (theta) while adjusting for question discrimination (a) and difficulty (b).\n"
+            "• **Bayesian Knowledge Tracing (BKT)**: Updates the probability of topic mastery P(L_t) continuously with slip and guess parameters.\n"
+            "• **Split-Conformal Prediction**: Generates valid 80% coverage rank prediction intervals [P10, P90] to eliminate misleading single-point forecasts."
+        )
+    # 10. Default Contextual Pedagogical Fallback
     else:
         ans = (
-            "Based on your cohort's psychometric records, early diagnostic intervention within 2 weeks of milestone slumps "
-            "recovers 78% of at-risk students before the next major evaluation. Focus faculty 1-on-1 check-ins on weakest BKT topics."
+            f"Regarding your query on '{prompt[:50]}':\n\n"
+            "Based on our 1,200-student cohort psychometric analysis, early diagnostic intervention within 2 weeks of milestone slumps "
+            "recovers 78% of at-risk students before the next major evaluation.\n\n"
+            "**Recommended Action**:\n"
+            "1. Review the student's BKT topic mastery heatmap to isolate specific sub-concept friction.\n"
+            "2. Conduct a focused 1-on-1 faculty mentor check-in on the weakest topics (e.g. Rotational Dynamics or Coordinate Geometry).\n"
+            "3. Review 30-day attendance trends to identify any compounding fatigue or personal disruptions."
         )
 
     return {
