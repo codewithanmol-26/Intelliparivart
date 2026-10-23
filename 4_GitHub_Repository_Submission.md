@@ -5,10 +5,10 @@
 **Evaluation Rubric:** 70% Technology & Architecture | 30% EdTech Market & Commercial Viability  
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
-[![GitHub Repo](https://img.shields.io/badge/GitHub-tribhuvneshsharma%2FIntelliprivart-181717.svg?logo=github)](https://github.com/tribhuvneshsharma/Intelliprivart)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-codewithanmol--26%2FIntelliprivart-181717.svg?logo=github)](https://github.com/codewithanmol-26/Intelliprivart)
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1UTJ0NDZTffQQ-if6o_TP_OBLeP15rkYi?usp=sharing)
 [![Google Slides](https://img.shields.io/badge/Google%20Slides-14--Slide%20Deck-FBBC04.svg?logo=googleslides)](https://docs.google.com/presentation/d/1-JMFZVQYazTDPJXLMlF96xofFSOSrFMkJRZYu1CCFuw/edit?usp=sharing)
-[![Excel Model](https://img.shields.io/badge/Excel-Financial%20Model-107C41.svg?logo=microsoftexcel)](https://1drv.ms/x/c/d60414ee7b60239b/IQDt8Tm9OCY0TrB-BuRbFUM4AeOaSTeDYpPUGq6YKj6_0ac?e=8M8Ja7)
+[![Excel Model](https://img.shields.io/badge/Excel-Financial%20Model-107C41.svg?logo=microsoftexcel)](https://1drv.ms/x/c/d60414ee7b60239b/IQDt8Tm9OCY0TrB-BuRbFUM4AdbpgmjsYKaEo6IS4nLO-gE?e=u1YbJe)
 [![DPDP Act 2023](https://img.shields.io/badge/Privacy-DPDP%20Act%202023%20Compliant-emerald.svg)](https://www.meity.gov.in/)
 [![MoE 2024](https://img.shields.io/badge/Well--being-MoE%20Jan%202024%20Guidelines-teal.svg)](https://www.education.gov.in/)
 
@@ -21,9 +21,9 @@ This repository contains and links the four complete, synchronized deliverables 
 | # | Deliverable | Live Cloud Link | Local Project File | Description & Verification |
 | :-: | :--- | :--- | :--- | :--- |
 | **1** | **Google Colab Notebook** | [**Open in Google Colab**](https://colab.research.google.com/drive/1UTJ0NDZTffQQ-if6o_TP_OBLeP15rkYi?usp=sharing) | [**`1_Colab_Intelliprivart_DataMoat_ML.ipynb`**](file:///c:/Users/aryan/OneDrive/Desktop/Data%20Moat/1_Colab_Intelliprivart_DataMoat_ML.ipynb) | Complete 20-cell standalone ML pipeline. Zero API keys, zero local dependencies, runs in ~90s on free CPU. |
-| **2** | **Excel Financial Model** | [**Open in Excel Online (OneDrive)**](https://1drv.ms/x/c/d60414ee7b60239b/IQDt8Tm9OCY0TrB-BuRbFUM4AeOaSTeDYpPUGq6YKj6_0ac?e=8M8Ja7) | [**`2_Excel_Nextute_Case_B_Financial_Model.xlsx`**](file:///c:/Users/aryan/OneDrive/Desktop/Data%20Moat/2_Excel_Nextute_Case_B_Financial_Model.xlsx) | 5 linked sheets: Assumptions, Institute ROI, Platform Unit Economics, 3-Year Projections, and Sensitivity Matrix. |
+| **2** | **Excel Financial Model** | [**Open in Excel Online (OneDrive)**](https://1drv.ms/x/c/d60414ee7b60239b/IQDt8Tm9OCY0TrB-BuRbFUM4AdbpgmjsYKaEo6IS4nLO-gE?e=u1YbJe) | [**`2_Excel_Nextute_Case_B_Financial_Model.xlsx`**](file:///c:/Users/aryan/OneDrive/Desktop/Data%20Moat/2_Excel_Nextute_Case_B_Financial_Model.xlsx) | 5 linked sheets: Assumptions, Institute ROI, Platform Unit Economics, 3-Year Projections, and Sensitivity Matrix. |
 | **3** | **PowerPoint Pitch Deck** | [**Open in Google Slides**](https://docs.google.com/presentation/d/1-JMFZVQYazTDPJXLMlF96xofFSOSrFMkJRZYu1CCFuw/edit?usp=sharing) | [**`3_PPT_Intelliparivart_CaseB_Round1.pptx`**](file:///c:/Users/aryan/OneDrive/Desktop/Data%20Moat/3_PPT_Intelliparivart_CaseB_Round1.pptx)<br>*(and [PDF version](file:///c:/Users/aryan/OneDrive/Desktop/Data%20Moat/3_PPT_Intelliparivart_CaseB_Round1.pdf))* | Definitive 14-slide competition deck tailored to the 70% Tech / 30% Market rubric, with companion speaker notes. |
-| **4** | **GitHub Repository** | [**tribhuvneshsharma/Intelliprivart**](https://github.com/tribhuvneshsharma/Intelliprivart) | [**`4_GitHub_Repository_Submission.md`**](file:///c:/Users/aryan/OneDrive/Desktop/Data%20Moat/4_GitHub_Repository_Submission.md) | Full-stack production codebase: Streamlit SaaS UI, FastAPI REST API, PostgreSQL/SQLite ORM, Docker, and ML pipeline. |
+| **4** | **GitHub Repository** | [**codewithanmol-26/Intelliprivart**](https://github.com/codewithanmol-26/Intelliprivart) | [**`4_GitHub_Repository_Submission.md`**](file:///c:/Users/aryan/OneDrive/Desktop/Data%20Moat/4_GitHub_Repository_Submission.md) | Full-stack production codebase: Streamlit SaaS UI, FastAPI REST API, PostgreSQL/SQLite ORM, Docker, and ML pipeline. |
 
 > [!TIP]
 > A duplicate copy of all 4 deliverables is also packaged in the [**`Final_Submission_Deliverables/`**](file:///c:/Users/aryan/OneDrive/Desktop/Data%20Moat/Final_Submission_Deliverables) folder for immediate zip or portal upload.
@@ -32,7 +32,7 @@ This repository contains and links the four complete, synchronized deliverables 
 
 ## 🚀 2. Quick-Start Git Commands (Pushing to Your GitHub)
 
-The repository remote `origin` is already linked to `https://github.com/tribhuvneshsharma/Intelliprivart.git`. To push:
+The repository remote `origin` is already linked to `https://github.com/codewithanmol-26/Intelliprivart.git`. To push:
 
 ```bash
 # Push to GitHub main branch
