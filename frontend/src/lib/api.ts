@@ -15,39 +15,16 @@ import {
   RecomputeStatus,
 } from './types';
 
-export class ApiError extends Error {
-  status: number;
-  statusText: string;
-  data: any;
-
-  constructor(status: number, statusText: string, data: any, message?: string) {
-    super(message || `API Error [${status}] ${statusText}`);
-    this.name = 'ApiError';
-    this.status = status;
-    this.statusText = statusText;
-    this.data = data;
-  }
-}
-
 export function getApiBaseUrl(): string {
-  // Canonical deployed production Render service hostname
-  const canonicalUrl = 'https://intelliparivart.onrender.com/api';
-
-  // Helper to normalize any misaligned Render hostnames (e.g. non-existent -backend suffix)
-  const normalizeUrl = (rawUrl: string): string => {
-    let clean = rawUrl.replace(/\/+$/, '');
-    if (clean.includes('intelliparivart-backend.onrender.com') || clean.includes('intelliprivart-backend.onrender.com')) {
-      clean = clean
-        .replace('intelliparivart-backend.onrender.com', 'intelliparivart.onrender.com')
-        .replace('intelliprivart-backend.onrender.com', 'intelliparivart.onrender.com');
-    }
-    return clean;
-  };
+  // Use the local API during local development unless explicitly configured.
+  if (typeof window !== 'undefined' && ['localhost', '127.0.0.1'].includes(window.location.hostname)) {
+    return process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, '') || 'http://127.0.0.1:8000/api';
+  }
 
   // 1. In browser or build client bundle, check public framework variable if defined
   const publicUrl = process.env.NEXT_PUBLIC_API_URL;
   if (publicUrl && !publicUrl.includes('127.0.0.1') && !publicUrl.includes('localhost')) {
-    return normalizeUrl(publicUrl);
+    return publicUrl.replace(/\/+$/, '');
   }
 
   // 2. On server side (SSR / Node runtime), check private server variables (Vercel-safe without public prefix)
@@ -57,12 +34,12 @@ export function getApiBaseUrl(): string {
       process.env.API_URL ||
       process.env.BACKEND_INTERNAL_URL;
     if (serverUrl && !serverUrl.includes('127.0.0.1') && !serverUrl.includes('localhost')) {
-      return normalizeUrl(serverUrl);
+      return serverUrl.replace(/\/+$/, '');
     }
   }
 
   // 3. Deployed Production Render backend fallback (works out of the box with 0 env vars)
-  return canonicalUrl;
+  return 'https://intelliparivart.onrender.com/api';
 }
 
 function getStoredToken(): string | null {
@@ -77,12 +54,8 @@ async function request<T>(
   options: RequestInit = {},
   tenantId: string = 'INST_PATNA_01'
 ): Promise<T> {
-  const baseUrl = getApiBaseUrl();
-  let cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
-  if (baseUrl.endsWith('/api') && cleanEndpoint.startsWith('/api/')) {
-    cleanEndpoint = cleanEndpoint.substring(4);
-  }
-  const url = `${baseUrl}${cleanEndpoint}`;
+  const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  const url = `${getApiBaseUrl()}${cleanEndpoint}`;
   const headers = new Headers(options.headers || {});
   headers.set('X-Tenant-ID', tenantId);
 
@@ -95,42 +68,14 @@ async function request<T>(
     headers.set('Content-Type', 'application/json');
   }
 
-  let response: Response;
-  try {
-    response = await fetch(url, {
-      ...options,
-      headers,
-    });
-  } catch (fetchErr: any) {
-    // If request failed with network error and baseUrl is not canonical fallback, try canonical fallback
-    const canonicalBase = 'https://intelliparivart.onrender.com/api';
-    if (!baseUrl.startsWith(canonicalBase) && (fetchErr.name === 'TypeError' || fetchErr.message?.includes('Failed to fetch') || fetchErr.message?.includes('NetworkError'))) {
-      const fallbackUrl = `${canonicalBase}${cleanEndpoint}`;
-      try {
-        response = await fetch(fallbackUrl, {
-          ...options,
-          headers,
-        });
-      } catch {
-        throw fetchErr;
-      }
-    } else {
-      throw fetchErr;
-    }
-  }
+  const response = await fetch(url, {
+    ...options,
+    headers,
+  });
 
   if (!response.ok) {
-    let errorData: any = null;
-    let detailMessage = '';
-    const rawText = await response.text();
-    try {
-      errorData = JSON.parse(rawText);
-      detailMessage = errorData.detail || errorData.message || rawText;
-    } catch {
-      errorData = { detail: rawText };
-      detailMessage = rawText;
-    }
-    throw new ApiError(response.status, response.statusText, errorData, detailMessage);
+    const errorText = await response.text();
+    throw new Error(`API Error [${response.status}] ${response.statusText}: ${errorText}`);
   }
 
   return response.json();

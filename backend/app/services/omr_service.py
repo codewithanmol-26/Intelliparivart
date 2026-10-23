@@ -56,13 +56,12 @@ def process_omr_sheet(
     if img is None:
         return {"error": "Failed to decode image file format"}
 
-    # Resize standard height for processing if needed
+    # Standard scoring grid uses a fixed 800x1100 sheet coordinate space.
     h, w = img.shape[:2]
     target_w, target_h = 800, 1100
-    resized = cv2.resize(img, (target_w, target_h))
 
-    # 1. Quality Check
-    quality = assess_image_quality(resized)
+    # 1. Quality Check must use the original image: resizing must not hide blur.
+    quality = assess_image_quality(img)
     if quality["status"].endswith("RECAPTURE"):
         return {
             "quality_status": quality["status"],
@@ -77,7 +76,40 @@ def process_omr_sheet(
             },
         }
 
-    # 2. Preprocessing & Binarization
+    # 2. Correct modest rotation before mapping the standard bubble grid.
+    gray_original = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    edges = cv2.Canny(gray_original, 50, 150)
+    lines = cv2.HoughLines(edges, 1, np.pi / 180, max(80, min(h, w) // 8))
+    skew_angle = 0.0
+    if lines is not None:
+        angles = []
+        for line in lines[:, 0]:
+            _, theta = line
+            angle = float(np.degrees(theta) - 90.0)
+            if -15.0 <= angle <= 15.0:
+                angles.append(angle)
+        if angles:
+            skew_angle = float(np.median(angles))
+    # The grid uses the original coordinates and cannot safely interpret strong perspective.
+    if abs(skew_angle) > 15.0:
+        return {
+            "quality_status": "SKEW_RECAPTURE",
+            "rejection_reason": "Sheet angle is too large for reliable correction. Retake the photo with the page held level.",
+            "total_detected": 0,
+            "score": 0,
+            "questions": [],
+            "diagnostics": {
+                "blur_laplacian": quality.get("laplacian_var", 0),
+                "brightness": quality.get("brightness", 0),
+                "skew_angle_deg": round(skew_angle, 2),
+            },
+        }
+    if abs(skew_angle) > 0.5:
+        matrix = cv2.getRotationMatrix2D((w / 2.0, h / 2.0), skew_angle, 1.0)
+        img = cv2.warpAffine(img, matrix, (w, h), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
+    resized = cv2.resize(img, (target_w, target_h))
+
+    # 3. Preprocessing & Binarization
     gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
     blurred = cv2.GaussianBlur(gray, (5, 5), 0)
     thresh = cv2.adaptiveThreshold(blurred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 21, 6)
@@ -162,7 +194,7 @@ def process_omr_sheet(
         annotated_base64 = None
 
     return {
-        "quality_status": "CLEAN",
+        "quality_status": "SKEWED_CORRECTED" if abs(skew_angle) > 0.5 else "CLEAN",
         "total_detected": len(questions_results),
         "score": correct_count * 4 - incorrect_count,
         "annotated_image": annotated_base64,
@@ -170,6 +202,6 @@ def process_omr_sheet(
         "diagnostics": {
             "blur_laplacian": quality.get("laplacian_var", 0),
             "brightness": quality.get("brightness", 0),
-            "skew_angle_deg": 0.0,
+            "skew_angle_deg": round(skew_angle, 2),
         },
     }
