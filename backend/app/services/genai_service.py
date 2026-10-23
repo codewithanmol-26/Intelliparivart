@@ -15,19 +15,17 @@ load_dotenv()
 def get_gemini_api_key() -> str:
     return os.getenv("GEMINI_API_KEY", "").strip()
 
-# Gemini candidate models to try in order of preference
+# Fast, reliable Gemini models in order of latency
 GEMINI_MODELS = [
-    "gemini-3.8-flash",
-    "gemini-flash-latest",
-    "gemini-pro-latest",
-    "gemini-2.0-flash",
-    "gemini-1.5-flash-latest"
+    "gemini-1.5-flash",
+    "gemini-2.0-flash"
 ]
 
 def call_gemini(prompt: str, system_instruction: Optional[str] = None) -> Optional[str]:
     """
-    Calls Google Gemini REST API directly using httpx.
-    Returns generated text if successful, or None if quota/error.
+    Calls Google Gemini REST API directly with a fast 2.5s timeout.
+    If external API is slow or throttled, falls back immediately to
+    deterministic pedagogical engine so the UI never hangs or times out.
     """
     api_key = get_gemini_api_key()
     if not api_key:
@@ -56,7 +54,7 @@ def call_gemini(prompt: str, system_instruction: Optional[str] = None) -> Option
     for model in GEMINI_MODELS:
         url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
         try:
-            with httpx.Client(timeout=8.0) as client:
+            with httpx.Client(timeout=2.5) as client:
                 res = client.post(url, json=payload, headers=headers)
                 if res.status_code == 200:
                     data = res.json()

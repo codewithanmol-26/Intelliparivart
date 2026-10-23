@@ -26,9 +26,9 @@ def startup_db_init():
     """Initializes database schema tables gracefully without failing process startup if database is temporarily unreachable."""
     try:
         Base.metadata.create_all(bind=engine)
-        print("✓ Database tables verified and initialized successfully.")
+        print("[OK] Database tables verified and initialized successfully.")
     except Exception as exc:
-        print(f"⚠️ Notice: Database initialization could not connect immediately ({exc}).")
+        print(f"[NOTICE] Database initialization could not connect immediately ({exc}).")
         print("The server will remain online and serve requests; database will reconnect when reachable.")
 
 # CORS Configuration allowing local Next.js frontend, PWA and external clients
