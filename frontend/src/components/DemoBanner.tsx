@@ -48,6 +48,31 @@ export default function DemoBanner({ onOpenRoleModal }: DemoBannerProps) {
     router.push(targetRoute);
   };
 
+  // Derive singular active role to guarantee exactly one button is selected
+  const activeRole: UserRole = React.useMemo(() => {
+    if (pathname === '/demo/owner') return 'owner';
+    if (pathname === '/demo/teacher') return 'teacher';
+    if (pathname === '/demo/student') return 'student';
+    if (pathname === '/demo/parent') return 'parent';
+    return role;
+  }, [pathname, role]);
+
+  // Synchronize AppContext role if navigating directly via URL or history
+  React.useEffect(() => {
+    if (pathname === '/demo/owner' && role !== 'owner') {
+      setRole('owner');
+    } else if (pathname === '/demo/teacher' && role !== 'teacher') {
+      setRole('teacher');
+    } else if (pathname === '/demo/student' && role !== 'student') {
+      setRole('student');
+      setSelectedStudentId('STD_PAT_001');
+    } else if (pathname === '/demo/parent' && role !== 'parent') {
+      setRole('parent');
+      setSelectedStudentId('STD_PAT_001');
+    }
+  }, [pathname, role, setRole, setSelectedStudentId]);
+
+
   return (
     <div className="bg-[#0B1F3A] text-white border-b border-blue-900/60 shadow-md">
       {/* Upper Status Line */}
@@ -93,7 +118,7 @@ export default function DemoBanner({ onOpenRoleModal }: DemoBannerProps) {
         <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
           {roles.map((r) => {
             const Icon = r.icon;
-            const isActive = pathname === r.route || (pathname.startsWith('/demo') && role === r.id);
+            const isActive = r.id === activeRole;
             return (
               <button
                 key={r.id}
