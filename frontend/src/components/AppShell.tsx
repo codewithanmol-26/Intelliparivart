@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Sidebar from './Sidebar';
+import DemoRoleModal from './DemoRoleModal';
 import { useApp } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
 import { UserRole } from '../lib/types';
@@ -14,14 +15,18 @@ import {
   Wifi,
   WifiOff,
   Database,
-  Languages,
   Calendar,
   LogIn,
   LogOut,
   X,
   CheckCircle2,
   Sparkles,
-  ArrowRight
+  ArrowRight,
+  PlayCircle,
+  HelpCircle,
+  Layers,
+  GraduationCap,
+  HeartHandshake
 } from 'lucide-react';
 
 interface AppShellProps {
@@ -30,6 +35,8 @@ interface AppShellProps {
 
 export default function AppShell({ children }: AppShellProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
   const pathname = usePathname();
 
   const {
@@ -68,13 +75,16 @@ export default function AppShell({ children }: AppShellProps) {
     '/register',
   ].includes(pathname);
 
+  // Dedicated demo subpages manage their own top role switcher bar
+  const isDedicatedDemoPage = pathname.startsWith('/demo/');
+
   if (isPublicRoute) {
     return (
       <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans antialiased">
-        {/* Public Sticky Top Header */}
+        {/* Public Navigation Header (Linear/Stripe Minimal Design) */}
         <header className="sticky top-0 z-40 bg-[#0B1F3A] text-white shadow-md border-b border-blue-900/60">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            {/* Logo & Platform Brand */}
+            {/* Logo & Brand Wordmark */}
             <Link href="/" className="flex items-center space-x-3 group">
               <div className="w-8 h-8 rounded-xl bg-teal-500 text-white font-black text-sm flex items-center justify-center shadow-md group-hover:bg-teal-400 transition">
                 IP
@@ -91,45 +101,152 @@ export default function AppShell({ children }: AppShellProps) {
 
             {/* Public Navigation (Desktop) */}
             <nav className="hidden md:flex items-center space-x-6 text-xs font-semibold text-slate-200">
-              <Link href="/" className="hover:text-teal-300 transition">Solutions</Link>
+              <Link href="/demo" className="hover:text-teal-300 transition">
+                Product
+              </Link>
+              <Link href="/#capabilities" className="hover:text-teal-300 transition">
+                Capabilities
+              </Link>
+              <Link href="/#workflow" className="hover:text-teal-300 transition">
+                How It Works
+              </Link>
+              <Link href="/#roles" className="hover:text-teal-300 transition">
+                Solutions
+              </Link>
               <Link href="/ai-assistant" className="hover:text-teal-300 transition flex items-center space-x-1">
                 <Sparkles className="w-3.5 h-3.5 text-teal-400" />
                 <span>AI Copilot</span>
               </Link>
-              <Link href="/owner" className="hover:text-teal-300 transition">ROI Model</Link>
-              <Link href="/privacy-policy" className="hover:text-teal-300 transition">DPDP Privacy</Link>
-              <Link href="/terms" className="hover:text-teal-300 transition">Terms</Link>
             </nav>
 
-            {/* Action Buttons */}
-            <div className="flex items-center space-x-2 sm:space-x-3 text-xs">
+            {/* Action Buttons & Demo Trigger */}
+            <div className="hidden sm:flex items-center space-x-2 sm:space-x-3 text-xs">
+              {/* Role-Aware Demo Entry (Prompt Section 6) */}
+              <button
+                onClick={() => setIsDemoModalOpen(true)}
+                className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-teal-500/20 text-teal-300 hover:bg-teal-500/30 border border-teal-500/40 font-bold transition shadow-xs"
+              >
+                <PlayCircle className="w-3.5 h-3.5 text-teal-400" />
+                <span>Demo</span>
+              </button>
+
               <Link
                 href="/login"
                 className="px-3 py-1.5 text-slate-200 hover:text-white font-medium transition"
               >
                 Sign In
               </Link>
-              <Link
-                href="/register"
-                className="hidden sm:inline-flex px-3 py-1.5 rounded-lg border border-teal-500/60 text-teal-300 hover:bg-teal-500/10 font-semibold transition"
+
+              <button
+                onClick={() => setIsDemoModalOpen(true)}
+                className="px-4 py-2 rounded-xl bg-teal-500 hover:bg-teal-600 text-white font-bold transition shadow-sm flex items-center space-x-1.5"
               >
-                Register Institute
-              </Link>
-              <Link
-                href="/overview"
-                className="px-3.5 py-1.5 rounded-xl bg-teal-500 hover:bg-teal-600 text-white font-bold transition shadow-sm flex items-center space-x-1.5"
-              >
-                <span>Live Platform</span>
+                <span>Explore Interactive Demo</span>
                 <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
+              </button>
+            </div>
+
+            {/* Mobile Hamburger Button */}
+            <div className="flex sm:hidden items-center space-x-2">
+              <button
+                onClick={() => setIsDemoModalOpen(true)}
+                className="px-2.5 py-1 rounded-lg bg-teal-500 text-white font-bold text-xs flex items-center space-x-1"
+              >
+                <PlayCircle className="w-3.5 h-3.5" />
+                <span>Demo</span>
+              </button>
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="p-2 rounded-lg bg-blue-900/60 text-slate-300 hover:text-white border border-blue-800"
+                aria-label="Toggle Navigation Menu"
+              >
+                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </button>
             </div>
           </div>
+
+          {/* Mobile Navigation Dropdown Drawer */}
+          {mobileMenuOpen && (
+            <div className="sm:hidden bg-[#08172c] border-b border-blue-900/80 px-4 py-4 space-y-3 text-xs animate-fadeIn">
+              <div className="grid grid-cols-2 gap-2 text-slate-200 font-semibold">
+                <Link
+                  href="/demo"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2 rounded-lg bg-blue-950 border border-blue-800 flex items-center space-x-2 text-teal-300"
+                >
+                  <PlayCircle className="w-4 h-4" />
+                  <span>Demo Hub</span>
+                </Link>
+                <Link
+                  href="/ai-assistant"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2 rounded-lg bg-blue-950 border border-blue-800 flex items-center space-x-2 text-teal-300"
+                >
+                  <Sparkles className="w-4 h-4" />
+                  <span>AI Copilot</span>
+                </Link>
+                <Link
+                  href="/#capabilities"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2 rounded-lg hover:bg-blue-900/60"
+                >
+                  Capabilities
+                </Link>
+                <Link
+                  href="/#workflow"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2 rounded-lg hover:bg-blue-900/60"
+                >
+                  How It Works
+                </Link>
+                <Link
+                  href="/#roles"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2 rounded-lg hover:bg-blue-900/60"
+                >
+                  Role Solutions
+                </Link>
+                <Link
+                  href="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2 rounded-lg hover:bg-blue-900/60"
+                >
+                  Institute Sign In
+                </Link>
+              </div>
+
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setIsDemoModalOpen(true);
+                }}
+                className="w-full py-2.5 rounded-xl bg-teal-500 text-white font-bold text-center block shadow-sm"
+              >
+                Launch Role Walkthrough &rarr;
+              </button>
+            </div>
+          )}
         </header>
 
         {/* Public Content Container */}
         <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
           {children}
         </main>
+
+        {/* Role Selection Modal */}
+        <DemoRoleModal
+          isOpen={isDemoModalOpen}
+          onClose={() => setIsDemoModalOpen(false)}
+        />
+      </div>
+    );
+  }
+
+  // If on dedicated /demo/* pages, let the page and DemoBanner handle the layout cleanly
+  if (isDedicatedDemoPage) {
+    return (
+      <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans antialiased">
+        {children}
       </div>
     );
   }
@@ -139,26 +256,20 @@ export default function AppShell({ children }: AppShellProps) {
       {/* Responsive Left Sidebar */}
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      {/* Main Content Area (Offset by 64px/w-64 on lg screens) */}
+      {/* Main Content Area */}
       <div className="lg:pl-64 flex flex-col flex-1 min-h-screen">
         {/* Sticky Top Header */}
         <header className="sticky top-0 z-30 bg-[#0B1F3A] text-white shadow-md border-b border-blue-900/60">
-          {/* Top Lineage & Compliance Banner */}
+          {/* Top Lineage & Compliance Banner (Honest Demo Labeling) */}
           <div className="bg-[#08172c] border-b border-blue-900/50 px-3 sm:px-6 py-1 text-[11px] sm:text-xs flex flex-wrap items-center justify-between text-blue-200 gap-1.5">
             <div className="flex items-center space-x-2">
-              <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
-              <span className="font-semibold text-emerald-300 bg-emerald-950/80 border border-emerald-500/40 px-1.5 py-0.5 rounded text-[10px]">
-                PRODUCTION PIPELINE ACTIVE
+              <span className="inline-block w-2 h-2 rounded-full bg-teal-400 animate-pulse shrink-0"></span>
+              <span className="font-semibold text-teal-300 bg-teal-950/80 border border-teal-500/40 px-1.5 py-0.5 rounded text-[10px]">
+                DEMO MODE — SAMPLE DATA
               </span>
               <span className="truncate max-w-[240px] sm:max-w-none text-slate-300">
-                Apex JEE & Medical Academy, Patna • Live Academic Intelligence
+                Apex JEE & Medical Academy, Patna (1,200 Cohort) • Synthetic Intelligence
               </span>
-              {lastRunId && (
-                <span className="hidden md:inline-flex items-center px-1.5 py-0.2 bg-teal-950/80 border border-teal-500/40 rounded text-[10px] text-teal-300 font-mono">
-                  <Database className="w-2.5 h-2.5 mr-1" />
-                  {lastRunId.length > 20 ? `Run ${lastRunId.slice(-8)}` : lastRunId}
-                </span>
-              )}
             </div>
 
             <div className="flex items-center space-x-3 text-[11px]">
@@ -167,7 +278,7 @@ export default function AppShell({ children }: AppShellProps) {
               <div className="flex items-center space-x-1">
                 {isOnline ? (
                   <span className="flex items-center text-emerald-400">
-                    <Wifi className="w-3 h-3 mr-1" /> Live Sync
+                    <Wifi className="w-3 h-3 mr-1" /> Client Simulation Active
                   </span>
                 ) : (
                   <span className="flex items-center text-amber-400 font-bold">
@@ -220,22 +331,8 @@ export default function AppShell({ children }: AppShellProps) {
               </div>
             </div>
 
-            {/* Right: Academic Period, Role, Language, Recompute & Auth */}
+            {/* Right: Role Switcher, Demo Hub, Period, Recompute & Auth */}
             <div className="flex items-center space-x-2 text-xs">
-              {/* Period Selector */}
-              <div className="hidden md:flex items-center bg-blue-950/70 border border-blue-800/60 rounded-lg px-2 py-1">
-                <Calendar className="w-3.5 h-3.5 text-slate-400 mr-1.5" />
-                <select
-                  value={selectedPeriod}
-                  onChange={(e) => setSelectedPeriod(e.target.value as any)}
-                  className="bg-transparent text-slate-200 focus:outline-none cursor-pointer text-[11px]"
-                >
-                  <option value="all" className="bg-[#0B1F3A] text-white">All Months (M1–M8)</option>
-                  <option value="m1-3" className="bg-[#0B1F3A] text-white">Early Triage (M1–M3)</option>
-                  <option value="m4-8" className="bg-[#0B1F3A] text-white">Advanced Prep (M4–M8)</option>
-                </select>
-              </div>
-
               {/* Role Switcher */}
               <div className="flex items-center bg-blue-950/70 border border-blue-800/60 rounded-lg px-2 py-1">
                 <span className="text-slate-400 mr-1 hidden sm:inline">Role:</span>
@@ -251,6 +348,15 @@ export default function AppShell({ children }: AppShellProps) {
                   <option value="parent" className="bg-[#0B1F3A] text-white">Parent (Digest View)</option>
                 </select>
               </div>
+
+              {/* Demo Role Walkthrough Trigger */}
+              <button
+                onClick={() => setIsDemoModalOpen(true)}
+                className="hidden sm:inline-flex items-center space-x-1 px-2.5 py-1 bg-teal-500/20 text-teal-300 border border-teal-500/40 rounded-lg text-xs font-semibold hover:bg-teal-500/30 transition"
+              >
+                <PlayCircle className="w-3.5 h-3.5 text-teal-400" />
+                <span>Demo Walkthrough</span>
+              </button>
 
               {/* Language Switcher */}
               <div className="flex items-center rounded-lg border border-blue-800/60 overflow-hidden bg-blue-950/70 text-[11px]">
@@ -272,7 +378,7 @@ export default function AppShell({ children }: AppShellProps) {
               <button
                 onClick={handleManualRecompute}
                 disabled={isRecomputing || recomputingLocal}
-                title="Trigger Full Recompute Pipeline (2PL IRT + BKT + GBDT + Conformal)"
+                title="Trigger Full Recompute Pipeline"
                 className="inline-flex items-center px-2.5 py-1 bg-teal-600/30 hover:bg-teal-600/50 border border-teal-500/50 rounded-lg text-xs font-semibold text-teal-300 transition disabled:opacity-50"
               >
                 <RotateCw className={`w-3.5 h-3.5 mr-1 ${isRecomputing || recomputingLocal ? 'animate-spin' : ''}`} />
@@ -310,18 +416,24 @@ export default function AppShell({ children }: AppShellProps) {
         <footer className="bg-white border-t border-slate-200 py-4 text-xs text-slate-500">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-2">
             <p>
-              <strong>Intelliprivart</strong> — AI-Powered Institute Intelligence Platform | Case B: The Data Moat (Nextute × IIT Patna)
+              <strong>Intelliprivart</strong> — AI-Powered Institute Intelligence Platform | Case B: The Data Moat
             </p>
             <div className="flex items-center space-x-3 text-[11px]">
-              <span>Multi-Tenant PostgreSQL</span>
+              <span>Demo Mode (Sample Data)</span>
               <span>•</span>
-              <span>DPDP Act 2023 Section 9 VPC</span>
+              <span>DPDP Act 2023 Compliant</span>
               <span>•</span>
-              <span className="text-teal-600 font-semibold">2PL IRT + BKT + Conformal Quantiles</span>
+              <span className="text-teal-600 font-semibold">2PL IRT + BKT Mastery</span>
             </div>
           </div>
         </footer>
       </div>
+
+      {/* Role Selection Modal */}
+      <DemoRoleModal
+        isOpen={isDemoModalOpen}
+        onClose={() => setIsDemoModalOpen(false)}
+      />
     </div>
   );
 }

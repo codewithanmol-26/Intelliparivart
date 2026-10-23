@@ -6,6 +6,7 @@ import { useApp } from '../../context/AppContext';
 import { api } from '../../lib/api';
 import { enqueueOfflineAction } from '../../lib/offlineQueue';
 import { IngestionResult, UploadSourceRecord, UploadPreviewResult } from '../../lib/types';
+import { SAMPLE_CSV_CONTENT } from '../../lib/demoData';
 import {
   UploadCloud,
   FileSpreadsheet,
@@ -224,10 +225,71 @@ export default function UploadPage() {
       setColumnOverrides(detected);
       setWizardStep(2);
     } catch (err: any) {
+      // Client-side in-browser CSV parsing fallback
+      if (file.name.endsWith('.csv') || file.type.includes('csv') || file.type.includes('text')) {
+        try {
+          const text = await file.text();
+          const lines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
+          if (lines.length > 0) {
+            const cols = lines[0].split(',').map(c => c.trim().replace(/^["']|["']$/g, ''));
+            const previewRows = lines.slice(1, 11).map(line => {
+              const vals = line.split(',').map(v => v.trim().replace(/^["']|["']$/g, ''));
+              const row: Record<string, any> = {};
+              cols.forEach((col, idx) => {
+                row[col] = vals[idx] ?? '';
+              });
+              return row;
+            });
+            const autoMap: Record<string, string> = {};
+            cols.forEach(c => {
+              const lc = c.toLowerCase();
+              if (lc.includes('id')) autoMap['student_id'] = c;
+              else if (lc.includes('name')) autoMap['student_name'] = c;
+              else if (lc.includes('batch')) autoMap['batch_id'] = c;
+              else if (lc.includes('subj')) autoMap['subject'] = c;
+              else if (lc.includes('topic')) autoMap['topic'] = c;
+              else if (lc.includes('score') && !lc.includes('max')) autoMap['score'] = c;
+              else if (lc.includes('max')) autoMap['max_score'] = c;
+              else if (lc.includes('attend')) autoMap['attendance'] = c;
+            });
+            setPreviewData({
+              filename: file.name,
+              total_rows: lines.length - 1,
+              detected_shape: 'TALL_RECORDS',
+              columns: cols,
+              auto_mapping: autoMap,
+              preview_rows: previewRows,
+              validation_issues: [],
+              requires_mapping: []
+            });
+            setColumnOverrides(autoMap);
+            setWizardStep(2);
+            return;
+          }
+        } catch (clientErr) {
+          console.error('Client CSV parse error:', clientErr);
+        }
+      }
       setPreviewError(err.message || 'Failed to parse file preview.');
     } finally {
       setIsPreviewLoading(false);
     }
+  };
+
+  const handleDownloadSampleCsv = () => {
+    const blob = new Blob([SAMPLE_CSV_CONTENT], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'intelliprivart_sample_benchmark.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleLoadBenchmarkCsv = async () => {
+    const file = new File([SAMPLE_CSV_CONTENT], 'intelliprivart_sample_benchmark.csv', { type: 'text/csv' });
+    await handleFileChange(file);
   };
 
   // Quick Competition Sample File Loaders
@@ -647,6 +709,33 @@ export default function UploadPage() {
                   <p className="mt-1 text-xs text-slate-500">
                     Supports `.csv`, `.xlsx`, `.xls` formats. Auto-handles Windows Excel encodings (UTF-8, Latin1, CP1252) and unpivots wide marks matrices.
                   </p>
+                </div>
+
+                {/* Demo Mode Client-side Notification & Sample Download */}
+                <div className="p-3.5 bg-teal-50/70 border border-teal-200 rounded-xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs">
+                  <div className="flex items-center space-x-2 text-teal-900">
+                    <CheckCircle2 className="w-4 h-4 text-teal-600 shrink-0" />
+                    <span><strong>Demo Mode — Local Browser Validation:</strong> Files are parsed securely in your browser. Download our standard CSV template or load the benchmark dataset with 1 click.</span>
+                  </div>
+                  <div className="flex items-center space-x-2 shrink-0">
+                    <button
+                      type="button"
+                      onClick={handleDownloadSampleCsv}
+                      className="px-3 py-1.5 bg-white border border-teal-300 rounded-lg text-teal-800 hover:bg-teal-100 font-bold text-xs flex items-center space-x-1 shadow-xs transition cursor-pointer"
+                    >
+                      <Download className="w-3.5 h-3.5" />
+                      <span>Download Sample CSV</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleLoadBenchmarkCsv}
+                      disabled={isPreviewLoading}
+                      className="px-3 py-1.5 bg-teal-700 hover:bg-teal-800 text-white rounded-lg font-bold text-xs flex items-center space-x-1 shadow-xs transition cursor-pointer"
+                    >
+                      <Zap className="w-3.5 h-3.5" />
+                      <span>Load Benchmark CSV</span>
+                    </button>
+                  </div>
                 </div>
 
                 {/* Drop Zone */}

@@ -1,15 +1,15 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useApp } from '../context/AppContext';
-import { getApiBaseUrl } from '../lib/api';
+import DemoRoleModal from '../components/DemoRoleModal';
 import {
   TrendingUp,
   ShieldCheck,
   Brain,
   FileSpreadsheet,
-  Camera,
   Users,
   ChevronRight,
   Database,
@@ -19,304 +19,854 @@ import {
   Clock,
   Award,
   Lock,
-  RotateCw,
-  Calculator,
   Layers,
   GraduationCap,
   Bot,
-  MessageSquare,
+  PlayCircle,
   FileText,
   Building2,
   BarChart3,
-  Check,
   Sliders,
-  ExternalLink,
-  ShieldAlert,
-  HelpCircle
+  AlertTriangle,
+  UploadCloud,
+  Check,
+  BookOpen,
+  MessageSquare,
+  HelpCircle,
+  Activity,
+  Calendar,
+  Share2
 } from 'lucide-react';
 
 export default function HomePage() {
-  const { tenantId, setRole, lastRunId } = useApp();
-  const [backendStatus, setBackendStatus] = useState<'checking' | 'online' | 'offline'>('checking');
+  const router = useRouter();
+  const { setRole } = useApp();
+  const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
+  const [activeRoleTab, setActiveRoleTab] = useState<'owner' | 'teacher' | 'student' | 'parent'>('owner');
 
-  // ROI Calculator Interactive State (Derived from Nextute_Case_B_Financial_Model.xlsx)
+  // ROI Calculator Interactive State
   const [roiStudents, setRoiStudents] = useState<number>(1200);
   const [roiAnnualFee, setRoiAnnualFee] = useState<number>(75000);
   const [roiRetentionEfficiency, setRoiRetentionEfficiency] = useState<number>(55); // % of dropouts prevented
 
-  // Financial calculations
-  const baselineDropoutRate = 0.128; // 12.8% baseline dropout in Tier-2/3 test-prep
+  const baselineDropoutRate = 0.128; // 12.8% baseline in Tier-2/3 test prep
   const dropoutsWithoutPlatform = Math.round(roiStudents * baselineDropoutRate);
   const studentsSaved = Math.round(dropoutsWithoutPlatform * (roiRetentionEfficiency / 100));
   const revenueProtected = studentsSaved * roiAnnualFee;
   const platformAnnualCost = 12960 * 12; // ₹12,960/month standard tier
-  const netRoiRatio = platformAnnualCost > 0 ? (revenueProtected / platformAnnualCost).toFixed(1) : '28.5';
+  const netRoiRatio = platformAnnualCost > 0 ? (revenueProtected / platformAnnualCost).toFixed(1) : '18.3';
 
-  useEffect(() => {
-    const apiBase = getApiBaseUrl();
-    fetch(`${apiBase}/health`)
-      .then((res) => {
-        if (res.ok) setBackendStatus('online');
-        else setBackendStatus('offline');
-      })
-      .catch(() => setBackendStatus('offline'));
-  }, []);
+  const handleLaunchRole = (role: 'owner' | 'teacher' | 'student' | 'parent') => {
+    setRole(role);
+    router.push(`/demo/${role}`);
+  };
 
   return (
-    <div className="space-y-16 pb-16">
-      {/* 1. Hero Banner */}
-      <section className="relative overflow-hidden rounded-3xl bg-[#0B1F3A] text-white p-6 sm:p-10 md:p-14 shadow-2xl border border-blue-900/60">
+    <div className="space-y-20 pb-20">
+      {/* Role Selection Modal */}
+      <DemoRoleModal isOpen={isRoleModalOpen} onClose={() => setIsRoleModalOpen(false)} />
+
+      {/* 1. HERO SECTION */}
+      <section className="relative overflow-hidden rounded-3xl bg-[#0B1F3A] text-white p-6 sm:p-10 md:p-16 border border-blue-900/60 shadow-2xl">
         <div className="relative z-10 max-w-4xl space-y-6">
           <div className="inline-flex items-center space-x-2 bg-teal-500/20 text-teal-300 border border-teal-500/30 px-3.5 py-1.5 rounded-full text-xs font-semibold shadow-inner">
             <Sparkles className="w-3.5 h-3.5 text-teal-400" />
-            <span>The Data Moat Case Competition • Case B Round 2 • Nextute × Finance Club, IIT Patna</span>
+            <span>AI Intelligence Platform for JEE & NEET Institutes</span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight leading-[1.15]">
-            The AI-Powered Intelligence Moat for JEE & NEET Institutes
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight leading-[1.12]">
+            Turn Coaching Data Into Better Student Outcomes.
           </h1>
 
-          <p className="text-sm sm:text-base md:text-lg text-slate-300 leading-relaxed max-w-3xl">
-            Transform messy paper OMR scans and scattered Excel registers into persistent psychometrics (2PL IRT + BKT),
-            zero-leakage dropout early warnings, split-conformal percentile predictions, and automated bilingual parent WhatsApp digests.
+          <p className="text-base sm:text-lg md:text-xl text-slate-300 leading-relaxed max-w-3xl font-normal">
+            Bring test results, attendance, and academic records together to understand student mastery,
+            identify learners who need support, and guide the next best action.
           </p>
 
           {/* Primary Action Buttons */}
-          <div className="pt-2 flex flex-wrap gap-3 sm:gap-4 items-center">
-            <Link
-              href="/overview"
-              className="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-teal-500 text-white font-bold text-xs sm:text-sm hover:bg-teal-600 transition shadow-lg shadow-teal-500/25"
+          <div className="pt-3 flex flex-wrap gap-3 sm:gap-4 items-center">
+            <button
+              onClick={() => setIsRoleModalOpen(true)}
+              className="inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-teal-500 text-white font-bold text-sm hover:bg-teal-600 transition shadow-lg shadow-teal-500/25 cursor-pointer"
             >
-              <span>Explore Live Platform</span>
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Link>
+              <PlayCircle className="w-4 h-4 mr-2" />
+              <span>Explore Interactive Demo</span>
+            </button>
 
-            <Link
-              href="/register"
-              className="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-white text-slate-900 font-bold text-xs sm:text-sm hover:bg-slate-100 transition shadow-md"
+            <a
+              href="#how-it-works"
+              className="inline-flex items-center justify-center px-5 py-3.5 rounded-xl bg-white/10 text-white hover:bg-white/15 transition font-semibold text-sm border border-white/10"
             >
-              <Building2 className="w-4 h-4 mr-2 text-teal-600" />
-              <span>Register Your Institute</span>
-            </Link>
+              <span>See How It Works</span>
+              <ChevronRight className="w-4 h-4 ml-1" />
+            </a>
 
             <Link
               href="/ai-assistant"
-              className="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-blue-900/60 text-teal-200 font-semibold text-xs sm:text-sm hover:bg-blue-800 transition border border-teal-500/40"
+              className="inline-flex items-center justify-center px-4 py-3.5 rounded-xl text-teal-300 hover:text-white font-medium text-sm transition"
             >
               <Bot className="w-4 h-4 mr-2 text-teal-400" />
-              <span>AI Teaching Copilot</span>
-            </Link>
-
-            <Link
-              href="/login"
-              className="inline-flex items-center justify-center px-4 py-3 rounded-xl text-slate-300 hover:text-white font-medium text-xs sm:text-sm transition"
-            >
-              <span>Institute Sign In &rarr;</span>
+              <span>AI Teaching Copilot &rarr;</span>
             </Link>
           </div>
+
+          {/* Micro trust indicators */}
+          <div className="pt-4 flex flex-wrap items-center gap-y-2 gap-x-6 text-xs text-slate-400 border-t border-blue-900/40">
+            <div className="flex items-center space-x-1.5">
+              <Check className="w-3.5 h-3.5 text-teal-400" />
+              <span>Pre-calibrated with 1,200 Benchmark Students</span>
+            </div>
+            <div className="flex items-center space-x-1.5">
+              <Check className="w-3.5 h-3.5 text-teal-400" />
+              <span>DPDP Act 2023 Sec 9 Child Privacy VPC</span>
+            </div>
+            <div className="flex items-center space-x-1.5">
+              <Check className="w-3.5 h-3.5 text-teal-400" />
+              <span>Zero Model Retraining on Private Marks</span>
+            </div>
+          </div>
         </div>
 
-        {/* Decorative Grid Pattern */}
-        <div className="absolute right-0 top-0 bottom-0 w-1/2 opacity-15 bg-[radial-gradient(#14B8A6_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none" />
+        {/* Ambient Grid Accent */}
+        <div className="absolute right-0 top-0 bottom-0 w-1/2 opacity-15 bg-[radial-gradient(#14B8A6_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
       </section>
 
-      {/* 2. Key Trust Metrics & System Telemetry */}
-      <section className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
-        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Backend API</div>
-          <div className="mt-1.5 flex items-center space-x-2">
-            <span className={`w-2.5 h-2.5 rounded-full ${backendStatus === 'online' ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
-            <span className="text-sm font-bold text-slate-900 capitalize font-mono">{backendStatus}</span>
-          </div>
-          <div className="text-[10px] text-slate-500 mt-1">FastAPI v2.4 (Render)</div>
-        </div>
-
-        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">GenAI Engine</div>
-          <div className="mt-1.5 text-sm font-bold text-teal-700 flex items-center space-x-1">
-            <Sparkles className="w-3.5 h-3.5 text-teal-500" />
-            <span>Gemini 3.8-Flash</span>
-          </div>
-          <div className="text-[10px] text-slate-500 mt-1">Pedagogical Guardrails</div>
-        </div>
-
-        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Benchmark Cohort</div>
-          <div className="mt-1.5 text-sm font-bold text-slate-900 font-mono">1,200 Students</div>
-          <div className="text-[10px] text-slate-500 mt-1">Apex Academy, Patna</div>
-        </div>
-
-        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Dropout Prevention</div>
-          <div className="mt-1.5 text-sm font-bold text-emerald-600 font-mono">12.8% &rarr; 5.7%</div>
-          <div className="text-[10px] text-slate-500 mt-1">55% Churn Avoided</div>
-        </div>
-
-        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Child Privacy</div>
-          <div className="mt-1.5 text-sm font-bold text-teal-700 flex items-center space-x-1">
-            <ShieldCheck className="w-3.5 h-3.5 text-teal-600" />
-            <span>DPDP Act 2023</span>
-          </div>
-          <div className="text-[10px] text-slate-500 mt-1">Section 9 Child VPC</div>
-        </div>
-
-        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Active Engine Run</div>
-          <div className="mt-1.5 text-xs font-mono font-bold text-slate-800 truncate">
-            {lastRunId ? lastRunId.slice(-8) : 'SEEDED_CALIB'}
-          </div>
-          <div className="text-[10px] text-slate-500 mt-1">2PL IRT + BKT State</div>
-        </div>
-      </section>
-
-      {/* 3. The 8-Stage Data Moat Architecture (Interactive Pipeline) */}
-      <section className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-xs space-y-6">
-        <div className="flex flex-wrap items-center justify-between gap-2">
+      {/* 2. REALISTIC PRODUCT DASHBOARD PREVIEW COMPOSITION */}
+      <section className="space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-2 px-1">
           <div>
-            <span className="text-xs uppercase font-bold tracking-wider text-teal-600 block">
-              End-to-End Architectural Pipeline
+            <span className="text-xs font-bold uppercase tracking-wider text-teal-600 block">
+              Live Frontend Component Composition
             </span>
             <h2 className="text-xl sm:text-2xl font-black text-slate-900 mt-0.5">
-              How Intelliprivart Builds Your Institute Data Moat
+              Real-Time Academic Intelligence Interface
             </h2>
           </div>
-          <Link
-            href="/overview"
-            className="text-xs font-bold text-teal-600 hover:text-teal-700 flex items-center space-x-1"
+          <button
+            onClick={() => setIsRoleModalOpen(true)}
+            className="text-xs font-bold text-teal-600 hover:text-teal-700 flex items-center space-x-1 cursor-pointer"
           >
-            <span>View Active Operations</span>
+            <span>Launch All 4 Interactive Roles</span>
             <ChevronRight className="w-4 h-4" />
-          </Link>
+          </button>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
-          {/* Stage 1 */}
-          <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50/60 hover:border-teal-500 transition group space-y-2">
-            <div className="w-8 h-8 rounded-xl bg-teal-100 text-teal-800 flex items-center justify-center font-bold text-xs">
-              01
+        {/* Browser Mock Shell */}
+        <div className="rounded-2xl border border-slate-200 bg-white shadow-xl overflow-hidden">
+          {/* Browser header bar */}
+          <div className="bg-slate-100 border-b border-slate-200 px-4 py-3 flex items-center justify-between text-xs text-slate-600">
+            <div className="flex items-center space-x-2">
+              <div className="w-3 h-3 rounded-full bg-rose-400" />
+              <div className="w-3 h-3 rounded-full bg-amber-400" />
+              <div className="w-3 h-3 rounded-full bg-emerald-400" />
+              <span className="text-slate-400 text-[11px] ml-2 font-mono">intelliprivart.vercel.app/overview</span>
             </div>
-            <h3 className="font-bold text-slate-900 text-xs sm:text-sm">Multi-Modal Ingestion</h3>
-            <p className="text-xs text-slate-500 leading-normal">
-              Seamlessly processes Excel rosters, CSV gradebooks, and mobile camera OMR scans with Hough Circle bubble segmentation.
+            <div className="flex items-center space-x-3 text-[11px]">
+              <span className="inline-flex items-center px-2 py-0.5 rounded bg-teal-100 text-teal-800 font-bold">
+                Demo Mode — Benchmark Data Active
+              </span>
+              <span className="text-slate-500 hidden sm:inline">Apex JEE & Medical Academy, Patna</span>
+            </div>
+          </div>
+
+          {/* Inner Dashboard Composition */}
+          <div className="p-4 sm:p-6 bg-slate-50/70 space-y-6">
+            {/* Top Stat Row */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+              <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs">
+                <div className="text-[11px] font-semibold text-slate-500 uppercase">Enrolled Students</div>
+                <div className="text-2xl font-black text-slate-900 mt-1">1,200</div>
+                <div className="text-[11px] text-emerald-600 font-medium mt-1 flex items-center">
+                  <TrendingUp className="w-3 h-3 mr-1" /> 94.2% Active Attendance
+                </div>
+              </div>
+
+              <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs">
+                <div className="text-[11px] font-semibold text-slate-500 uppercase">Avg Concept Mastery</div>
+                <div className="text-2xl font-black text-slate-900 mt-1">74.2%</div>
+                <div className="text-[11px] text-teal-600 font-medium mt-1">
+                  Bayesian Knowledge Tracing
+                </div>
+              </div>
+
+              <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs">
+                <div className="text-[11px] font-semibold text-slate-500 uppercase">Support Triage Queue</div>
+                <div className="text-2xl font-black text-amber-600 mt-1">8 Students</div>
+                <div className="text-[11px] text-amber-700 font-medium mt-1">
+                  Early Intervention Required
+                </div>
+              </div>
+
+              <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs">
+                <div className="text-[11px] font-semibold text-slate-500 uppercase">Protected Fee Revenue</div>
+                <div className="text-2xl font-black text-emerald-600 mt-1">₹28.5 Lakhs</div>
+                <div className="text-[11px] text-slate-500 font-medium mt-1">
+                  18.3x Platform ROI
+                </div>
+              </div>
+            </div>
+
+            {/* Split View: Topic Mastery Heatmap & Early-Warning Triage */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+              {/* Left Column: BKT Mastery Progress (7 cols) */}
+              <div className="lg:col-span-7 p-5 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-4">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                  <div>
+                    <h3 className="text-sm font-bold text-slate-900">Topic Mastery Heatmap (2PL IRT + BKT)</h3>
+                    <p className="text-xs text-slate-500">Physics & Chemistry Core Topics • Batch: Achievers Top-30</p>
+                  </div>
+                  <span className="text-[10px] bg-teal-50 text-teal-700 font-semibold px-2 py-0.5 rounded-full border border-teal-200">
+                    Probabilistic Mastery
+                  </span>
+                </div>
+
+                <div className="space-y-3 pt-1 text-xs">
+                  <div>
+                    <div className="flex justify-between items-center mb-1 font-medium">
+                      <span className="text-slate-800 font-semibold">Kinematics & 1D Motion (Physics)</span>
+                      <span className="text-emerald-700 font-bold font-mono">91% Mastered</span>
+                    </div>
+                    <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+                      <div className="h-full bg-emerald-500 rounded-full" style={{ width: '91%' }} />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex justify-between items-center mb-1 font-medium">
+                      <span className="text-slate-800 font-semibold">Electrostatics & Gauss Law (Physics)</span>
+                      <span className="text-teal-700 font-bold font-mono">76% In Progress</span>
+                    </div>
+                    <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+                      <div className="h-full bg-teal-500 rounded-full" style={{ width: '76%' }} />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex justify-between items-center mb-1 font-medium">
+                      <span className="text-slate-800 font-semibold">Organic Reaction Mechanisms (Chemistry)</span>
+                      <span className="text-amber-700 font-bold font-mono">48% Needs Practice</span>
+                    </div>
+                    <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+                      <div className="h-full bg-amber-500 rounded-full" style={{ width: '48%' }} />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex justify-between items-center mb-1 font-medium">
+                      <span className="text-slate-800 font-semibold">Rotational Dynamics & Torque (Physics)</span>
+                      <span className="text-rose-700 font-bold font-mono">44% Critical Remedial</span>
+                    </div>
+                    <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+                      <div className="h-full bg-rose-500 rounded-full" style={{ width: '44%' }} />
+                    </div>
+                    <div className="mt-1 text-[11px] text-rose-600 font-medium flex items-center">
+                      <AlertTriangle className="w-3 h-3 mr-1" /> 1-on-1 Faculty Mentorship Triggered
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
+                  <span className="text-slate-500 text-[11px]">Item Difficulty: b=1.42 • Discrimination: a=1.85</span>
+                  <Link href="/mastery" className="text-teal-600 font-bold hover:underline inline-flex items-center">
+                    <span>Full Mastery Matrix</span> &rarr;
+                  </Link>
+                </div>
+              </div>
+
+              {/* Right Column: Early Warning Triage (5 cols) */}
+              <div className="lg:col-span-5 p-5 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-4">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                  <div>
+                    <h3 className="text-sm font-bold text-slate-900">Support Triage Queue</h3>
+                    <p className="text-xs text-slate-500">Non-leaking Early Indicators</p>
+                  </div>
+                  <span className="text-[10px] bg-amber-50 text-amber-700 font-semibold px-2 py-0.5 rounded-full border border-amber-200">
+                    Actionable
+                  </span>
+                </div>
+
+                <div className="space-y-2.5 pt-1">
+                  {/* Student 1 */}
+                  <div className="p-2.5 rounded-xl border border-rose-200 bg-rose-50/50 flex items-center justify-between text-xs">
+                    <div>
+                      <div className="font-bold text-slate-900">Aarav Sharma</div>
+                      <div className="text-[11px] text-slate-500">Achievers Top-30 • 3-Test Slump Streak</div>
+                    </div>
+                    <span className="px-2 py-0.5 rounded bg-rose-100 text-rose-800 text-[10px] font-bold">
+                      High Support
+                    </span>
+                  </div>
+
+                  {/* Student 2 */}
+                  <div className="p-2.5 rounded-xl border border-amber-200 bg-amber-50/50 flex items-center justify-between text-xs">
+                    <div>
+                      <div className="font-bold text-slate-900">Rohan Verma</div>
+                      <div className="text-[11px] text-slate-500">Foundation JEE 11th • Attendance Dip</div>
+                    </div>
+                    <span className="px-2 py-0.5 rounded bg-amber-100 text-amber-800 text-[10px] font-bold">
+                      Medium
+                    </span>
+                  </div>
+
+                  {/* Student 3 */}
+                  <div className="p-2.5 rounded-xl border border-emerald-200 bg-emerald-50/50 flex items-center justify-between text-xs">
+                    <div>
+                      <div className="font-bold text-slate-900">Priya Patel</div>
+                      <div className="text-[11px] text-slate-500">Target NEET Achievers • 96% Mastery</div>
+                    </div>
+                    <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">
+                      On Track
+                    </span>
+                  </div>
+                </div>
+
+                {/* Conformal prediction badge */}
+                <div className="p-3 rounded-xl bg-slate-900 text-white space-y-1 text-xs">
+                  <div className="text-slate-400 text-[10px] font-semibold uppercase">Calibrated Exam Forecast</div>
+                  <div className="flex justify-between items-center">
+                    <span className="font-bold">JEE Percentile Range [P₁₀, P₉₀]:</span>
+                    <span className="font-mono font-bold text-teal-300">88.5% – 93.2%</span>
+                  </div>
+                  <div className="text-[10px] text-slate-400">90% Split-Conformal Coverage Guarantee</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. THE FRAGMENTED DATA PROBLEM */}
+      <section className="space-y-8">
+        <div className="max-w-2xl">
+          <span className="text-xs font-bold uppercase tracking-wider text-teal-600 block">
+            The Coaching Reality
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
+            Why Institutes Lose Students and Fall Behind
+          </h2>
+          <p className="text-sm text-slate-500 mt-2 leading-relaxed">
+            Coaching institutes generate massive volumes of academic data daily, but fragmented tools leave directors and teachers flying blind until after results are published.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2.5 hover:border-teal-500/50 transition">
+            <div className="w-9 h-9 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center font-bold">
+              <FileSpreadsheet className="w-5 h-5" />
+            </div>
+            <h3 className="font-bold text-slate-900 text-sm">Paper Records & OMR Overhead</h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Bubble OMR sheets and paper registers take days to grade manually, distort easily, and are frequently misplaced between branch offices.
             </p>
-            <Link href="/upload" className="text-[11px] font-semibold text-teal-600 group-hover:translate-x-0.5 transition inline-flex items-center pt-1">
-              <span>Open Ingest Wizard</span> &rarr;
+          </div>
+
+          <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2.5 hover:border-teal-500/50 transition">
+            <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
+              <Database className="w-5 h-5" />
+            </div>
+            <h3 className="font-bold text-slate-900 text-sm">Scattered Spreadsheets</h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Test scores live on faculty laptops, attendance in physical registers, fee payments in accounts, and parent communication in WhatsApp groups.
+            </p>
+          </div>
+
+          <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2.5 hover:border-teal-500/50 transition">
+            <div className="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
+              <Clock className="w-5 h-5" />
+            </div>
+            <h3 className="font-bold text-slate-900 text-sm">Delayed Analysis</h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Disengagement and score drops are noticed 4–6 weeks after a test occurs — when the student has already fallen behind in foundational concepts.
+            </p>
+          </div>
+
+          <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2.5 hover:border-teal-500/50 transition">
+            <div className="w-9 h-9 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center font-bold">
+              <Users className="w-5 h-5" />
+            </div>
+            <h3 className="font-bold text-slate-900 text-sm">Limited Individual Visibility</h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Raw percentage totals mask concept misconceptions: a 75% score never clarifies whether a student guessed on Rotational Dynamics or genuinely mastered it.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. SIX CORE CAPABILITIES */}
+      <section className="bg-slate-50/80 rounded-3xl p-6 sm:p-10 border border-slate-200 space-y-8">
+        <div className="max-w-2xl">
+          <span className="text-xs font-bold uppercase tracking-wider text-teal-600 block">
+            Engineered For Competitive Test-Prep
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
+            Complete Intelligence Across the Academic Lifecycle
+          </h2>
+          <p className="text-sm text-slate-500 mt-2 leading-relaxed">
+            Intelliprivart provides specialized psychometrics, predictive modeling, and automated workflows designed specifically for JEE & NEET coaching ecosystems.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {/* 1. Topic Mastery */}
+          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-3">
+            <div className="w-10 h-10 rounded-xl bg-teal-100 text-teal-800 flex items-center justify-center font-bold">
+              <Brain className="w-5 h-5" />
+            </div>
+            <h3 className="font-bold text-slate-900 text-base">Topic Mastery Analytics</h3>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Bayesian Knowledge Tracing (BKT) and 2-Parameter Logistic Item Response Theory (2PL IRT) isolate student latent ability ($\theta$) from item difficulty, replacing misleading raw percentages.
+            </p>
+            <Link href="/mastery" className="text-xs font-bold text-teal-600 hover:text-teal-700 inline-flex items-center pt-1">
+              <span>Explore Mastery Matrix</span> &rarr;
             </Link>
           </div>
 
-          {/* Stage 2 */}
-          <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50/60 hover:border-teal-500 transition group space-y-2">
-            <div className="w-8 h-8 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center font-bold text-xs">
-              02
+          {/* 2. Early Warning */}
+          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-3">
+            <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-bold">
+              <AlertTriangle className="w-5 h-5" />
             </div>
-            <h3 className="font-bold text-slate-900 text-xs sm:text-sm">Quarantine & Auto-Fix</h3>
-            <p className="text-xs text-slate-500 leading-normal">
-              Failsafe verification detects duplicate roll numbers, date irregularities, and out-of-range marks before database ingestion.
+            <h3 className="font-bold text-slate-900 text-base">Early-Warning Insights</h3>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Identifies disengagement 4–6 weeks early using strict Months 1–3 non-leaking features: consecutive test slumps, attendance dropoffs, and fee lags.
             </p>
-            <Link href="/review-queue" className="text-[11px] font-semibold text-teal-600 group-hover:translate-x-0.5 transition inline-flex items-center pt-1">
-              <span>Inspect Review Queue</span> &rarr;
+            <Link href="/risk" className="text-xs font-bold text-teal-600 hover:text-teal-700 inline-flex items-center pt-1">
+              <span>Inspect Risk Queue</span> &rarr;
             </Link>
           </div>
 
-          {/* Stage 3 */}
-          <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50/60 hover:border-teal-500 transition group space-y-2">
-            <div className="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-800 flex items-center justify-center font-bold text-xs">
-              03
+          {/* 3. Conformal Ranges */}
+          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-3">
+            <div className="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-800 flex items-center justify-center font-bold">
+              <TrendingUp className="w-5 h-5" />
             </div>
-            <h3 className="font-bold text-slate-900 text-xs sm:text-sm">2PL IRT Psychometrics</h3>
-            <p className="text-xs text-slate-500 leading-normal">
-              Separates true latent student ability ($\theta$) from lucky guesses and test difficulty, replacing naive raw percentages.
+            <h3 className="font-bold text-slate-900 text-base">Exam Performance Ranges</h3>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Provides finite-sample Split-Conformal percentile intervals $[P_{10}, P_{90}]$ with mathematically proven coverage guarantees, explicitly explaining prediction uncertainty.
             </p>
-            <Link href="/mastery" className="text-[11px] font-semibold text-teal-600 group-hover:translate-x-0.5 transition inline-flex items-center pt-1">
-              <span>View Topic Mastery</span> &rarr;
+            <Link href="/predict" className="text-xs font-bold text-teal-600 hover:text-teal-700 inline-flex items-center pt-1">
+              <span>View Forecasts</span> &rarr;
             </Link>
           </div>
 
-          {/* Stage 4 */}
-          <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50/60 hover:border-teal-500 transition group space-y-2">
-            <div className="w-8 h-8 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-xs">
-              04
+          {/* 4. Personalized Interventions */}
+          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-3">
+            <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold">
+              <CheckCircle2 className="w-5 h-5" />
             </div>
-            <h3 className="font-bold text-slate-900 text-xs sm:text-sm">Early-Warning Triage</h3>
-            <p className="text-xs text-slate-500 leading-normal">
-              Detects disengagement 4–6 weeks early using strict Months 1–3 non-leaking features (test absences, fee lags, slump streaks).
+            <h3 className="font-bold text-slate-900 text-base">Personalized Interventions</h3>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Instantly generates 15-minute 3-tier remedial worksheets tailored to specific concept mistakes, and logs faculty mentor check-ins with closed-loop recovery tracking.
             </p>
-            <Link href="/risk" className="text-[11px] font-semibold text-teal-600 group-hover:translate-x-0.5 transition inline-flex items-center pt-1">
-              <span>Open Risk Centre</span> &rarr;
+            <Link href="/interventions" className="text-xs font-bold text-teal-600 hover:text-teal-700 inline-flex items-center pt-1">
+              <span>Track Interventions</span> &rarr;
             </Link>
           </div>
 
-          {/* Stage 5 */}
-          <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50/60 hover:border-teal-500 transition group space-y-2">
-            <div className="w-8 h-8 rounded-xl bg-purple-100 text-purple-800 flex items-center justify-center font-bold text-xs">
-              05
+          {/* 5. Bilingual Reports */}
+          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-3">
+            <div className="w-10 h-10 rounded-xl bg-rose-100 text-rose-800 flex items-center justify-center font-bold">
+              <GraduationCap className="w-5 h-5" />
             </div>
-            <h3 className="font-bold text-slate-900 text-xs sm:text-sm">Conformal Predictions</h3>
-            <p className="text-xs text-slate-500 leading-normal">
-              Finite-sample Split-Conformal prediction intervals provide rigorous $90\%$ coverage guarantees for JEE/NEET ranks.
+            <h3 className="font-bold text-slate-900 text-base">Bilingual Parent Reports</h3>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Generates deterministic weekly progress digests in English and Hindi (हिन्दी) formatted for WhatsApp, building transparent family trust without hallucinated claims.
             </p>
-            <Link href="/predict" className="text-[11px] font-semibold text-teal-600 group-hover:translate-x-0.5 transition inline-flex items-center pt-1">
-              <span>Forecast Trajectories</span> &rarr;
+            <Link href="/reports" className="text-xs font-bold text-teal-600 hover:text-teal-700 inline-flex items-center pt-1">
+              <span>Preview Parent Reports</span> &rarr;
             </Link>
           </div>
 
-          {/* Stage 6 */}
-          <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50/60 hover:border-teal-500 transition group space-y-2">
-            <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs">
-              06
+          {/* 6. Batch-Level Intelligence */}
+          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-3">
+            <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center font-bold">
+              <Building2 className="w-5 h-5" />
             </div>
-            <h3 className="font-bold text-slate-900 text-xs sm:text-sm">AI Remedial Worksheets</h3>
-            <p className="text-xs text-slate-500 leading-normal">
-              Google Gemini 3.8-Flash analyzes error clusters to generate tailored concept cheat-sheets and 3 graded practice problems.
+            <h3 className="font-bold text-slate-900 text-base">Batch-Level Intelligence</h3>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Equips directors with cross-batch health comparisons, faculty teaching loads, fee retention metrics, and real-time ROI protection tracking across centres.
             </p>
-            <Link href="/ai-assistant" className="text-[11px] font-semibold text-teal-600 group-hover:translate-x-0.5 transition inline-flex items-center pt-1">
-              <span>Launch AI Copilot</span> &rarr;
-            </Link>
-          </div>
-
-          {/* Stage 7 */}
-          <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50/60 hover:border-teal-500 transition group space-y-2">
-            <div className="w-8 h-8 rounded-xl bg-rose-100 text-rose-800 flex items-center justify-center font-bold text-xs">
-              07
-            </div>
-            <h3 className="font-bold text-slate-900 text-xs sm:text-sm">Bilingual Parent Digests</h3>
-            <p className="text-xs text-slate-500 leading-normal">
-              Delivers deterministic, non-hallucinated weekly updates in Hindi (हिन्दी) & English via WhatsApp to build parent trust.
-            </p>
-            <Link href="/reports" className="text-[11px] font-semibold text-teal-600 group-hover:translate-x-0.5 transition inline-flex items-center pt-1">
-              <span>View Parent Reports</span> &rarr;
-            </Link>
-          </div>
-
-          {/* Stage 8 */}
-          <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50/60 hover:border-teal-500 transition group space-y-2">
-            <div className="w-8 h-8 rounded-xl bg-teal-100 text-teal-800 flex items-center justify-center font-bold text-xs">
-              08
-            </div>
-            <h3 className="font-bold text-slate-900 text-xs sm:text-sm">Intervention Tracking</h3>
-            <p className="text-xs text-slate-500 leading-normal">
-              Closes the feedback loop by logging faculty mentorship, concept remedies, and measuring subsequent score recovery.
-            </p>
-            <Link href="/interventions" className="text-[11px] font-semibold text-teal-600 group-hover:translate-x-0.5 transition inline-flex items-center pt-1">
-              <span>Intervention Tracker</span> &rarr;
+            <Link href="/owner" className="text-xs font-bold text-teal-600 hover:text-teal-700 inline-flex items-center pt-1">
+              <span>View Executive Model</span> &rarr;
             </Link>
           </div>
         </div>
       </section>
 
-      {/* 4. Interactive Financial ROI Calculator */}
+      {/* 5. HOW IT WORKS (5-STEP WORKFLOW) */}
+      <section id="how-it-works" className="space-y-8 scroll-mt-20">
+        <div className="max-w-2xl">
+          <span className="text-xs font-bold uppercase tracking-wider text-teal-600 block">
+            Deterministic Academic Pipeline
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
+            How Intelliprivart Works: From Ingest to Recovery
+          </h2>
+          <p className="text-sm text-slate-500 mt-2 leading-relaxed">
+            A disciplined 5-stage workflow connecting raw test logs to faculty interventions and measurable student improvement.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+          {/* Step 1 */}
+          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2 relative">
+            <div className="text-xs font-black font-mono text-teal-600 bg-teal-50 w-7 h-7 rounded-lg flex items-center justify-center border border-teal-200">
+              01
+            </div>
+            <h3 className="font-bold text-slate-900 text-sm">CAPTURE</h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Import Excel gradebooks, CSV rosters, or phone camera OMR scans with bubble detection.
+            </p>
+          </div>
+
+          {/* Step 2 */}
+          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2 relative">
+            <div className="text-xs font-black font-mono text-blue-600 bg-blue-50 w-7 h-7 rounded-lg flex items-center justify-center border border-blue-200">
+              02
+            </div>
+            <h3 className="font-bold text-slate-900 text-sm">VALIDATE</h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Quarantine filters isolate duplicate roll numbers, date glitches, and out-of-range marks before ingest.
+            </p>
+          </div>
+
+          {/* Step 3 */}
+          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2 relative">
+            <div className="text-xs font-black font-mono text-indigo-600 bg-indigo-50 w-7 h-7 rounded-lg flex items-center justify-center border border-indigo-200">
+              03
+            </div>
+            <h3 className="font-bold text-slate-900 text-sm">ANALYZE</h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              2PL IRT and BKT models calculate sub-topic latent mastery and early disengagement risk scores.
+            </p>
+          </div>
+
+          {/* Step 4 */}
+          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2 relative">
+            <div className="text-xs font-black font-mono text-amber-600 bg-amber-50 w-7 h-7 rounded-lg flex items-center justify-center border border-amber-200">
+              04
+            </div>
+            <h3 className="font-bold text-slate-900 text-sm">INTERVENE</h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Generate 15-minute concept remedial worksheets and log 1-on-1 faculty mentor sessions.
+            </p>
+          </div>
+
+          {/* Step 5 */}
+          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2 relative">
+            <div className="text-xs font-black font-mono text-emerald-600 bg-emerald-50 w-7 h-7 rounded-lg flex items-center justify-center border border-emerald-200">
+              05
+            </div>
+            <h3 className="font-bold text-slate-900 text-sm">MEASURE</h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Track subsequent milestone exam recovery, proving pedagogical ROI and retaining fee revenue.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* 6. ROLE-BASED VALUE PROPOSITIONS */}
+      <section className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-xs space-y-6">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <span className="text-xs font-bold uppercase tracking-wider text-teal-600 block">
+              Dedicated Workflows
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
+              Built For Every Stakeholder in the Coaching Ecosystem
+            </h2>
+          </div>
+          <button
+            onClick={() => setIsRoleModalOpen(true)}
+            className="text-xs font-bold text-teal-600 hover:text-teal-700 flex items-center space-x-1 cursor-pointer"
+          >
+            <span>Role Switcher Modal</span>
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* Role Tabs */}
+        <div className="flex flex-wrap gap-2 border-b border-slate-200 pb-2 text-xs font-semibold">
+          <button
+            onClick={() => setActiveRoleTab('owner')}
+            className={`px-4 py-2 rounded-xl transition cursor-pointer ${
+              activeRoleTab === 'owner'
+                ? 'bg-teal-600 text-white font-bold shadow-xs'
+                : 'text-slate-600 hover:bg-slate-100'
+            }`}
+          >
+            Institute Owner
+          </button>
+          <button
+            onClick={() => setActiveRoleTab('teacher')}
+            className={`px-4 py-2 rounded-xl transition cursor-pointer ${
+              activeRoleTab === 'teacher'
+                ? 'bg-teal-600 text-white font-bold shadow-xs'
+                : 'text-slate-600 hover:bg-slate-100'
+            }`}
+          >
+            Teacher & Academic Head
+          </button>
+          <button
+            onClick={() => setActiveRoleTab('student')}
+            className={`px-4 py-2 rounded-xl transition cursor-pointer ${
+              activeRoleTab === 'student'
+                ? 'bg-teal-600 text-white font-bold shadow-xs'
+                : 'text-slate-600 hover:bg-slate-100'
+            }`}
+          >
+            Student (Growth View)
+          </button>
+          <button
+            onClick={() => setActiveRoleTab('parent')}
+            className={`px-4 py-2 rounded-xl transition cursor-pointer ${
+              activeRoleTab === 'parent'
+                ? 'bg-teal-600 text-white font-bold shadow-xs'
+                : 'text-slate-600 hover:bg-slate-100'
+            }`}
+          >
+            Parent (Bilingual Digest)
+          </button>
+        </div>
+
+        {/* Tab Content Display */}
+        <div className="pt-2">
+          {activeRoleTab === 'owner' && (
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+              <div className="md:col-span-7 space-y-4">
+                <div className="inline-flex items-center space-x-2 text-xs font-semibold text-teal-700 bg-teal-50 border border-teal-200 px-3 py-1 rounded-full">
+                  <Building2 className="w-3.5 h-3.5" />
+                  <span>Executive Operations & Financial Retention</span>
+                </div>
+                <h3 className="text-xl font-bold text-slate-900">
+                  Protect Institute Revenue with Real-Time Churn Prevention
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Institute owners get an executive overview of all 1,200 students across 4 active batches. Track attendance trends, monitor batch-level health, and quantify retained fee revenue through proactive faculty triage.
+                </p>
+                <ul className="space-y-1.5 text-xs text-slate-700">
+                  <li className="flex items-center space-x-2">
+                    <CheckCircle2 className="w-4 h-4 text-teal-600" />
+                    <span>Real-time fee revenue protection calculator (₹28.5L baseline saved)</span>
+                  </li>
+                  <li className="flex items-center space-x-2">
+                    <CheckCircle2 className="w-4 h-4 text-teal-600" />
+                    <span>Cross-batch attendance and milestone test trendline charts</span>
+                  </li>
+                  <li className="flex items-center space-x-2">
+                    <CheckCircle2 className="w-4 h-4 text-teal-600" />
+                    <span>Active faculty intervention ledger with recovery timestamps</span>
+                  </li>
+                </ul>
+                <div className="pt-2">
+                  <button
+                    onClick={() => handleLaunchRole('owner')}
+                    className="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold transition inline-flex items-center shadow-md cursor-pointer"
+                  >
+                    <PlayCircle className="w-4 h-4 mr-2" />
+                    <span>Launch Institute Owner Interactive Demo</span>
+                  </button>
+                </div>
+              </div>
+
+              <div className="md:col-span-5 bg-slate-900 text-white p-5 rounded-2xl border border-slate-800 space-y-3">
+                <div className="text-xs font-bold uppercase tracking-wider text-teal-400">Executive Telemetry</div>
+                <div className="grid grid-cols-2 gap-3 text-xs">
+                  <div className="p-3 rounded-xl bg-slate-800/70">
+                    <span className="text-slate-400 block text-[10px]">Revenue Protected</span>
+                    <span className="text-lg font-black text-emerald-400 font-mono">₹28.50 L</span>
+                  </div>
+                  <div className="p-3 rounded-xl bg-slate-800/70">
+                    <span className="text-slate-400 block text-[10px]">ROI Multiple</span>
+                    <span className="text-lg font-black text-teal-400 font-mono">18.3x</span>
+                  </div>
+                  <div className="p-3 rounded-xl bg-slate-800/70">
+                    <span className="text-slate-400 block text-[10px]">Active Batches</span>
+                    <span className="text-lg font-black text-white font-mono">4 Cohorts</span>
+                  </div>
+                  <div className="p-3 rounded-xl bg-slate-800/70">
+                    <span className="text-slate-400 block text-[10px]">Dropout Trend</span>
+                    <span className="text-lg font-black text-emerald-400 font-mono">12.8% &rarr; 5.7%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeRoleTab === 'teacher' && (
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+              <div className="md:col-span-7 space-y-4">
+                <div className="inline-flex items-center space-x-2 text-xs font-semibold text-teal-700 bg-teal-50 border border-teal-200 px-3 py-1 rounded-full">
+                  <Brain className="w-3.5 h-3.5" />
+                  <span>Pedagogical Diagnostics & Remedial Generator</span>
+                </div>
+                <h3 className="text-xl font-bold text-slate-900">
+                  Know Exactly Which Concepts Need Remediation Before Next Class
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Teachers can filter by assigned batches (Achievers Top-30, Foundation 11th, NEET Achievers) to inspect BKT topic mastery heatmaps and generate instant 15-minute remedial worksheets for student misconceptions.
+                </p>
+                <ul className="space-y-1.5 text-xs text-slate-700">
+                  <li className="flex items-center space-x-2">
+                    <CheckCircle2 className="w-4 h-4 text-teal-600" />
+                    <span>Micro-topic BKT mastery heatmaps across Physics, Chemistry, Maths</span>
+                  </li>
+                  <li className="flex items-center space-x-2">
+                    <CheckCircle2 className="w-4 h-4 text-teal-600" />
+                    <span>1-click 15-minute 3-tier remedial worksheet generator (Gemini 3.8-Flash)</span>
+                  </li>
+                  <li className="flex items-center space-x-2">
+                    <CheckCircle2 className="w-4 h-4 text-teal-600" />
+                    <span>Early-warning support triage queue with logged mentorship</span>
+                  </li>
+                </ul>
+                <div className="pt-2">
+                  <button
+                    onClick={() => handleLaunchRole('teacher')}
+                    className="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold transition inline-flex items-center shadow-md cursor-pointer"
+                  >
+                    <PlayCircle className="w-4 h-4 mr-2" />
+                    <span>Launch Teacher & Academic Head Demo</span>
+                  </button>
+                </div>
+              </div>
+
+              <div className="md:col-span-5 bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3">
+                <div className="text-xs font-bold uppercase tracking-wider text-slate-600">Sample Remedial Preview</div>
+                <div className="p-3.5 rounded-xl bg-white border border-slate-200 space-y-2 text-xs">
+                  <div className="font-bold text-slate-900">Rotational Dynamics 15-Min Worksheet</div>
+                  <div className="text-[11px] text-slate-500">Targeting: Moment of Inertia on Tilted Planes</div>
+                  <div className="p-2 bg-slate-50 rounded text-[11px] font-mono text-slate-700">
+                    Q1: Hollow cylinder rolling without slipping... (Foundational)
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeRoleTab === 'student' && (
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+              <div className="md:col-span-7 space-y-4">
+                <div className="inline-flex items-center space-x-2 text-xs font-semibold text-teal-700 bg-teal-50 border border-teal-200 px-3 py-1 rounded-full">
+                  <Award className="w-3.5 h-3.5" />
+                  <span>Supportive, Growth-Mindset Learning</span>
+                </div>
+                <h3 className="text-xl font-bold text-slate-900">
+                  Personal Growth Trajectories Without Public Shaming
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Students see their strengths clearly celebrated alongside constructive practice topics. No public rank boards or shaming labels — only calibrated percentile ranges and weekly personal focus drills.
+                </p>
+                <ul className="space-y-1.5 text-xs text-slate-700">
+                  <li className="flex items-center space-x-2">
+                    <CheckCircle2 className="w-4 h-4 text-teal-600" />
+                    <span>Personal mastery breakdown across concepts and topics</span>
+                  </li>
+                  <li className="flex items-center space-x-2">
+                    <CheckCircle2 className="w-4 h-4 text-teal-600" />
+                    <span>Calibrated percentile intervals [P₁₀, P₉₀] with conformal coverage</span>
+                  </li>
+                  <li className="flex items-center space-x-2">
+                    <CheckCircle2 className="w-4 h-4 text-teal-600" />
+                    <span>Supportive 7-day recommended practice roadmap</span>
+                  </li>
+                </ul>
+                <div className="pt-2">
+                  <button
+                    onClick={() => handleLaunchRole('student')}
+                    className="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold transition inline-flex items-center shadow-md cursor-pointer"
+                  >
+                    <PlayCircle className="w-4 h-4 mr-2" />
+                    <span>Launch Student Growth Demo</span>
+                  </button>
+                </div>
+              </div>
+
+              <div className="md:col-span-5 bg-gradient-to-br from-teal-900 to-slate-900 text-white p-5 rounded-2xl border border-teal-700/50 space-y-3">
+                <div className="text-xs font-bold uppercase tracking-wider text-teal-300">Student Growth Card</div>
+                <div className="space-y-2 text-xs">
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-300">Kinematics:</span>
+                    <span className="text-emerald-400 font-bold font-mono">91% (Solid Anchor)</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-300">Rotational Dynamics:</span>
+                    <span className="text-amber-300 font-bold font-mono">44% (Focus Drill)</span>
+                  </div>
+                  <div className="pt-2 border-t border-slate-700 text-[11px] text-teal-200">
+                    &quot;Your problem-solving speed has improved 18% in the last 2 milestone tests.&quot;
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeRoleTab === 'parent' && (
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+              <div className="md:col-span-7 space-y-4">
+                <div className="inline-flex items-center space-x-2 text-xs font-semibold text-teal-700 bg-teal-50 border border-teal-200 px-3 py-1 rounded-full">
+                  <GraduationCap className="w-3.5 h-3.5" />
+                  <span>Bilingual Trust & WhatsApp Delivery</span>
+                </div>
+                <h3 className="text-xl font-bold text-slate-900">
+                  Instant English & Hindi Weekly Progress Digests
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Parents receive deterministic, supportive progress summaries in English and Hindi (हिन्दी) via WhatsApp. Gain complete transparency into attendance, topic strengths, and actionable home support tips.
+                </p>
+                <ul className="space-y-1.5 text-xs text-slate-700">
+                  <li className="flex items-center space-x-2">
+                    <CheckCircle2 className="w-4 h-4 text-teal-600" />
+                    <span>1-click instant live toggle between English and Hindi (हिन्दी)</span>
+                  </li>
+                  <li className="flex items-center space-x-2">
+                    <CheckCircle2 className="w-4 h-4 text-teal-600" />
+                    <span>Realistic WhatsApp delivery preview with direct share action</span>
+                  </li>
+                  <li className="flex items-center space-x-2">
+                    <CheckCircle2 className="w-4 h-4 text-teal-600" />
+                    <span>Faculty mentor notes and constructive home study suggestions</span>
+                  </li>
+                </ul>
+                <div className="pt-2">
+                  <button
+                    onClick={() => handleLaunchRole('parent')}
+                    className="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold transition inline-flex items-center shadow-md cursor-pointer"
+                  >
+                    <PlayCircle className="w-4 h-4 mr-2" />
+                    <span>Launch Parent Bilingual Demo</span>
+                  </button>
+                </div>
+              </div>
+
+              <div className="md:col-span-5 bg-emerald-950/90 text-white p-5 rounded-2xl border border-emerald-700/50 space-y-3">
+                <div className="text-xs font-bold uppercase tracking-wider text-emerald-400">
+                  WhatsApp Digest Sample (हिन्दी)
+                </div>
+                <div className="p-3 bg-emerald-900/60 rounded-xl text-xs space-y-1.5 border border-emerald-800 text-emerald-100 leading-relaxed font-sans">
+                  <p className="font-bold text-white">अपेक्स अकादमी, पटना — साप्ताहिक प्रगति रिपोर्ट</p>
+                  <p>प्रिय अभिभावक, आरव शर्मा की इस सप्ताह 96% उपस्थिति रही।</p>
+                  <p className="text-emerald-300">मजबूत विषय: गतिज विज्ञान (Kinematics)</p>
+                  <p className="text-amber-300">अभ्यास की आवश्यकता: घूर्णन गति (Rotational Dynamics)</p>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* 7. FINANCIAL ROI CALCULATOR */}
       <section className="bg-slate-900 text-white rounded-3xl p-6 sm:p-10 border border-slate-800 shadow-xl space-y-8">
         <div className="max-w-2xl">
           <div className="inline-flex items-center space-x-2 bg-teal-500/20 text-teal-300 border border-teal-500/30 px-3 py-1 rounded-full text-xs font-semibold mb-2">
-            <Calculator className="w-3.5 h-3.5" />
-            <span>Interactive Financial Model • Nextute Case B</span>
+            <Sliders className="w-3.5 h-3.5" />
+            <span>Interactive Financial Model • Institute Director ROI</span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
-            Calculate Your Institute&apos;s Revenue Protection
+            Calculate Your Institute&apos;s Fee Retention Protection
           </h2>
           <p className="text-xs sm:text-sm text-slate-400 mt-1">
-            See how early-warning retention analytics directly protects student fees and delivers 20x+ ROI for coaching institutes.
+            See how early-warning retention analytics directly protects student fees and delivers 18x+ ROI for coaching institutes.
           </p>
         </div>
 
@@ -425,107 +975,107 @@ export default function HomePage() {
             </div>
 
             <Link
-              href="/owner"
-              onClick={() => setRole('owner')}
-              className="w-full py-2.5 bg-teal-500 hover:bg-teal-600 text-white rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 shadow-md"
+              href="/demo/owner"
+              className="w-full py-3 bg-teal-500 hover:bg-teal-600 text-white rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 shadow-md"
             >
-              <span>View Executive Financial Model</span>
+              <span>Explore Institute Owner Model</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </div>
       </section>
 
-      {/* 5. DPDP Act 2023 Section 9 & Enterprise Security */}
+      {/* 8. RESPONSIBLE AI & PRIVACY SECTION */}
       <section className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-xs space-y-6">
         <div className="max-w-2xl">
-          <span className="text-xs uppercase font-bold tracking-wider text-teal-600 block">
-            Regulatory & Statutory Compliance
+          <span className="text-xs font-bold uppercase tracking-wider text-teal-600 block">
+            Responsible AI & Privacy Protection
           </span>
           <h2 className="text-xl sm:text-2xl font-black text-slate-900 mt-0.5">
-            Engineered Under the DPDP Act 2023 (Section 9)
+            Built for DPDP Act 2023 & MoE Coaching Guidelines 2024
           </h2>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Indian coaching institutes operate under strict scrutiny regarding child privacy and non-shaming education standards.
+            Student data requires strict ethical standards. Intelliprivart is built around transparency, non-shaming indicators, and verifiable consent.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 text-xs">
-          <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50 space-y-2">
+          <div className="p-5 rounded-2xl border border-slate-200 bg-slate-50/70 space-y-2.5">
             <ShieldCheck className="w-5 h-5 text-teal-600" />
-            <h3 className="font-bold text-slate-900 text-sm">Verifiable Parental Consent (VPC)</h3>
-            <p className="text-slate-600 leading-normal">
-              Statutory consent manager tracks guardian authorization before automated WhatsApp digests are dispatched. Consent revocations halt outbound notifications instantaneously.
+            <h3 className="font-bold text-slate-900 text-sm">Probabilistic Estimates, Not Labels</h3>
+            <p className="text-slate-600 leading-relaxed">
+              Predictions are always presented as calibrated percentile intervals $[P_{10}, P_{90}]$ with uncertainty explained. Students are never branded with fixed limits or predetermined outcomes.
             </p>
           </div>
 
-          <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50 space-y-2">
-            <Lock className="w-5 h-5 text-teal-600" />
-            <h3 className="font-bold text-slate-900 text-sm">Zero Commercial Behavioral Profiling</h3>
-            <p className="text-slate-600 leading-normal">
-              In full compliance with Section 9(2), student records are never tracked for targeted advertising or shared with external data brokers. Tenant schemas are cryptographically isolated.
-            </p>
-          </div>
-
-          <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50 space-y-2">
+          <div className="p-5 rounded-2xl border border-slate-200 bg-slate-50/70 space-y-2.5">
             <Award className="w-5 h-5 text-teal-600" />
-            <h3 className="font-bold text-slate-900 text-sm">Zero-Shaming Growth Trajectory</h3>
-            <p className="text-slate-600 leading-normal">
-              Under Section 9(3), detrimental psychological impacts are prevented by replacing public rank-shaming boards with constructive topic-mastery ladders and formative remediation.
+            <h3 className="font-bold text-slate-900 text-sm">Supportive, Non-Punitive Triage</h3>
+            <p className="text-slate-600 leading-relaxed">
+              Early-warning indicators exist solely to trigger supportive faculty mentorship and tailored remedial worksheets. We strictly prohibit public ranking boards or shame-based metrics.
+            </p>
+          </div>
+
+          <div className="p-5 rounded-2xl border border-slate-200 bg-slate-50/70 space-y-2.5">
+            <Lock className="w-5 h-5 text-teal-600" />
+            <h3 className="font-bold text-slate-900 text-sm">Verifiable Consent & VPC Isolation</h3>
+            <p className="text-slate-600 leading-relaxed">
+              Full compliance with Section 9 of the DPDP Act 2023. Student records are cryptographically isolated per institute, with zero commercial tracking and verifiable guardian consent management.
             </p>
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-slate-100 text-xs">
-          <div className="flex items-center space-x-2 text-slate-600">
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-slate-100 text-xs text-slate-500">
+          <div className="flex items-center space-x-2">
             <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-            <span>MeitY-Empanelled Cloud Data Sovereignty (AWS Mumbai ap-south-1)</span>
+            <span>DPDP Act 2023 Sec 9 Child Privacy • Ministry of Education 2024 Compliant</span>
           </div>
           <div className="flex items-center space-x-3">
             <Link href="/privacy-policy" className="text-teal-600 font-bold hover:underline">
-              Read Complete Privacy Policy &rarr;
+              Read Privacy Policy &rarr;
             </Link>
             <span>•</span>
             <Link href="/terms" className="text-teal-600 font-bold hover:underline">
-              View Terms of Service &rarr;
+              Terms of Service &rarr;
             </Link>
           </div>
         </div>
       </section>
 
-      {/* 6. Ready to Deploy Call to Action */}
+      {/* 9. CLOSING CALL TO ACTION */}
       <section className="bg-gradient-to-r from-teal-600 to-emerald-600 rounded-3xl p-8 sm:p-12 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="max-w-xl space-y-2 text-center md:text-left">
           <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
-            Ready to Protect Your Coaching Institute&apos;s Revenue?
+            Ready to Turn Coaching Data Into Better Outcomes?
           </h2>
           <p className="text-xs sm:text-sm text-teal-100 leading-relaxed">
-            Register your institute today to unlock 2PL Item Response Theory, early dropout triage, and AI-powered remedial worksheets.
+            Experience the interactive four-role prototype with pre-calibrated benchmark data, or register your coaching institute to begin.
           </p>
         </div>
 
         <div className="flex flex-wrap gap-3 shrink-0">
+          <button
+            onClick={() => setIsRoleModalOpen(true)}
+            className="px-6 py-3.5 bg-white text-teal-900 rounded-xl font-bold text-xs sm:text-sm hover:bg-slate-100 transition shadow-lg cursor-pointer flex items-center space-x-2"
+          >
+            <PlayCircle className="w-4 h-4" />
+            <span>Explore Interactive Demo</span>
+          </button>
           <Link
             href="/register"
-            className="px-6 py-3 bg-white text-teal-800 rounded-xl font-bold text-xs sm:text-sm hover:bg-slate-100 transition shadow-lg"
+            className="px-6 py-3.5 bg-teal-800/70 hover:bg-teal-800 text-white rounded-xl font-semibold text-xs sm:text-sm transition border border-teal-300/40"
           >
-            Register New Institute
-          </Link>
-          <Link
-            href="/overview"
-            className="px-6 py-3 bg-teal-800/60 hover:bg-teal-800 text-white rounded-xl font-semibold text-xs sm:text-sm transition border border-teal-300/40"
-          >
-            Launch Platform Tour
+            Register Institute
           </Link>
         </div>
       </section>
 
-      {/* 7. Comprehensive Public Footer */}
+      {/* 10. COMPREHENSIVE PUBLIC FOOTER */}
       <footer className="pt-10 border-t border-slate-200 text-xs text-slate-500 space-y-6">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
-          <div className="col-span-2 space-y-2">
-            <div className="flex items-center space-x-2">
-              <div className="w-7 h-7 rounded-lg bg-teal-600 text-white flex items-center justify-center font-bold text-xs">
+          <div className="col-span-2 space-y-2.5">
+            <div className="flex items-center space-x-2.5">
+              <div className="w-7 h-7 rounded-lg bg-teal-600 text-white flex items-center justify-center font-black text-xs">
                 IP
               </div>
               <span className="font-extrabold text-slate-900 tracking-tight text-sm">
@@ -533,40 +1083,43 @@ export default function HomePage() {
               </span>
             </div>
             <p className="text-slate-500 text-xs max-w-sm leading-relaxed">
-              The AI-Powered Institute Intelligence Moat. Developed for Nextute EdTech × Finance Club, IIT Patna (The Data Moat Round 2).
+              AI-Powered Coaching Institute Intelligence System. Converting fragmented test, attendance, and academic records into actionable topic mastery and supportive interventions.
             </p>
-            <div className="text-[11px] text-slate-400">
-              Patliputra Colony, Patna, Bihar 800013, India
+            <div className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-md bg-slate-100 text-[10px] text-slate-600 font-mono">
+              <span className="w-2 h-2 rounded-full bg-teal-500" />
+              <span>Demo Prototype • Benchmark Data Active</span>
             </div>
           </div>
 
           <div className="space-y-2">
-            <strong className="text-slate-900 block font-bold">Solutions</strong>
+            <strong className="text-slate-900 block font-bold">Product & Demo</strong>
             <ul className="space-y-1.5 text-slate-600">
-              <li><Link href="/upload" className="hover:text-teal-600">OMR & CSV Ingestion</Link></li>
-              <li><Link href="/mastery" className="hover:text-teal-600">Topic Mastery (2PL IRT)</Link></li>
-              <li><Link href="/risk" className="hover:text-teal-600">Early-Warning Centre</Link></li>
-              <li><Link href="/predict" className="hover:text-teal-600">Conformal Forecasts</Link></li>
-              <li><Link href="/reports" className="hover:text-teal-600">Bilingual Parent Digests</Link></li>
+              <li><button onClick={() => handleLaunchRole('owner')} className="hover:text-teal-600 text-left cursor-pointer">Institute Owner Demo</button></li>
+              <li><button onClick={() => handleLaunchRole('teacher')} className="hover:text-teal-600 text-left cursor-pointer">Teacher Demo</button></li>
+              <li><button onClick={() => handleLaunchRole('student')} className="hover:text-teal-600 text-left cursor-pointer">Student Growth Demo</button></li>
+              <li><button onClick={() => handleLaunchRole('parent')} className="hover:text-teal-600 text-left cursor-pointer">Parent Bilingual Demo</button></li>
+              <li><Link href="/demo" className="hover:text-teal-600 font-semibold text-teal-700">Demo Role Hub</Link></li>
             </ul>
           </div>
 
           <div className="space-y-2">
-            <strong className="text-slate-900 block font-bold">Intelligence & AI</strong>
+            <strong className="text-slate-900 block font-bold">Capabilities</strong>
             <ul className="space-y-1.5 text-slate-600">
+              <li><Link href="/upload" className="hover:text-teal-600">Data Import & Ingest</Link></li>
+              <li><Link href="/mastery" className="hover:text-teal-600">Topic Mastery (BKT)</Link></li>
+              <li><Link href="/risk" className="hover:text-teal-600">Early-Warning Triage</Link></li>
+              <li><Link href="/predict" className="hover:text-teal-600">Conformal Predictions</Link></li>
+              <li><Link href="/reports" className="hover:text-teal-600">Bilingual Reports</Link></li>
               <li><Link href="/ai-assistant" className="hover:text-teal-600">AI Teaching Copilot</Link></li>
-              <li><Link href="/model-report" className="hover:text-teal-600">ML Rigour & Metrics</Link></li>
-              <li><Link href="/owner" className="hover:text-teal-600">Executive ROI Model</Link></li>
-              <li><Link href="/interventions" className="hover:text-teal-600">Intervention Tracker</Link></li>
             </ul>
           </div>
 
           <div className="space-y-2">
-            <strong className="text-slate-900 block font-bold">Governance & Legal</strong>
+            <strong className="text-slate-900 block font-bold">Compliance & Legal</strong>
             <ul className="space-y-1.5 text-slate-600">
               <li><Link href="/privacy-policy" className="hover:text-teal-600 font-semibold text-teal-700">Privacy Policy (DPDP)</Link></li>
-              <li><Link href="/terms" className="hover:text-teal-600 font-semibold text-teal-700">Terms of Service (MSA)</Link></li>
-              <li><Link href="/privacy" className="hover:text-teal-600">Consent Ledger & Audit</Link></li>
+              <li><Link href="/terms" className="hover:text-teal-600 font-semibold text-teal-700">Terms of Service</Link></li>
+              <li><Link href="/privacy" className="hover:text-teal-600">Consent Ledger</Link></li>
               <li><Link href="/login" className="hover:text-teal-600">Institute Sign In</Link></li>
               <li><Link href="/register" className="hover:text-teal-600">Register Institute</Link></li>
             </ul>
@@ -574,11 +1127,11 @@ export default function HomePage() {
         </div>
 
         <div className="pt-6 border-t border-slate-200 flex flex-wrap items-center justify-between gap-4 text-[11px] text-slate-400">
-          <span>&copy; {new Date().getFullYear()} Nextute EdTech Private Limited. All rights reserved.</span>
+          <span>&copy; {new Date().getFullYear()} Intelliprivart EdTech. All rights reserved.</span>
           <div className="flex items-center space-x-3">
-            <span>Built for IIT Patna Case Competition</span>
-            <span>•</span>
             <span>DPDP Act 2023 Compliant</span>
+            <span>•</span>
+            <span>Ministry of Education 2024 Guidelines</span>
           </div>
         </div>
       </footer>

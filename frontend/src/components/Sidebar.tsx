@@ -23,6 +23,7 @@ import {
   Database,
   Building2,
   Globe,
+  PlayCircle,
   X
 } from 'lucide-react';
 
@@ -36,6 +37,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const { tenantId, role, offlineQueueCount, isOnline } = useApp();
 
   const primaryNavItems = [
+    { href: '/demo', label: 'Interactive Demo (4 Roles)', icon: PlayCircle },
     { href: '/overview', label: 'Overview', icon: LayoutDashboard },
     { href: '/upload', label: 'Data Import', icon: UploadCloud },
     { href: '/review-queue', label: 'Review Queue', icon: AlertTriangle },
@@ -168,8 +170,8 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             </span>
           </div>
           <div className="flex items-center justify-between text-[10px]">
-            <span>DPDP Act 2023</span>
-            <span className="text-emerald-400 font-semibold">Active Sec 9 VPC</span>
+            <span>System Mode</span>
+            <span className="text-teal-400 font-semibold">Demo (Sample Data)</span>
           </div>
           <div className="pt-1.5 border-t border-blue-900/40 flex items-center justify-between text-[10px] text-slate-500">
             <Link href="/privacy-policy" className="hover:text-teal-300 transition">Privacy Policy</Link>
