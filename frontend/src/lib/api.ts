@@ -370,4 +370,56 @@ export const api = {
   async resetData(tenantId: string): Promise<any> {
     return request<any>('/demo/reset', { method: 'POST' }, tenantId);
   },
+
+  // OMR Commit
+  async commitOmr(payload: {
+    student_id: string;
+    test_id: string;
+    batch_id?: string;
+    answers: Record<string, string>;
+    score?: number;
+  }, tenantId: string): Promise<any> {
+    return request<any>('/ingest/omr-commit', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }, tenantId);
+  },
+
+  // WhatsApp Business API
+  async getWhatsAppStatus(): Promise<any> {
+    return request<any>('/whatsapp/status');
+  },
+
+  async sendWhatsApp(payload: {
+    recipient_phone: string;
+    student_id?: string;
+    student_name?: string;
+    guardian_name?: string;
+    attendance_pct?: number;
+    percentile_range?: string;
+    weak_topics?: string[];
+    strong_topics?: string[];
+    language?: string;
+    custom_message?: string;
+  }, tenantId?: string): Promise<any> {
+    return request<any>('/whatsapp/send', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }, tenantId);
+  },
+
+  async broadcastWhatsApp(payload: {
+    batch_id: string;
+    message_type?: string;
+    language?: string;
+  }, tenantId?: string): Promise<any> {
+    return request<any>('/whatsapp/broadcast', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }, tenantId);
+  },
+
+  async getWhatsAppLogs(tenantId?: string): Promise<any> {
+    return request<any>('/whatsapp/logs', {}, tenantId);
+  },
 };

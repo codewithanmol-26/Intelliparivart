@@ -11,6 +11,7 @@ Capabilities:
 import os
 import cv2
 import numpy as np
+import base64
 from typing import Dict, List, Tuple, Any
 
 DEFAULT_ANSWER_KEY = {i: "A" if i % 2 == 1 else "B" for i in range(1, 21)}
@@ -142,9 +143,17 @@ def process_omr_sheet(
         os.makedirs(os.path.dirname(output_annotated_path), exist_ok=True)
         cv2.imwrite(output_annotated_path, annotated)
 
+    # Encode annotated image as base64 for real-time frontend display
+    try:
+        _, buf = cv2.imencode(".png", annotated)
+        annotated_base64 = "data:image/png;base64," + base64.b64encode(buf).decode("utf-8")
+    except Exception:
+        annotated_base64 = None
+
     return {
         "quality_status": "CLEAN",
         "total_detected": 20,
         "score": correct_count,
+        "annotated_image": annotated_base64,
         "questions": questions_results
     }

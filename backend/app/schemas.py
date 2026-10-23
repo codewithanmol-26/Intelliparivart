@@ -132,6 +132,12 @@ class OMRScanResult(BaseModel):
     score: int
     questions: List[OMRQuestionResult]
     annotated_image_url: Optional[str] = None
+    annotated_image: Optional[str] = None
+    student_id: Optional[str] = None
+    test_id: Optional[str] = None
+    ocr_confidence: Optional[float] = None
+    requires_human_review: Optional[bool] = None
+    diagnostics: Optional[Dict[str, Any]] = None
 
 # ROI Calculator Schemas
 class ROICalculatorInput(BaseModel):

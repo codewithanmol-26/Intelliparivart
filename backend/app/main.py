@@ -12,7 +12,7 @@ import backend.app.models
 from backend.app.routes import (
     auth, ingest, mastery, risk, predictions, reports,
     owner, consent, audit, model_report, simulate, demo,
-    interventions, students, exports, overview, genai
+    interventions, students, exports, overview, genai, whatsapp
 )
 
 app = FastAPI(
@@ -46,7 +46,7 @@ feature_routers = [
     predictions.router, reports.router, owner.router, consent.router,
     audit.router, model_report.router, simulate.router, demo.router,
     interventions.router, students.router, exports.router, overview.router,
-    genai.router
+    genai.router, whatsapp.router
 ]
 for r in feature_routers:
     app.include_router(r)

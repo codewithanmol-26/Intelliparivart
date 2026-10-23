@@ -162,3 +162,68 @@ def test_auth_register_endpoint():
     assert user["email"] == random_email
     assert user["full_name"] == "Prof. Alok Mukherjee"
     assert "INST_" in user["tenant_id"]
+
+def test_whatsapp_endpoints():
+    # 1. Status
+    r_status = client.get("/api/whatsapp/status")
+    assert r_status.status_code == 200
+    st_data = r_status.json()
+    assert st_data["status"] == "online"
+
+    # 2. Send Message
+    send_payload = {
+        "recipient_phone": "+91 98765 43210",
+        "student_name": "Ananya Pandey",
+        "guardian_name": "Mahesh Prasad",
+        "attendance_pct": 92.5,
+        "percentile_range": "94.5 - 97.2",
+        "language": "en"
+    }
+    r_send = client.post("/api/whatsapp/send", json=send_payload, headers={"X-Tenant-ID": "INST_PATNA_01"})
+    assert r_send.status_code == 200
+    send_data = r_send.json()
+    assert send_data["status"] == "success"
+    assert "delivery_details" in send_data
+    assert "wamid." in send_data["delivery_details"]["message_id"]
+
+    # 3. Broadcast Batch
+    bcast_payload = {
+        "batch_id": "INST_PATNA_01_B1_JEE_12",
+        "language": "hi"
+    }
+    r_bcast = client.post("/api/whatsapp/broadcast", json=bcast_payload, headers={"X-Tenant-ID": "INST_PATNA_01"})
+    assert r_bcast.status_code == 200
+    bcast_data = r_bcast.json()
+    assert bcast_data["total_dispatched"] >= 1
+
+    # 4. Logs
+    r_logs = client.get("/api/whatsapp/logs", headers={"X-Tenant-ID": "INST_PATNA_01"})
+    assert r_logs.status_code == 200
+    logs_data = r_logs.json()
+    assert logs_data["total"] >= 1
+
+def test_omr_ocr_endpoint():
+    with open("data/omr_samples/sample_omr_clean.png", "rb") as f:
+        img_bytes = f.read()
+
+    files = {"file": ("sample_omr_clean.png", img_bytes, "image/png")}
+    data = {"tenant_id": "INST_PATNA_01"}
+    r_omr = client.post("/api/ingest/omr-scan", files=files, data=data)
+    assert r_omr.status_code == 200
+    omr_data = r_omr.json()
+    assert "student_id" in omr_data
+    assert "ocr_confidence" in omr_data
+    assert "annotated_image" in omr_data
+    assert len(omr_data["questions"]) == 20
+
+    # Commit OMR
+    commit_payload = {
+        "student_id": omr_data["student_id"],
+        "test_id": "TEST_PH_004",
+        "answers": {"Q01": "A", "Q02": "A", "Q03": "C"},
+        "score": omr_data["score"]
+    }
+    r_commit = client.post("/api/ingest/omr-commit", json=commit_payload, headers={"X-Tenant-ID": "INST_PATNA_01"})
+    assert r_commit.status_code == 200
+    commit_data = r_commit.json()
+    assert commit_data["status"] == "SUCCESS"
