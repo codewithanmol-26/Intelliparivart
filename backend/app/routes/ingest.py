@@ -412,22 +412,27 @@ async def ingest_omr(
     # Run OCR character recognition on header bounding boxes
     ocr_res = run_ocr_on_omr_header(contents)
 
-    # Log Audit
-    audit = AuditLog(
-        tenant_id=tenant_id,
-        actor_role="Teacher",
-        action="OMR_SCAN",
-        resource_type="OMR_IMAGE",
-        resource_id=file.filename or "omr_scan.png",
-        details_json=json.dumps({
-            "quality": result["quality_status"],
-            "score": result.get("score", 0),
-            "ocr_student": ocr_res.get("student_id"),
-            "ocr_confidence": ocr_res.get("ocr_confidence")
-        })
-    )
-    db.add(audit)
-    db.commit()
+    # Safely Log Audit without crashing scan if audit table is pending creation
+    try:
+        Base.metadata.create_all(bind=db.get_bind())
+        audit = AuditLog(
+            tenant_id=tenant_id,
+            actor_role="Teacher",
+            action="OMR_SCAN",
+            resource_type="OMR_IMAGE",
+            resource_id=file.filename or "omr_scan.png",
+            details_json=json.dumps({
+                "quality": result.get("quality_status", "UNKNOWN"),
+                "score": result.get("score", 0),
+                "ocr_student": ocr_res.get("student_id"),
+                "ocr_confidence": ocr_res.get("ocr_confidence")
+            })
+        )
+        db.add(audit)
+        db.commit()
+    except Exception as audit_exc:
+        db.rollback()
+        # Telemetry audit failure does not disrupt teacher workflow
 
     return {
         "file_name": file.filename or "omr_sheet.png",
@@ -461,21 +466,25 @@ def commit_omr_results(
     db: Session = Depends(get_db)
 ):
     """Commits OMR answers directly into student test records."""
-    audit = AuditLog(
-        tenant_id=tenant_id,
-        actor_role="Teacher",
-        action="OMR_COMMIT",
-        resource_type="STUDENT_RESPONSE",
-        resource_id=req.student_id,
-        details_json=json.dumps({
-            "student_id": req.student_id,
-            "test_id": req.test_id,
-            "committed_count": len(req.answers),
-            "score": req.score
-        })
-    )
-    db.add(audit)
-    db.commit()
+    try:
+        Base.metadata.create_all(bind=db.get_bind())
+        audit = AuditLog(
+            tenant_id=tenant_id,
+            actor_role="Teacher",
+            action="OMR_COMMIT",
+            resource_type="STUDENT_RESPONSE",
+            resource_id=req.student_id,
+            details_json=json.dumps({
+                "student_id": req.student_id,
+                "test_id": req.test_id,
+                "committed_count": len(req.answers),
+                "score": req.score
+            })
+        )
+        db.add(audit)
+        db.commit()
+    except Exception:
+        db.rollback()
 
     return {
         "status": "SUCCESS",
