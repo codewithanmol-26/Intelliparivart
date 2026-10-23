@@ -117,6 +117,7 @@ export interface ParentReport {
 export interface OwnerDashboardData {
   tenant_id: string;
   institute_name: string;
+  city?: string;
   total_enrolled: number;
   active_students: number;
   high_risk_count: number;
@@ -173,6 +174,7 @@ export interface DemoUserPersona {
   role: UserRole;
   tenant_id: string;
   institute_name: string;
+  city?: string;
   description: string;
   student_id?: string;
 }

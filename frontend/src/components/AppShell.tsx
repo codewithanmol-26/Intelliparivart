@@ -105,18 +105,21 @@ export default function AppShell({ children }: AppShellProps) {
             </Link>
 
             {/* Public Navigation (Desktop) */}
-            <nav className="hidden md:flex items-center space-x-6 text-xs font-semibold text-slate-200">
+            <nav className="hidden md:flex items-center space-x-5 text-xs font-semibold text-slate-200">
               <Link href="/demo" className="hover:text-teal-300 transition">
-                Product
+                Product Demo
+              </Link>
+              <Link href="/owner" className="text-teal-300 hover:text-white transition font-bold">
+                Revenue Model
+              </Link>
+              <Link href="/model-report" className="text-teal-300 hover:text-white transition font-bold">
+                ML Rigour
               </Link>
               <Link href="/#capabilities" className="hover:text-teal-300 transition">
                 Capabilities
               </Link>
               <Link href="/#workflow" className="hover:text-teal-300 transition">
                 How It Works
-              </Link>
-              <Link href="/#roles" className="hover:text-teal-300 transition">
-                Solutions
               </Link>
               <Link href="/ai-assistant" className="hover:text-teal-300 transition flex items-center space-x-1">
                 <Sparkles className="w-3.5 h-3.5 text-teal-400" />
@@ -203,6 +206,20 @@ export default function AppShell({ children }: AppShellProps) {
                   className="p-2 rounded-lg hover:bg-blue-900/60"
                 >
                   How It Works
+                </Link>
+                <Link
+                  href="/owner"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2 rounded-lg bg-blue-950 border border-blue-800 flex items-center space-x-2 text-teal-300 font-bold"
+                >
+                  <span>Revenue Model</span>
+                </Link>
+                <Link
+                  href="/model-report"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2 rounded-lg bg-blue-950 border border-blue-800 flex items-center space-x-2 text-teal-300 font-bold"
+                >
+                  <span>ML Rigour</span>
                 </Link>
                 <Link
                   href="/#roles"

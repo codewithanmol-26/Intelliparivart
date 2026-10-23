@@ -44,17 +44,21 @@ export default function HomePage() {
   const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
   const [activeRoleTab, setActiveRoleTab] = useState<'owner' | 'teacher' | 'student' | 'parent'>('owner');
 
-  // ROI Calculator Interactive State
-  const [roiStudents, setRoiStudents] = useState<number>(1200);
-  const [roiAnnualFee, setRoiAnnualFee] = useState<number>(75000);
-  const [roiRetentionEfficiency, setRoiRetentionEfficiency] = useState<number>(55); // % of dropouts prevented
+  // ROI Calculator Interactive State (Directly calibrated to Case B Financial Model)
+  const [roiStudents, setRoiStudents] = useState<number>(400);
+  const [roiAnnualFee, setRoiAnnualFee] = useState<number>(60000);
+  const [roiRetentionEfficiency, setRoiRetentionEfficiency] = useState<number>(15); // 15% prevention efficiency
 
-  const baselineDropoutRate = 0.128; // 12.8% baseline in Tier-2/3 test prep
+  const baselineDropoutRate = 0.12; // 12% industry baseline
   const dropoutsWithoutPlatform = Math.round(roiStudents * baselineDropoutRate);
   const studentsSaved = Math.round(dropoutsWithoutPlatform * (roiRetentionEfficiency / 100));
-  const revenueProtected = studentsSaved * roiAnnualFee;
-  const platformAnnualCost = 12960 * 12; // ₹12,960/month standard tier
-  const netRoiRatio = platformAnnualCost > 0 ? (revenueProtected / platformAnnualCost).toFixed(1) : '18.3';
+  const lostFeePerDropout = (roiAnnualFee / 10) * 6; // 6 unpaid monthly installments
+  const revenueProtected = studentsSaved * lostFeePerDropout;
+  const monthlyPlatformCost = roiStudents <= 150 ? 5999 : roiStudents <= 300 ? 9999 : 9999 + (roiStudents - 300) * 30;
+  const platformAnnualCost = monthlyPlatformCost * 10; // 10 active billing months
+  const netProfitProtected = revenueProtected - platformAnnualCost;
+  const netRoiRatio = platformAnnualCost > 0 ? (revenueProtected / platformAnnualCost).toFixed(2) : '1.94';
+  const breakevenThreshold = (platformAnnualCost / lostFeePerDropout).toFixed(1);
 
   const handleLaunchRole = (role: 'owner' | 'teacher' | 'student' | 'parent') => {
     setRole(role);
@@ -493,74 +497,103 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 5. HOW IT WORKS (5-STEP WORKFLOW) */}
-      <section id="how-it-works" className="space-y-8 scroll-mt-20">
-        <div className="max-w-2xl">
+      {/* 5. WHAT A COMPLETE SOLUTION LOOKS LIKE (6-STEP REFERENCE SKELETON FROM CASE B) */}
+      <section id="workflow" className="space-y-8 scroll-mt-20">
+        <div className="max-w-3xl">
           <span className="text-xs font-bold uppercase tracking-wider text-teal-600 block">
-            Deterministic Academic Pipeline
+            Case Competition Section 05 Reference Skeleton
           </span>
           <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
-            How Intelliprivart Works: From Ingest to Recovery
+            End-to-End Operational Pipeline: Capture &rarr; Prove ROI
           </h2>
           <p className="text-sm text-slate-500 mt-2 leading-relaxed">
-            A disciplined 5-stage workflow connecting raw test logs to faculty interventions and measurable student improvement.
+            The full 6-stage flow expected by IIT Patna judges connecting raw paper OMR and Excel records to predictive modeling, supportive action, and verifiable financial ROI.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-3">
           {/* Step 1 */}
-          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2 relative">
+          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2">
             <div className="text-xs font-black font-mono text-teal-600 bg-teal-50 w-7 h-7 rounded-lg flex items-center justify-center border border-teal-200">
               01
             </div>
-            <h3 className="font-bold text-slate-900 text-sm">CAPTURE</h3>
+            <h3 className="font-bold text-slate-900 text-sm">1. CAPTURE</h3>
             <p className="text-xs text-slate-500 leading-relaxed">
-              Import Excel gradebooks, CSV rosters, or phone camera OMR scans with bubble detection.
+              Phone-camera OMR (OpenCV), Excel/CSV rosters, Google Forms, and offline queue sync.
             </p>
+            <Link href="/upload" className="text-[11px] font-bold text-teal-600 hover:text-teal-700 block pt-1">
+              Test Ingestion &rarr;
+            </Link>
           </div>
 
           {/* Step 2 */}
-          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2 relative">
+          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2">
             <div className="text-xs font-black font-mono text-blue-600 bg-blue-50 w-7 h-7 rounded-lg flex items-center justify-center border border-blue-200">
               02
             </div>
-            <h3 className="font-bold text-slate-900 text-sm">VALIDATE</h3>
+            <h3 className="font-bold text-slate-900 text-sm">2. STRUCTURE</h3>
             <p className="text-xs text-slate-500 leading-relaxed">
-              Quarantine filters isolate duplicate roll numbers, date glitches, and out-of-range marks before ingest.
+              Tag questions to JEE/NEET topics via SLM, quarantine glitches in Human Review Queue.
             </p>
+            <Link href="/review-queue" className="text-[11px] font-bold text-blue-600 hover:text-blue-700 block pt-1">
+              Review Queue &rarr;
+            </Link>
           </div>
 
           {/* Step 3 */}
-          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2 relative">
+          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2">
             <div className="text-xs font-black font-mono text-indigo-600 bg-indigo-50 w-7 h-7 rounded-lg flex items-center justify-center border border-indigo-200">
               03
             </div>
-            <h3 className="font-bold text-slate-900 text-sm">ANALYZE</h3>
+            <h3 className="font-bold text-slate-900 text-sm">3. MODEL</h3>
             <p className="text-xs text-slate-500 leading-relaxed">
-              2PL IRT and BKT models calculate sub-topic latent mastery and early disengagement risk scores.
+              2PL IRT difficulty, BKT topic mastery, LOIO-CV dropout risk, and Conformal rank intervals.
             </p>
+            <Link href="/model-report" className="text-[11px] font-bold text-indigo-600 hover:text-indigo-700 block pt-1">
+              ML Rigour Suite &rarr;
+            </Link>
           </div>
 
           {/* Step 4 */}
-          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2 relative">
+          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2">
             <div className="text-xs font-black font-mono text-amber-600 bg-amber-50 w-7 h-7 rounded-lg flex items-center justify-center border border-amber-200">
               04
             </div>
-            <h3 className="font-bold text-slate-900 text-sm">INTERVENE</h3>
+            <h3 className="font-bold text-slate-900 text-sm">4. ACT</h3>
             <p className="text-xs text-slate-500 leading-relaxed">
-              Generate 15-minute concept remedial worksheets and log 1-on-1 faculty mentor sessions.
+              Early-warning mentor alerts, targeted remedial batches, and AI personalized study plans.
             </p>
+            <Link href="/interventions" className="text-[11px] font-bold text-amber-600 hover:text-amber-700 block pt-1">
+              Interventions &rarr;
+            </Link>
           </div>
 
           {/* Step 5 */}
-          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2 relative">
-            <div className="text-xs font-black font-mono text-emerald-600 bg-emerald-50 w-7 h-7 rounded-lg flex items-center justify-center border border-emerald-200">
+          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2">
+            <div className="text-xs font-black font-mono text-rose-600 bg-rose-50 w-7 h-7 rounded-lg flex items-center justify-center border border-rose-200">
               05
             </div>
-            <h3 className="font-bold text-slate-900 text-sm">MEASURE</h3>
+            <h3 className="font-bold text-slate-900 text-sm">5. SHARE</h3>
             <p className="text-xs text-slate-500 leading-relaxed">
-              Track subsequent milestone exam recovery, proving pedagogical ROI and retaining fee revenue.
+              Role-specific views for teacher, student (zero-shaming), and bilingual WhatsApp parent digests.
             </p>
+            <Link href="/demo" className="text-[11px] font-bold text-rose-600 hover:text-rose-700 block pt-1">
+              4-Role Demo &rarr;
+            </Link>
+          </div>
+
+          {/* Step 6 */}
+          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2">
+            <div className="text-xs font-black font-mono text-emerald-600 bg-emerald-50 w-7 h-7 rounded-lg flex items-center justify-center border border-emerald-200">
+              06
+            </div>
+            <h3 className="font-bold text-slate-900 text-sm">6. PROVE ROI</h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Fee leakage prevention, 1.94x net ROI multiple, and auditable financial payback dashboard.
+            </p>
+            <Link href="/owner" className="text-[11px] font-bold text-emerald-600 hover:text-emerald-700 block pt-1">
+              Revenue Model &rarr;
+            </Link>
           </div>
         </div>
       </section>
@@ -943,44 +976,62 @@ export default function HomePage() {
           {/* Results Card */}
           <div className="lg:col-span-5 bg-gradient-to-br from-teal-950/80 to-slate-950 p-6 sm:p-8 rounded-3xl border border-teal-500/30 space-y-5 shadow-2xl">
             <span className="text-[11px] font-bold uppercase tracking-wider text-teal-400 block">
-              Annual Financial Impact
+              Financial Model Output (Sheet 2)
             </span>
 
             <div>
-              <span className="text-xs text-slate-400 block">Net Fee Revenue Protected:</span>
+              <span className="text-xs text-slate-400 block">Annual Tuition Fees Recovered:</span>
               <span className="text-3xl sm:text-4xl font-black text-white font-mono mt-1 block">
                 ₹{(revenueProtected / 100000).toFixed(2)} Lakhs
               </span>
               <span className="text-[11px] text-teal-300 mt-1 block">
-                From {studentsSaved} at-risk students successfully retained
+                From {studentsSaved} at-risk students retained (out of {dropoutsWithoutPlatform} at-risk)
               </span>
             </div>
 
             <div className="pt-4 border-t border-slate-800 grid grid-cols-2 gap-3 text-xs">
               <div>
-                <span className="text-[10px] text-slate-400 uppercase font-semibold block">Platform Cost</span>
+                <span className="text-[10px] text-slate-400 uppercase font-semibold block">Platform Cost (10 mos)</span>
                 <span className="text-base font-bold text-slate-200 font-mono mt-0.5 block">
                   ₹{(platformAnnualCost / 100000).toFixed(2)} Lakhs
                 </span>
-                <span className="text-[10px] text-slate-500">₹12,960 / month</span>
+                <span className="text-[10px] text-slate-400">₹{monthlyPlatformCost.toLocaleString()} / mo</span>
               </div>
 
               <div>
-                <span className="text-[10px] text-slate-400 uppercase font-semibold block">Net ROI Multiple</span>
+                <span className="text-[10px] text-slate-400 uppercase font-semibold block">Institute Net ROI</span>
                 <span className="text-2xl font-black text-emerald-400 font-mono mt-0.5 block">
                   {netRoiRatio}x
                 </span>
-                <span className="text-[10px] text-emerald-300">Return on Investment</span>
+                <span className="text-[10px] text-emerald-300">Breakeven at {breakevenThreshold} students</span>
               </div>
             </div>
 
-            <Link
-              href="/demo/owner"
-              className="w-full py-3 bg-teal-500 hover:bg-teal-600 text-white rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 shadow-md"
-            >
-              <span>Explore Institute Owner Model</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
+            <div className="pt-2 space-y-2">
+              <Link
+                href="/owner"
+                className="w-full py-3 bg-teal-500 hover:bg-teal-600 text-white rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 shadow-md"
+              >
+                <span>Launch 5-Sheet Revenue Model Portal</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+
+              <div className="grid grid-cols-2 gap-2">
+                <Link
+                  href="/model-report"
+                  className="py-2.5 bg-slate-800 hover:bg-slate-700 text-teal-300 border border-slate-700 rounded-xl text-xs font-semibold transition text-center"
+                >
+                  <span>ML Rigour Suite</span>
+                </Link>
+                <a
+                  href="/2_Excel_Nextute_Case_B_Financial_Model.xlsx"
+                  download
+                  className="py-2.5 bg-emerald-600/30 hover:bg-emerald-600/50 text-emerald-300 border border-emerald-500/40 rounded-xl text-xs font-semibold transition text-center"
+                >
+                  <span>Download Excel</span>
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </section>

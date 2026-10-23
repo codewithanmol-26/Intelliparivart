@@ -376,6 +376,46 @@ export default function DemoOwnerPage() {
             </div>
           </div>
         </div>
+
+        {/* Case B Financial Model & ML Rigour Quick-Nav Banner */}
+        <div className="bg-gradient-to-r from-[#0B1F3A] to-[#132E52] p-5 sm:p-6 rounded-2xl text-white shadow-md flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="space-y-1">
+            <div className="flex items-center space-x-2 text-teal-300 text-xs font-bold uppercase tracking-wider">
+              <Sparkles className="w-4 h-4" />
+              <span>Case B: The Data Moat — Full Deliverables</span>
+            </div>
+            <h3 className="text-lg font-bold text-white">
+              Explore 5-Sheet Revenue Model & Psychometric ML Rigour
+            </h3>
+            <p className="text-xs text-slate-300 max-w-xl">
+              Evaluate our auditable financial model (1.94x ROI, 3.95 mo CAC payback, 21.1x LTV:CAC) and our LOIO-CV cross-validated ML engine (2PL IRT, BKT, and Conformal rank intervals).
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2 shrink-0">
+            <Link
+              href="/owner"
+              className="px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white font-bold rounded-xl text-xs transition shadow-sm flex items-center space-x-1"
+            >
+              <span>5-Sheet Revenue Portal</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+            <Link
+              href="/model-report"
+              className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-teal-300 border border-slate-700 font-bold rounded-xl text-xs transition"
+            >
+              <span>ML Rigour Suite</span>
+            </Link>
+            <a
+              href="/2_Excel_Nextute_Case_B_Financial_Model.xlsx"
+              download
+              className="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition flex items-center space-x-1"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>Excel</span>
+            </a>
+          </div>
+        </div>
       </main>
 
       {/* Role Selection Modal */}
