@@ -106,12 +106,25 @@ python scripts/seed_supabase.py "postgresql://postgres:[PASSWORD]@db.[PROJECT-RE
    - **Root Directory**: Click **Edit** and select **`frontend`**
    - **Build Command**: `npm run build` *(Default)*
    - **Output Directory**: `.next` *(Default)*
-5. Open the **Environment Variables** section and add:
-   | Key | Value |
-   | :--- | :--- |
-   | `NEXT_PUBLIC_API_URL` | `https://intelliparivart.onrender.com/api` |
+5. Open the **Environment Variables** section:
+   Choose whichever configuration fits your security preference:
 
-   *(Replace with your actual Render URL from Step 2, appending `/api`)*
+   - **Option A (Recommended: Private Server-Side — No Public Prefix)**:
+     | Key | Value | Type |
+     | :--- | :--- | :--- |
+     | `BACKEND_URL` | `https://intelliparivart.onrender.com/api` | Sensitive / Secret |
+
+     *(Keeps backend URL private. Next.js reverse-proxy rewrites forward `/api` requests to Render with zero client-side leakage)*
+
+   - **Option B (Public Config Variable)**:
+     | Key | Value | Type |
+     | :--- | :--- | :--- |
+     | `NEXT_PUBLIC_API_URL` | `https://intelliparivart.onrender.com/api` | **Config** |
+
+     *(When Vercel shows the notice: "Remove the public framework prefix to keep this value private. Public prefixes expose values to the browser. If that’s safe, change the variable to Config.", click **"Change to Config"**)*
+
+   - **Option C (Zero-Config Automatic Default)**:
+     You can even skip adding environment variables completely! The production build defaults directly to `https://intelliparivart.onrender.com/api`.
 
 6. Click **"Deploy"**.
 7. Vercel will install dependencies, compile all 19 static routes, and assign an SSL URL (e.g. `https://intelliprivart.vercel.app`).

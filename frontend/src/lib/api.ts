@@ -16,12 +16,24 @@ import {
 } from './types';
 
 export function getApiBaseUrl(): string {
-  const envUrl = process.env.NEXT_PUBLIC_API_URL;
-  // If explicitly provided and not pointing to old local host, use it
-  if (envUrl && !envUrl.includes('127.0.0.1') && !envUrl.includes('localhost')) {
-    return envUrl.replace(/\/+$/, '');
+  // 1. In browser or build client bundle, check public framework variable if defined
+  const publicUrl = process.env.NEXT_PUBLIC_API_URL;
+  if (publicUrl && !publicUrl.includes('127.0.0.1') && !publicUrl.includes('localhost')) {
+    return publicUrl.replace(/\/+$/, '');
   }
-  // Production deployed Render API endpoint
+
+  // 2. On server side (SSR / Node runtime), check private server variables (Vercel-safe without public prefix)
+  if (typeof window === 'undefined') {
+    const serverUrl =
+      process.env.BACKEND_URL ||
+      process.env.API_URL ||
+      process.env.BACKEND_INTERNAL_URL;
+    if (serverUrl && !serverUrl.includes('127.0.0.1') && !serverUrl.includes('localhost')) {
+      return serverUrl.replace(/\/+$/, '');
+    }
+  }
+
+  // 3. Deployed Production Render backend fallback (works out of the box with 0 env vars)
   return 'https://intelliparivart.onrender.com/api';
 }
 
