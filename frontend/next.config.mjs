@@ -8,13 +8,17 @@ const backendUrl =
   process.env.NEXT_PUBLIC_API_URL ||
   'https://intelliparivart.onrender.com/api';
 
+const resolvedBackendUrl = backendUrl
+  .replace('intelliparivart-backend.onrender.com', 'intelliparivart.onrender.com')
+  .replace('intelliprivart-backend.onrender.com', 'intelliparivart.onrender.com');
+
 const nextConfig = {
   reactStrictMode: true,
   async rewrites() {
     return [
       {
         source: '/api/:path*',
-        destination: `${backendUrl.replace(/\/$/, '')}/:path*`,
+        destination: `${resolvedBackendUrl.replace(/\/$/, '')}/:path*`,
       },
     ];
   },

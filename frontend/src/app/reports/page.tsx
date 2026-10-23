@@ -129,15 +129,24 @@ export default function ReportsPage() {
         notifyRecomputed(undefined, `WhatsApp digest accepted for ${recipientPhone}`);
       }
     } catch (err: any) {
-      let msg = err.message || 'WhatsApp dispatch could not connect to backend gateway.';
-      if (msg.includes('403') || msg.includes('consent') || msg.includes('DPDP')) {
+      const status = err.status || (typeof err.message === 'string' && err.message.match(/\[(\d{3})\]/)?.[1] ? parseInt(err.message.match(/\[(\d{3})\]/)[1]) : null);
+      const detail = err.data?.detail || err.data?.message || err.message || '';
+
+      let msg = '';
+      if (status === 403 || detail.includes('consent') || detail.includes('DPDP')) {
         msg = 'DPDP Act 2023 Section 9: Parental communication consent has been withdrawn for this student. Dispatch halted.';
-      } else if (msg.includes('401')) {
+      } else if (status === 401) {
         msg = 'Faculty session expired or unauthorized. Please log in again.';
-      } else if (msg.includes('404')) {
+      } else if (status === 404) {
         msg = 'Backend WhatsApp service endpoint returned 404 Not Found. Please verify the deployed backend release.';
-      } else if (msg.includes('Failed to fetch') || msg.includes('NetworkError')) {
+      } else if (status === 429) {
+        msg = 'Meta WhatsApp API rate limit reached. Please wait a few moments before sending another message.';
+      } else if (status === 500 || status === 502 || status === 503 || status === 504) {
+        msg = `Backend Service Error [${status}]: ${detail || 'The messaging service encountered a server failure.'}`;
+      } else if (err.name === 'TypeError' || err.message?.includes('Failed to fetch') || err.message?.includes('NetworkError')) {
         msg = 'Network failure: Unable to establish connection to the backend WhatsApp API gateway.';
+      } else {
+        msg = detail || 'WhatsApp dispatch could not connect to backend gateway.';
       }
       setWhatsAppSendError(msg);
     } finally {

@@ -27,6 +27,21 @@ def startup_db_init():
     try:
         Base.metadata.create_all(bind=engine)
         print("[OK] Database tables verified and initialized successfully.")
+
+        # Non-destructive schema migration for existing PostgreSQL / SQLite deployments
+        from sqlalchemy import inspect, text
+        inspector = inspect(engine)
+        tables = inspector.get_table_names()
+
+        if "students" in tables:
+            cols = [c["name"] for c in inspector.get_columns("students")]
+            with engine.begin() as conn:
+                if "guardian_name" not in cols:
+                    conn.execute(text("ALTER TABLE students ADD COLUMN guardian_name VARCHAR(128);"))
+                    print("[MIGRATION] Added guardian_name to students table.")
+                if "guardian_phone" not in cols:
+                    conn.execute(text("ALTER TABLE students ADD COLUMN guardian_phone VARCHAR(32);"))
+                    print("[MIGRATION] Added guardian_phone to students table.")
     except Exception as exc:
         print(f"[NOTICE] Database initialization could not connect immediately ({exc}).")
         print("The server will remain online and serve requests; database will reconnect when reachable.")
