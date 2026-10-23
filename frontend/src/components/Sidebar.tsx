@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useApp } from '../context/AppContext';
+import { UserRole } from '../lib/types';
 import {
   LayoutDashboard,
   UploadCloud,
@@ -24,7 +25,9 @@ import {
   Building2,
   Globe,
   PlayCircle,
-  X
+  X,
+  HeartHandshake,
+  UserCheck
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -34,27 +37,62 @@ interface SidebarProps {
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
-  const { tenantId, role, offlineQueueCount, isOnline } = useApp();
+  const { tenantId, role, setRole, setSelectedStudentId, offlineQueueCount, isOnline } = useApp();
 
-  const primaryNavItems = [
-    { href: '/demo', label: 'Interactive Demo (4 Roles)', icon: PlayCircle },
-    { href: '/overview', label: 'Overview', icon: LayoutDashboard },
-    { href: '/upload', label: 'Data Import', icon: UploadCloud },
-    { href: '/review-queue', label: 'Review Queue', icon: AlertTriangle },
-    { href: '/student', label: 'Student Analytics', icon: Users },
-    { href: '/mastery', label: 'Topic Mastery', icon: Layers },
-    { href: '/ai-assistant', label: 'AI Teaching Copilot', icon: Sparkles },
-    { href: '/risk', label: 'Early-Warning Centre', icon: ShieldAlert },
-    { href: '/predict', label: 'Performance Forecast', icon: LineChart },
-    { href: '/reports', label: 'Parent Reports', icon: GraduationCap },
-    { href: '/interventions', label: 'Intervention Tracker', icon: CheckCircle2 },
-    { href: '/exports', label: 'Reports & Exports', icon: Download },
-    { href: '/privacy', label: 'Settings & Privacy', icon: Lock },
-  ];
+  const getRoleNavItems = () => {
+    switch (role) {
+      case 'owner':
+        return [
+          { href: '/overview', label: 'Owner Dashboard', icon: LayoutDashboard },
+          { href: '/owner', label: 'Executive ROI Model', icon: FileSpreadsheet },
+          { href: '/risk', label: 'Early-Warning Dropouts', icon: ShieldAlert },
+          { href: '/interventions', label: 'Remedial Triage Ledger', icon: CheckCircle2 },
+          { href: '/mastery', label: 'Batch Mastery Heatmap', icon: Layers },
+          { href: '/upload', label: 'Data Ingestion & OMR', icon: UploadCloud },
+          { href: '/model-report', label: 'ML Rigour Card', icon: FileCheck2 },
+          { href: '/exports', label: 'Reports & Exports', icon: Download },
+          { href: '/privacy', label: 'Settings & DPDP Privacy', icon: Lock },
+        ];
+      case 'teacher':
+        return [
+          { href: '/overview', label: 'Teacher Workspace', icon: LayoutDashboard },
+          { href: '/mastery', label: 'Topic Mastery Heatmap', icon: Layers },
+          { href: '/ai-assistant', label: 'AI Teaching Copilot', icon: Sparkles },
+          { href: '/interventions', label: 'Remedial Triage & Worksheets', icon: CheckCircle2 },
+          { href: '/risk', label: 'Students Needing Support', icon: ShieldAlert },
+          { href: '/predict', label: 'Performance Forecast', icon: LineChart },
+          { href: '/upload', label: 'Upload Marks & OMR', icon: UploadCloud },
+          { href: '/review-queue', label: 'Review Queue', icon: AlertTriangle },
+          { href: '/reports', label: 'Parent Progress Digests', icon: GraduationCap },
+        ];
+      case 'student':
+        return [
+          { href: '/overview', label: 'My Growth Dashboard', icon: LayoutDashboard },
+          { href: '/student', label: 'Topic Mastery & Strengths', icon: Layers },
+          { href: '/predict', label: 'Predicted Progress', icon: LineChart },
+          { href: '/ai-assistant', label: 'AI Doubt Practice', icon: Sparkles },
+          { href: '/privacy', label: 'My DPDP Privacy Rights', icon: Lock },
+        ];
+      case 'parent':
+        return [
+          { href: '/overview', label: 'Parent Progress Digest', icon: LayoutDashboard },
+          { href: '/reports', label: 'Bilingual Report (EN/HI)', icon: GraduationCap },
+          { href: '/privacy', label: 'Guardian Consent Register', icon: Lock },
+        ];
+      default:
+        return [
+          { href: '/overview', label: 'Overview', icon: LayoutDashboard },
+          { href: '/student', label: 'Student Analytics', icon: Users },
+          { href: '/mastery', label: 'Topic Mastery', icon: Layers },
+          { href: '/interventions', label: 'Intervention Tracker', icon: CheckCircle2 },
+        ];
+    }
+  };
+
+  const primaryNavItems = getRoleNavItems();
 
   const secondaryNavItems = [
-    { href: '/owner', label: 'Executive ROI Model', icon: FileSpreadsheet },
-    { href: '/model-report', label: 'ML Rigour Card', icon: FileCheck2 },
+    { href: '/demo', label: 'Interactive Demo (4 Roles)', icon: PlayCircle },
     { href: '/demo-tools', label: 'Scenario Simulator', icon: Sparkles },
     { href: '/', label: 'Public Website', icon: Globe },
   ];
@@ -93,18 +131,73 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
           <button
             onClick={onClose}
-            className="p-1 rounded text-slate-400 hover:text-white lg:hidden"
+            className="p-1 rounded text-slate-400 hover:text-white lg:hidden cursor-pointer"
             aria-label="Close Sidebar"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Primary Navigation Menu */}
+        {/* Role Quick Switcher Box in Sidebar */}
+        <div className="p-3 bg-[#0a1b33] border-b border-blue-900/40">
+          <div className="flex items-center justify-between text-[10px] text-slate-400 font-semibold uppercase tracking-wider mb-1.5">
+            <span>Active Role View:</span>
+            <span className="text-teal-400 font-bold capitalize">{role}</span>
+          </div>
+          <div className="grid grid-cols-2 gap-1 text-[11px] font-bold">
+            <button
+              onClick={() => setRole('owner')}
+              className={`px-2 py-1 rounded transition text-left truncate flex items-center space-x-1 ${
+                role === 'owner' ? 'bg-teal-600 text-white font-extrabold shadow-2xs' : 'text-slate-300 hover:bg-blue-900/50'
+              }`}
+            >
+              <Building2 className="w-3 h-3 shrink-0" />
+              <span className="truncate">Owner</span>
+            </button>
+            <button
+              onClick={() => setRole('teacher')}
+              className={`px-2 py-1 rounded transition text-left truncate flex items-center space-x-1 ${
+                role === 'teacher' ? 'bg-teal-600 text-white font-extrabold shadow-2xs' : 'text-slate-300 hover:bg-blue-900/50'
+              }`}
+            >
+              <Layers className="w-3 h-3 shrink-0" />
+              <span className="truncate">Teacher</span>
+            </button>
+            <button
+              onClick={() => {
+                setRole('student');
+                setSelectedStudentId('STD_PAT_001');
+              }}
+              className={`px-2 py-1 rounded transition text-left truncate flex items-center space-x-1 ${
+                role === 'student' ? 'bg-teal-600 text-white font-extrabold shadow-2xs' : 'text-slate-300 hover:bg-blue-900/50'
+              }`}
+            >
+              <GraduationCap className="w-3 h-3 shrink-0" />
+              <span className="truncate">Student</span>
+            </button>
+            <button
+              onClick={() => {
+                setRole('parent');
+                setSelectedStudentId('STD_PAT_001');
+              }}
+              className={`px-2 py-1 rounded transition text-left truncate flex items-center space-x-1 ${
+                role === 'parent' ? 'bg-teal-600 text-white font-extrabold shadow-2xs' : 'text-slate-300 hover:bg-blue-900/50'
+              }`}
+            >
+              <HeartHandshake className="w-3 h-3 shrink-0" />
+              <span className="truncate">Parent</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Role-Adaptive Primary Navigation Menu */}
         <div className="flex-1 overflow-y-auto px-3 py-4 space-y-6 scrollbar-thin">
           <div>
             <span className="px-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
-              Primary Navigation
+              {role === 'owner' && 'Owner & Executive Tools'}
+              {role === 'teacher' && 'Teacher & Classroom Tools'}
+              {role === 'student' && 'My Learning Tools'}
+              {role === 'parent' && 'Parent Digest Tools'}
             </span>
             <nav className="space-y-1">
               {primaryNavItems.map((item) => {
@@ -135,7 +228,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           {/* Secondary Utilities */}
           <div className="pt-2 border-t border-blue-900/40">
             <span className="px-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
-              Judge & Analysis Tools
+              Evaluation & Judge Tools
             </span>
             <nav className="space-y-1">
               {secondaryNavItems.map((item) => {

@@ -37,6 +37,7 @@ export default function Navbar() {
     setTenantId,
     role,
     setRole,
+    setSelectedStudentId,
     isOnline,
     offlineQueueCount,
     institutes,
@@ -61,32 +62,35 @@ export default function Navbar() {
     switch (role) {
       case 'owner':
         return [
+          { href: '/overview', label: 'Owner Dashboard', icon: LineChart },
           { href: '/owner', label: 'Executive ROI & Cohort', icon: LineChart },
           { href: '/risk', label: 'Early-Warning Dropouts', icon: ShieldAlert },
           { href: '/mastery', label: 'Batch Mastery Heatmap', icon: Layers },
           { href: '/upload', label: 'Ingest & Sources Audit', icon: UploadCloud },
           { href: '/privacy', label: 'DPDP Consent & Privacy', icon: Lock },
           { href: '/model-report', label: 'ML Rigor & Financial Model', icon: FileCheck2 },
-          { href: '/demo-tools', label: 'Judge Curveball Sandbox', icon: Sparkles },
         ];
       case 'teacher':
         return [
-          { href: '/upload', label: 'Data Ingestion & Wizard', icon: UploadCloud },
-          { href: '/review-queue', label: 'Review Queue', icon: AlertTriangle },
+          { href: '/overview', label: 'Teacher Workspace', icon: Layers },
           { href: '/mastery', label: 'Topic Mastery Heatmap', icon: Layers },
+          { href: '/ai-assistant', label: 'AI Teaching Copilot', icon: Sparkles },
+          { href: '/interventions', label: 'Remedial Triage & Worksheets', icon: CheckCircle2 },
           { href: '/risk', label: 'At-Risk & Remedials', icon: ShieldAlert },
           { href: '/predict', label: 'Percentile Ranges', icon: LineChart },
           { href: '/reports', label: 'Parent Digests (EN/HI)', icon: GraduationCap },
-          { href: '/demo-tools', label: 'Curveball Sandbox', icon: Sparkles },
         ];
       case 'student':
         return [
+          { href: '/overview', label: 'My Growth Dashboard', icon: Layers },
           { href: '/student', label: 'My Learning & Mastery', icon: Layers },
           { href: '/predict', label: 'My Predicted Progress', icon: LineChart },
+          { href: '/ai-assistant', label: 'AI Doubt Practice', icon: Sparkles },
           { href: '/privacy', label: 'My DPDP Rights', icon: Lock },
         ];
       case 'parent':
         return [
+          { href: '/overview', label: 'Parent Progress Digest', icon: GraduationCap },
           { href: '/reports', label: 'Weekly Progress Digest', icon: GraduationCap },
           { href: '/privacy', label: 'Guardian Consent Register', icon: Lock },
         ];
@@ -209,7 +213,13 @@ export default function Navbar() {
               <select
                 aria-label="Select User Role"
                 value={role}
-                onChange={(e) => setRole(e.target.value as UserRole)}
+                onChange={(e) => {
+                  const newRole = e.target.value as UserRole;
+                  setRole(newRole);
+                  if (newRole === 'student' || newRole === 'parent') {
+                    setSelectedStudentId('STD_PAT_001');
+                  }
+                }}
                 className="bg-transparent text-teal-300 font-semibold focus:outline-none cursor-pointer capitalize"
               >
                 <option value="owner" className="bg-[#0B1F3A] text-white">Institute Owner</option>
@@ -337,7 +347,13 @@ export default function Navbar() {
                 <select
                   aria-label="Select User Role"
                   value={role}
-                  onChange={(e) => setRole(e.target.value as UserRole)}
+                  onChange={(e) => {
+                  const newRole = e.target.value as UserRole;
+                  setRole(newRole);
+                  if (newRole === 'student' || newRole === 'parent') {
+                    setSelectedStudentId('STD_PAT_001');
+                  }
+                }}
                   className="w-full bg-transparent text-teal-300 font-bold focus:outline-none capitalize"
                 >
                   <option value="owner" className="bg-[#0B1F3A] text-white">Institute Owner</option>
