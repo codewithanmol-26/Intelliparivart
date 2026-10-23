@@ -44,11 +44,13 @@ import {
   FileCheck2,
   ArrowUpRight
 } from 'lucide-react';
+import AskDataMoatChatbot from '../components/AskDataMoatChatbot';
 
 export default function HomePage() {
   const router = useRouter();
   const { setRole } = useApp();
   const [activeRoleTab, setActiveRoleTab] = useState<'owner' | 'teacher' | 'student' | 'parent'>('owner');
+  const [showFloatingChat, setShowFloatingChat] = useState(false);
 
   // Interactive ROI Calculator State (Calibrated directly to Case B Financial Model)
   const [roiStudents, setRoiStudents] = useState<number>(400);
@@ -74,79 +76,88 @@ export default function HomePage() {
   return (
     <div className="space-y-20 pb-20 font-sans selection:bg-teal-500 selection:text-white">
 
-      {/* 1. TEACHMINT-INSPIRED HERO SECTION */}
-      <section className="relative overflow-hidden rounded-3xl bg-[#08172c] text-white p-6 sm:p-12 md:p-16 border border-blue-900/60 shadow-2xl">
+      {/* 1. TEACHMINT & CIVITAS INSPIRED HERO SECTION */}
+      <section className="relative overflow-hidden rounded-3xl bg-[#08172c] text-white p-6 sm:p-10 md:p-14 border border-blue-900/60 shadow-2xl">
         {/* Subtle Ambient Radial Glows */}
         <div className="absolute -top-24 -right-24 w-96 h-96 bg-teal-500/15 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="relative z-10 max-w-4xl space-y-6">
-          {/* Badge Pill */}
-          <div className="inline-flex items-center space-x-2 bg-teal-500/15 text-teal-300 border border-teal-500/30 px-3.5 py-1.5 rounded-full text-xs font-semibold backdrop-blur-md shadow-inner">
-            <Sparkles className="w-3.5 h-3.5 text-teal-400" />
-            <span>The All-In-One AI Operating System for Coaching Institutes</span>
+        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          {/* Left Column: Headline, Trust Pill & Metrics */}
+          <div className="lg:col-span-7 space-y-6">
+            {/* Badge Pill */}
+            <div className="inline-flex items-center space-x-2 bg-teal-500/15 text-teal-300 border border-teal-500/30 px-3.5 py-1.5 rounded-full text-xs font-semibold backdrop-blur-md shadow-inner">
+              <Sparkles className="w-3.5 h-3.5 text-teal-400" />
+              <span>The All-In-One AI Operating System for Coaching Institutes</span>
+            </div>
+
+            {/* Headline */}
+            <h1 className="text-3xl sm:text-5xl md:text-5xl lg:text-6xl font-black tracking-tight leading-[1.12]">
+              Turn Fragmented Coaching Data Into{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-300 via-teal-200 to-emerald-400">
+                Measurable Student Success.
+              </span>
+            </h1>
+
+            {/* Subtitle */}
+            <p className="text-sm sm:text-base md:text-lg text-slate-300 leading-relaxed font-normal">
+              Connect smartphone OMR tests, daily attendance, 2PL IRT topic mastery, early dropout prevention,
+              and automated parent digests in one enterprise-grade platform built for JEE &amp; NEET excellence.
+            </p>
+
+            {/* Primary Action Buttons */}
+            <div className="pt-2 flex flex-wrap gap-3 sm:gap-4 items-center">
+              <Link
+                href="/login"
+                className="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-teal-500 text-white font-bold text-xs sm:text-sm hover:bg-teal-400 transition shadow-lg shadow-teal-500/25 group"
+              >
+                <LogIn className="w-4 h-4 mr-2" />
+                <span>Sign In to Portal</span>
+                <ArrowRight className="w-4 h-4 ml-1.5 group-hover:translate-x-0.5 transition" />
+              </Link>
+
+              <Link
+                href="/register"
+                className="inline-flex items-center justify-center px-4 py-3 rounded-xl bg-white/10 text-white hover:bg-white/20 transition font-semibold text-xs sm:text-sm border border-white/20"
+              >
+                <Building2 className="w-4 h-4 mr-2 text-teal-300" />
+                <span>Register Institute</span>
+              </Link>
+
+              <button
+                type="button"
+                onClick={() => setShowFloatingChat(true)}
+                className="inline-flex items-center justify-center px-3 py-3 rounded-xl text-teal-300 hover:text-white font-medium text-xs sm:text-sm transition lg:hidden"
+              >
+                <MessageSquare className="w-4 h-4 mr-1.5 text-teal-400" />
+                <span>Ask DataMoat Chatbot &rarr;</span>
+              </button>
+            </div>
+
+            {/* Key Metrics Counter Banner */}
+            <div className="pt-5 mt-4 border-t border-blue-900/60 grid grid-cols-2 sm:grid-cols-4 gap-4 text-left">
+              <div>
+                <div className="text-xl sm:text-2xl font-black text-white font-mono">1,200+</div>
+                <div className="text-[10px] text-teal-300/80 font-medium mt-0.5">Benchmark Cohort</div>
+              </div>
+              <div>
+                <div className="text-xl sm:text-2xl font-black text-white font-mono">4–6 Wks</div>
+                <div className="text-[10px] text-teal-300/80 font-medium mt-0.5">Early Notice</div>
+              </div>
+              <div>
+                <div className="text-xl sm:text-2xl font-black text-white font-mono">100%</div>
+                <div className="text-[10px] text-teal-300/80 font-medium mt-0.5">DPDP Sec 9 VPC</div>
+              </div>
+              <div>
+                <div className="text-xl sm:text-2xl font-black text-white font-mono">1.94x</div>
+                <div className="text-[10px] text-teal-300/80 font-medium mt-0.5">Net Fee ROI</div>
+              </div>
+            </div>
           </div>
 
-          {/* Headline */}
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight leading-[1.12]">
-            Turn Fragmented Coaching Data Into{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-300 via-teal-200 to-emerald-400">
-              Measurable Student Success.
-            </span>
-          </h1>
-
-          {/* Subtitle */}
-          <p className="text-base sm:text-lg md:text-xl text-slate-300 leading-relaxed max-w-3xl font-normal">
-            Connect smartphone OMR tests, daily attendance, 2PL IRT topic mastery, early dropout prevention,
-            and automated parent digests in one enterprise-grade platform built for JEE & NEET excellence.
-          </p>
-
-          {/* Primary Action Buttons */}
-          <div className="pt-3 flex flex-wrap gap-3 sm:gap-4 items-center">
-            <Link
-              href="/login"
-              className="inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-teal-500 text-white font-bold text-sm hover:bg-teal-400 transition shadow-lg shadow-teal-500/25 group"
-            >
-              <LogIn className="w-4 h-4 mr-2" />
-              <span>Sign In to Portal</span>
-              <ArrowRight className="w-4 h-4 ml-1.5 group-hover:translate-x-0.5 transition" />
-            </Link>
-
-            <Link
-              href="/register"
-              className="inline-flex items-center justify-center px-5 py-3.5 rounded-xl bg-white/10 text-white hover:bg-white/20 transition font-semibold text-sm border border-white/20"
-            >
-              <Building2 className="w-4 h-4 mr-2 text-teal-300" />
-              <span>Register Coaching Institute</span>
-            </Link>
-
-            <Link
-              href="/ai-assistant"
-              className="inline-flex items-center justify-center px-4 py-3.5 rounded-xl text-teal-300 hover:text-white font-medium text-sm transition"
-            >
-              <Bot className="w-4 h-4 mr-2 text-teal-400" />
-              <span>AI Teaching Copilot &rarr;</span>
-            </Link>
-          </div>
-
-          {/* Teachmint-Style Key Metrics Counter Banner */}
-          <div className="pt-6 mt-6 border-t border-blue-900/60 grid grid-cols-2 sm:grid-cols-4 gap-4 text-left">
-            <div>
-              <div className="text-2xl sm:text-3xl font-black text-white font-mono">1,200+</div>
-              <div className="text-[11px] text-teal-300/80 font-medium mt-0.5">Benchmark Cohort Tested</div>
-            </div>
-            <div>
-              <div className="text-2xl sm:text-3xl font-black text-white font-mono">4–6 Wks</div>
-              <div className="text-[11px] text-teal-300/80 font-medium mt-0.5">Early Dropout Notice</div>
-            </div>
-            <div>
-              <div className="text-2xl sm:text-3xl font-black text-white font-mono">100%</div>
-              <div className="text-[11px] text-teal-300/80 font-medium mt-0.5">DPDP Act Sec 9 Compliant</div>
-            </div>
-            <div>
-              <div className="text-2xl sm:text-3xl font-black text-white font-mono">1.94x</div>
-              <div className="text-[11px] text-teal-300/80 font-medium mt-0.5">Direct Net Fee ROI</div>
-            </div>
+          {/* Right Column: "Ask DataMoat" Live AI Widget (Directly inspired by Civitas Learning) */}
+          <div className="lg:col-span-5 hidden lg:block">
+            <AskDataMoatChatbot />
           </div>
         </div>
 
@@ -1128,6 +1139,34 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
+
+      {/* Floating "Ask DataMoat" Widget (Civitas Style, Available Across Page) */}
+      <div className="fixed bottom-5 right-5 z-50">
+        {!showFloatingChat ? (
+          <button
+            onClick={() => setShowFloatingChat(true)}
+            className="flex items-center space-x-2.5 px-4 py-3 bg-[#08172c] hover:bg-[#0b2242] text-white rounded-full border border-teal-500/60 shadow-2xl transition transform hover:scale-105 group backdrop-blur-md"
+            title="Ask DataMoat AI Chatbot"
+            aria-label="Open Ask DataMoat Chatbot"
+          >
+            <div className="w-7 h-7 rounded-full bg-teal-500 text-slate-950 flex items-center justify-center font-bold shadow-xs group-hover:bg-teal-400">
+              <Sparkles className="w-4 h-4 text-slate-950" />
+            </div>
+            <div className="text-left leading-tight hidden sm:block">
+              <span className="text-xs font-bold text-white block group-hover:text-teal-300">
+                Ask DataMoat
+              </span>
+              <span className="text-[10px] text-teal-300/80 font-medium block">
+                Answers with sources
+              </span>
+            </div>
+          </button>
+        ) : (
+          <div className="w-[360px] sm:w-[430px] max-w-[95vw] animate-in slide-in-from-bottom duration-200">
+            <AskDataMoatChatbot onClose={() => setShowFloatingChat(false)} isFloating />
+          </div>
+        )}
+      </div>
 
     </div>
   );
