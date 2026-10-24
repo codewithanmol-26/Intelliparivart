@@ -60,21 +60,8 @@ export default function AppShell({ children }: AppShellProps) {
     clearNotification,
   } = useApp();
 
-  const { user, logout } = useAuth();
+  const { user, loading, logout } = useAuth();
   const [recomputingLocal, setRecomputingLocal] = useState(false);
-
-  // Synchronize context role with authenticated user's profile
-  React.useEffect(() => {
-    if (user && user.role && user.role !== role) {
-      setRole(user.role);
-    }
-  }, [user, role, setRole]);
-
-  const handleManualRecompute = async () => {
-    setRecomputingLocal(true);
-    await triggerRecompute();
-    setRecomputingLocal(false);
-  };
 
   const isPublicRoute = [
     '/',
@@ -88,6 +75,26 @@ export default function AppShell({ children }: AppShellProps) {
 
   // Dedicated demo subpages manage their own top role switcher bar
   const isDedicatedDemoPage = pathname.startsWith('/demo/');
+
+  // Synchronize context role with authenticated user's profile
+  React.useEffect(() => {
+    if (user && user.role && user.role !== role) {
+      setRole(user.role);
+    }
+  }, [user, role, setRole]);
+
+  // Route Protection: Unauthenticated visitors trying to view private dashboards are directed to /login
+  React.useEffect(() => {
+    if (!loading && !user && !isPublicRoute && !isDedicatedDemoPage) {
+      router.push('/login');
+    }
+  }, [loading, user, isPublicRoute, isDedicatedDemoPage, router]);
+
+  const handleManualRecompute = async () => {
+    setRecomputingLocal(true);
+    await triggerRecompute();
+    setRecomputingLocal(false);
+  };
 
   if (isPublicRoute) {
     return (
@@ -107,8 +114,8 @@ export default function AppShell({ children }: AppShellProps) {
 
             {/* Public Navigation (Clean product modules, no profile tab!) */}
             <nav className="hidden md:flex items-center space-x-6 text-xs font-semibold text-slate-200">
-              <Link href="/owner" className="text-teal-300 hover:text-white transition font-bold">
-                Revenue Model
+              <Link href="/#why-datamoat" className="hover:text-teal-300 transition">
+                Why DataMoat
               </Link>
               <Link href="/model-report" className="text-teal-300 hover:text-white transition font-bold">
                 ML Rigour
@@ -125,9 +132,26 @@ export default function AppShell({ children }: AppShellProps) {
               </Link>
             </nav>
 
-            {/* Right Action: Professional User Profile Picture Dropdown */}
+            {/* Right Action: If authenticated, render UserProfileMenu. If guest/public, show Sign In & Register */}
             <div className="hidden sm:flex items-center text-xs">
-              <UserProfileMenu align="right" />
+              {user ? (
+                <UserProfileMenu align="right" />
+              ) : (
+                <div className="flex items-center space-x-2">
+                  <Link
+                    href="/login"
+                    className="px-4 py-2 rounded-xl bg-teal-500 hover:bg-teal-400 text-white font-bold transition shadow-sm"
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold transition border border-white/20"
+                  >
+                    Register Institute
+                  </Link>
+                </div>
+              )}
             </div>
 
             {/* Mobile Controls */}
@@ -152,14 +176,25 @@ export default function AppShell({ children }: AppShellProps) {
           {mobileMenuOpen && (
             <div className="sm:hidden bg-[#08172c] border-b border-blue-900/80 px-4 py-4 space-y-3 text-xs animate-fadeIn">
               <div className="grid grid-cols-2 gap-2 text-slate-200 font-semibold">
-                <Link
-                  href="/overview"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="p-2 rounded-lg bg-blue-950 border border-blue-800 flex items-center space-x-2 text-teal-300"
-                >
-                  <Layers className="w-4 h-4" />
-                  <span>Dashboard</span>
-                </Link>
+                {user ? (
+                  <Link
+                    href="/overview"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="p-2 rounded-lg bg-blue-950 border border-blue-800 flex items-center space-x-2 text-teal-300"
+                  >
+                    <Layers className="w-4 h-4" />
+                    <span>My Dashboard</span>
+                  </Link>
+                ) : (
+                  <Link
+                    href="/login"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="p-2 rounded-lg bg-teal-600 text-white font-bold flex items-center space-x-2"
+                  >
+                    <User className="w-4 h-4" />
+                    <span>Sign In</span>
+                  </Link>
+                )}
                 <Link
                   href="/ai-assistant"
                   onClick={() => setMobileMenuOpen(false)}
@@ -167,6 +202,13 @@ export default function AppShell({ children }: AppShellProps) {
                 >
                   <Sparkles className="w-4 h-4" />
                   <span>AI Copilot</span>
+                </Link>
+                <Link
+                  href="/#why-datamoat"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2 rounded-lg hover:bg-blue-900/60"
+                >
+                  Why DataMoat
                 </Link>
                 <Link
                   href="/#capabilities"
@@ -181,13 +223,6 @@ export default function AppShell({ children }: AppShellProps) {
                   className="p-2 rounded-lg hover:bg-blue-900/60"
                 >
                   How It Works
-                </Link>
-                <Link
-                  href="/owner"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="p-2 rounded-lg bg-blue-950 border border-blue-800 flex items-center space-x-2 text-teal-300 font-bold"
-                >
-                  <span>Revenue Model</span>
                 </Link>
                 <Link
                   href="/model-report"
@@ -208,7 +243,7 @@ export default function AppShell({ children }: AppShellProps) {
                   onClick={() => setMobileMenuOpen(false)}
                   className="p-2 rounded-lg bg-teal-600 text-white font-bold"
                 >
-                  Sign In
+                  Portal Sign In
                 </Link>
               </div>
 

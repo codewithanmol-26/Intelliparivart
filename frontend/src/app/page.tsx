@@ -204,10 +204,10 @@ export default function HomePage() {
               <div className="pt-1 flex items-center justify-between text-xs border-t border-blue-900/60">
                 <span className="text-[10px] text-slate-400 font-mono">DPDP Act Sec 9 VPC</span>
                 <Link
-                  href="/overview"
+                  href="/login"
                   className="text-teal-300 hover:text-white font-bold transition flex items-center space-x-1"
                 >
-                  <span>Open Console &rarr;</span>
+                  <span>Sign In to Console &rarr;</span>
                 </Link>
               </div>
             </div>
@@ -388,7 +388,7 @@ export default function HomePage() {
               {/* Bottom Action CTA */}
               <div className="pt-6 mt-6 border-t border-slate-100">
                 <Link
-                  href="/owner"
+                  href="/login?role=owner"
                   className="w-full py-2.5 px-4 rounded-xl bg-slate-50 hover:bg-[#0284c7] hover:text-white text-slate-800 font-bold text-xs flex items-center justify-center space-x-1.5 transition border border-slate-200 group-hover:border-[#0284c7]"
                 >
                   <span>Explore Leadership Suite</span>
@@ -626,7 +626,7 @@ export default function HomePage() {
                     <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
                   </Link>
                   <Link
-                    href="/owner"
+                    href="/login?role=owner"
                     className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold transition"
                   >
                     Explore Executive ROI Model &rarr;
@@ -1066,7 +1066,7 @@ export default function HomePage() {
 
           <div className="flex items-center space-x-3">
             <Link
-              href="/owner"
+              href="/login?role=owner"
               className="text-teal-300 font-bold hover:text-white transition flex items-center space-x-1"
             >
               <span>Explore Financial ROI Model</span>
@@ -1378,11 +1378,10 @@ export default function HomePage() {
             </div>
 
             <Link
-              href="/owner"
+              href="/login?role=owner"
               className="w-full py-2.5 bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-xs rounded-xl flex items-center justify-center space-x-1.5 transition shadow-md"
             >
-              <span>View Full Case B Financial Model</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <span>View Full Case B Financial Model &rarr;</span>
             </Link>
           </div>
         </div>
@@ -1463,7 +1462,7 @@ export default function HomePage() {
               <li><Link href="/risk" className="hover:text-teal-600">Early-Warning Retention</Link></li>
               <li><Link href="/ai-assistant" className="hover:text-teal-600">AI Teaching Copilot</Link></li>
               <li><Link href="/upload" className="hover:text-teal-600">Camera OMR Ingestion</Link></li>
-              <li><Link href="/owner" className="hover:text-teal-600">Executive ROI Model</Link></li>
+              <li><Link href="/login?role=owner" className="hover:text-teal-600">Executive ROI Model</Link></li>
             </ul>
           </div>
 

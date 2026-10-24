@@ -40,7 +40,7 @@ export const DEFAULT_DEMO_USER: AuthUser = {
 };
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<AuthUser | null>(DEFAULT_DEMO_USER);
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -55,11 +55,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setUser(userData);
         })
         .catch(() => {
-          // Token expired or server restarted, fallback to default persona
-          setUser(DEFAULT_DEMO_USER);
+          // Token expired or server restarted
+          setUser(null);
+          if (typeof window !== 'undefined') {
+            localStorage.removeItem('datamoat_auth_token');
+          }
         })
         .finally(() => setLoading(false));
     } else {
+      setUser(null);
       setLoading(false);
     }
   }, []);
