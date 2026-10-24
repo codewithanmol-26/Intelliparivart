@@ -100,7 +100,7 @@ export default function AppShell({ children }: AppShellProps) {
     return (
       <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans antialiased">
         {/* Public Navigation Header (Linear/Stripe Minimal Design) */}
-        <header className="sticky top-0 z-40 bg-[#0B1F3A] text-white shadow-md border-b border-blue-900/60">
+        <header className="sticky top-0 z-[100] bg-[#0B1F3A] text-white shadow-md border-b border-blue-900/60">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             {/* Logo & Brand Wordmark */}
             <Link href="/" className="flex items-center space-x-3 group">

@@ -44,3 +44,63 @@ body {
     transparent 8px
   );
 }
+
+@layer utilities {
+  /* =========================================================================
+     PREMIUM VERTICAL STACKED SCROLL / STICKY OVERLAPPING SECTIONS
+     Inspired by modern high-end SaaS landing pages (Linear, Stripe, Apple).
+     Pure CSS compositor-driven sticky stacking with zero scroll-hijacking.
+     ========================================================================= */
+
+  @media (min-width: 1024px) and (min-height: 640px) {
+    .stacked-card {
+      position: sticky;
+      top: var(--stack-top, 76px);
+      z-index: var(--stack-z, 10);
+      margin-bottom: var(--stack-mb, 3.5rem);
+      /* Subtle elevated upward drop-shadow casting onto preceding cards as this card overlaps */
+      box-shadow: 
+        0 -18px 42px -10px rgba(15, 23, 42, 0.16),
+        0 14px 28px -6px rgba(15, 23, 42, 0.08);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+      will-change: transform;
+    }
+
+    .stacked-card-dark {
+      position: sticky;
+      top: var(--stack-top, 76px);
+      z-index: var(--stack-z, 10);
+      margin-bottom: var(--stack-mb, 3.5rem);
+      /* Deep contrast upward drop-shadow for dark cards */
+      box-shadow: 
+        0 -22px 50px -12px rgba(0, 0, 0, 0.65),
+        0 18px 36px -8px rgba(0, 0, 0, 0.4);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+      will-change: transform;
+    }
+  }
+
+  /* Responsive Graceful Fallback for Mobile and Tablets (< 1024px) */
+  @media (max-width: 1023px) {
+    .stacked-card,
+    .stacked-card-dark {
+      position: relative !important;
+      top: auto !important;
+      z-index: auto !important;
+      margin-bottom: 2rem !important;
+    }
+  }
+
+  /* Accessibility: Respect Reduced Motion Preferences */
+  @media (prefers-reduced-motion: reduce) {
+    .stacked-card,
+    .stacked-card-dark {
+      position: relative !important;
+      top: auto !important;
+      z-index: auto !important;
+      box-shadow: none !important;
+      transition: none !important;
+    }
+  }
+}
+

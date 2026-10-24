@@ -74,10 +74,14 @@ export default function HomePage() {
   const [parentPreviewLang, setParentPreviewLang] = useState<'en' | 'hi'>('hi');
 
   return (
-    <div className="space-y-20 pb-20 font-sans selection:bg-teal-500 selection:text-white">
+    <div className="space-y-12 lg:space-y-16 pb-16 font-sans selection:bg-teal-500 selection:text-white">
 
       {/* 1. TEACHMINT & CIVITAS INSPIRED HERO SECTION */}
-      <section className="relative overflow-hidden rounded-3xl bg-[#08172c] text-white p-6 sm:p-10 md:p-14 border border-blue-900/60 shadow-2xl">
+      <section
+        id="hero"
+        className="stacked-card-dark relative overflow-hidden rounded-3xl bg-[#08172c] text-white p-6 sm:p-10 md:p-14 border border-blue-900/60 shadow-2xl"
+        style={{ '--stack-top': '72px', '--stack-z': 10 } as React.CSSProperties}
+      >
         {/* Subtle Ambient Radial Glows */}
         <div className="absolute -top-24 -right-24 w-96 h-96 bg-teal-500/15 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />
@@ -220,7 +224,11 @@ export default function HomePage() {
 
 
       {/* 1.5 ELIMINATE THE GAPS THAT HOLD STUDENTS BACK (CIVITAS IMPACT PLATFORM) */}
-      <section id="eliminate-gaps" className="space-y-12 scroll-mt-20">
+      <section
+        id="eliminate-gaps"
+        className="stacked-card bg-slate-50 p-6 sm:p-10 md:p-12 rounded-3xl border border-slate-200/90 shadow-2xl space-y-8 scroll-mt-24"
+        style={{ '--stack-top': '76px', '--stack-z': 20 } as React.CSSProperties}
+      >
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto space-y-3">
           <div className="inline-flex items-center space-x-2 bg-rose-50 text-rose-700 border border-rose-200 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide">
@@ -331,14 +339,26 @@ export default function HomePage() {
             </div>
           </div>
         </div>
+      </section>
 
-        {/* BUILT FOR EVERY TEAM (CIVITAS-STYLE 3-CARD SHOWCASE) */}
-        <div className="space-y-6 pt-4">
-          <div className="text-left space-y-1">
-            <span className="text-xs font-black tracking-widest text-[#0284c7] uppercase block font-mono">
-              BUILT FOR EVERY TEAM
-            </span>
-          </div>
+
+      {/* 1.6 BUILT FOR EVERY TEAM (CIVITAS-STYLE 3-CARD SHOWCASE) */}
+      <section
+        id="built-for-teams"
+        className="stacked-card bg-white p-6 sm:p-10 md:p-12 rounded-3xl border border-slate-200/90 shadow-2xl space-y-6 scroll-mt-24"
+        style={{ '--stack-top': '80px', '--stack-z': 25 } as React.CSSProperties}
+      >
+        <div className="text-left space-y-1">
+          <span className="text-xs font-black tracking-widest text-[#0284c7] uppercase block font-mono">
+            BUILT FOR EVERY TEAM
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+            Equip Everyone to Impact Any Student Outcome
+          </h2>
+          <p className="text-sm text-slate-500 font-medium leading-relaxed">
+            Coordinated intelligence connecting leadership strategy, advising action, and student self-efficacy.
+          </p>
+        </div>
 
           {/* 3 Civitas-Style Cards: For Data-Informed Leaders, For Student-Facing Teams, For Students */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-stretch">
@@ -514,12 +534,15 @@ export default function HomePage() {
             </div>
 
           </div>
-        </div>
       </section>
 
 
       {/* 2. TEACHMINT-STYLE "ONE CONNECTED PLATFORM, EVERY STAKEHOLDER" */}
-      <section id="stakeholder-ecosystem" className="space-y-8 scroll-mt-20">
+      <section
+        id="stakeholder-ecosystem"
+        className="stacked-card bg-slate-50 p-6 sm:p-10 md:p-12 rounded-3xl border border-slate-200 shadow-2xl space-y-8 scroll-mt-24"
+        style={{ '--stack-top': '84px', '--stack-z': 30 } as React.CSSProperties}
+      >
         <div className="text-center max-w-3xl mx-auto space-y-2">
           <div className="inline-flex items-center space-x-2 bg-teal-50 text-teal-700 border border-teal-200 px-3 py-1 rounded-full text-xs font-semibold">
             <Users className="w-3.5 h-3.5 text-teal-600" />
@@ -928,7 +951,11 @@ export default function HomePage() {
 
 
       {/* 2.5 THE STRATEGIC FOUNDATION: WHY CHOOSE A DATA MOAT? */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#08172c] via-[#0B1F3A] to-[#040D1A] text-white p-6 sm:p-12 md:p-14 border border-blue-900/80 shadow-2xl space-y-10">
+      <section
+        id="why-datamoat"
+        className="stacked-card-dark relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#08172c] via-[#0B1F3A] to-[#040D1A] text-white p-6 sm:p-12 md:p-14 border border-blue-900/80 shadow-2xl space-y-10 scroll-mt-24"
+        style={{ '--stack-top': '88px', '--stack-z': 40 } as React.CSSProperties}
+      >
         {/* Subtle Background Glows */}
         <div className="absolute -top-32 -left-32 w-80 h-80 bg-teal-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-32 -right-32 w-80 h-80 bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />
@@ -1086,7 +1113,11 @@ export default function HomePage() {
 
 
       {/* 3. SIX PILLARS OF INTELLIPRIVART (TEACHMINT CONNECTED SUITE CARDS) */}
-      <section id="capabilities" className="space-y-8 scroll-mt-20">
+      <section
+        id="capabilities"
+        className="stacked-card bg-slate-50 p-6 sm:p-10 md:p-12 rounded-3xl border border-slate-200 shadow-2xl space-y-8 scroll-mt-24"
+        style={{ '--stack-top': '92px', '--stack-z': 50 } as React.CSSProperties}
+      >
         <div className="text-center max-w-3xl mx-auto space-y-2">
           <span className="text-xs font-bold uppercase tracking-wider text-teal-600 block">
             Integrated Academic Infrastructure
@@ -1200,7 +1231,11 @@ export default function HomePage() {
 
 
       {/* 4. TEACHMINT-STYLE COMPARISON MATRIX: "WHY INSTITUTES CHOOSE US OVER TRADITIONAL ERPS" */}
-      <section className="bg-slate-50 rounded-3xl p-6 sm:p-10 border border-slate-200 space-y-6">
+      <section
+        id="comparison"
+        className="stacked-card bg-slate-50 rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-2xl space-y-6 scroll-mt-24"
+        style={{ '--stack-top': '96px', '--stack-z': 60 } as React.CSSProperties}
+      >
         <div className="max-w-2xl">
           <span className="text-xs font-bold uppercase tracking-wider text-teal-600 block">
             The Competitive Difference
@@ -1260,7 +1295,11 @@ export default function HomePage() {
 
 
       {/* 5. INTERACTIVE FINANCIAL ROI CALCULATOR (TEACHMINT VALUE PROVING SECTION) */}
-      <section className="bg-[#0B1F3A] text-white rounded-3xl p-6 sm:p-12 border border-blue-900/80 shadow-2xl space-y-8">
+      <section
+        id="roi-calculator"
+        className="stacked-card-dark bg-[#0B1F3A] text-white rounded-3xl p-6 sm:p-12 border border-blue-900/80 shadow-2xl space-y-8 scroll-mt-24"
+        style={{ '--stack-top': '100px', '--stack-z': 65 } as React.CSSProperties}
+      >
         <div className="max-w-2xl">
           <div className="inline-flex items-center space-x-2 bg-teal-500/20 text-teal-300 border border-teal-500/30 px-3 py-1 rounded-full text-xs font-semibold mb-2">
             <Sliders className="w-3.5 h-3.5" />
@@ -1388,110 +1427,117 @@ export default function HomePage() {
       </section>
 
 
-      {/* 6. TEACHMINT-STYLE CLOSING CALL TO ACTION BANNER */}
-      <section className="bg-gradient-to-r from-teal-600 via-teal-700 to-blue-900 rounded-3xl p-8 sm:p-14 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
-        <div className="max-w-xl space-y-2 text-center md:text-left">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight">
-            Ready to Modernize Your Coaching Operations?
-          </h2>
-          <p className="text-xs sm:text-sm text-teal-100 leading-relaxed">
-            Join forward-looking JEE &amp; NEET coaching institutes. Sign in to your dedicated role portal or register your institute to experience pre-calibrated benchmark intelligence.
-          </p>
-        </div>
-
-        <div className="flex flex-wrap gap-3 shrink-0">
-          <Link
-            href="/login"
-            className="px-6 py-3.5 bg-white text-slate-900 rounded-xl font-bold text-xs sm:text-sm hover:bg-slate-100 transition shadow-lg flex items-center space-x-2"
-          >
-            <LogIn className="w-4 h-4 text-teal-600" />
-            <span>Sign In to Portal</span>
-          </Link>
-          <Link
-            href="/register"
-            className="px-6 py-3.5 bg-teal-950/70 hover:bg-teal-950 text-white rounded-xl font-semibold text-xs sm:text-sm transition border border-teal-300/40 flex items-center space-x-2"
-          >
-            <Building2 className="w-4 h-4 text-teal-300" />
-            <span>Register Institute</span>
-          </Link>
-        </div>
-      </section>
-
-
-      {/* 7. COMPREHENSIVE TEACHMINT-INSPIRED FOOTER */}
-      <footer className="pt-10 border-t border-slate-200 text-xs text-slate-500 space-y-8">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
-          {/* Brand Info */}
-          <div className="col-span-2 space-y-3">
-            <Link href="/" className="inline-block group">
-              <img
-                src="/intelliprivart-logo-light.png"
-                alt="Intelliprivart"
-                className="h-9 sm:h-10 w-auto object-contain group-hover:opacity-90 transition"
-              />
-            </Link>
-            <p className="text-xs text-slate-500 leading-relaxed max-w-sm">
-              The AI-Powered Connected Intelligence Platform for JEE &amp; NEET Coaching Institutes. Built for Case B: The Data Moat.
+      {/* 6. CLOSING CALL TO ACTION BANNER & FOOTER (Stacked Final Layer) */}
+      <div
+        id="closing-and-footer"
+        className="stacked-card space-y-12 bg-white rounded-3xl p-6 sm:p-10 md:p-12 border border-slate-200 shadow-2xl scroll-mt-24"
+        style={{ '--stack-top': '104px', '--stack-z': 70 } as React.CSSProperties}
+      >
+        {/* 6. TEACHMINT-STYLE CLOSING CALL TO ACTION BANNER */}
+        <section className="bg-gradient-to-r from-teal-600 via-teal-700 to-blue-900 rounded-2xl p-8 sm:p-12 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="max-w-xl space-y-2 text-center md:text-left">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight">
+              Ready to Modernize Your Coaching Operations?
+            </h2>
+            <p className="text-xs sm:text-sm text-teal-100 leading-relaxed">
+              Join forward-looking JEE &amp; NEET coaching institutes. Sign in to your dedicated role portal or register your institute to experience pre-calibrated benchmark intelligence.
             </p>
-            <div className="text-[11px] text-slate-400 space-y-1">
-              <div>Nextute EdTech Pvt. Ltd. • Registered Partner</div>
-              <div className="text-teal-700 font-semibold">DPDP Act 2023 Section 9 VPC Certified</div>
+          </div>
+
+          <div className="flex flex-wrap gap-3 shrink-0">
+            <Link
+              href="/login"
+              className="px-6 py-3.5 bg-white text-slate-900 rounded-xl font-bold text-xs sm:text-sm hover:bg-slate-100 transition shadow-lg flex items-center space-x-2"
+            >
+              <LogIn className="w-4 h-4 text-teal-600" />
+              <span>Sign In to Portal</span>
+            </Link>
+            <Link
+              href="/register"
+              className="px-6 py-3.5 bg-teal-950/70 hover:bg-teal-950 text-white rounded-xl font-semibold text-xs sm:text-sm transition border border-teal-300/40 flex items-center space-x-2"
+            >
+              <Building2 className="w-4 h-4 text-teal-300" />
+              <span>Register Institute</span>
+            </Link>
+          </div>
+        </section>
+
+
+        {/* 7. COMPREHENSIVE TEACHMINT-INSPIRED FOOTER */}
+        <footer className="pt-6 border-t border-slate-200 text-xs text-slate-500 space-y-8">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
+            {/* Brand Info */}
+            <div className="col-span-2 space-y-3">
+              <Link href="/" className="inline-block group">
+                <img
+                  src="/intelliprivart-logo-light.png"
+                  alt="Intelliprivart"
+                  className="h-9 sm:h-10 w-auto object-contain group-hover:opacity-90 transition"
+                />
+              </Link>
+              <p className="text-xs text-slate-500 leading-relaxed max-w-sm">
+                The AI-Powered Connected Intelligence Platform for JEE &amp; NEET Coaching Institutes. Built for Case B: The Data Moat.
+              </p>
+              <div className="text-[11px] text-slate-400 space-y-1">
+                <div>Nextute EdTech Pvt. Ltd. • Registered Partner</div>
+                <div className="text-teal-700 font-semibold">DPDP Act 2023 Section 9 VPC Certified</div>
+              </div>
+            </div>
+
+            {/* Stakeholder Portals */}
+            <div className="space-y-2">
+              <span className="font-bold text-slate-900 uppercase text-[10px] tracking-wider block">
+                Stakeholder Portals
+              </span>
+              <ul className="space-y-1.5 text-xs text-slate-600">
+                <li><Link href="/login?role=owner" className="hover:text-teal-600">Institute Owner Portal</Link></li>
+                <li><Link href="/login?role=teacher" className="hover:text-teal-600">Teacher Workspace</Link></li>
+                <li><Link href="/login?role=student" className="hover:text-teal-600">Student Growth View</Link></li>
+                <li><Link href="/login?role=parent" className="hover:text-teal-600">Parent Bilingual Digest</Link></li>
+              </ul>
+            </div>
+
+            {/* Academic Modules */}
+            <div className="space-y-2">
+              <span className="font-bold text-slate-900 uppercase text-[10px] tracking-wider block">
+                Intelligence Modules
+              </span>
+              <ul className="space-y-1.5 text-xs text-slate-600">
+                <li><Link href="/mastery" className="hover:text-teal-600">2PL IRT Topic Mastery</Link></li>
+                <li><Link href="/risk" className="hover:text-teal-600">Early-Warning Retention</Link></li>
+                <li><Link href="/ai-assistant" className="hover:text-teal-600">AI Teaching Copilot</Link></li>
+                <li><Link href="/upload" className="hover:text-teal-600">Camera OMR Ingestion</Link></li>
+                <li><Link href="/login?role=owner" className="hover:text-teal-600">Executive ROI Model</Link></li>
+              </ul>
+            </div>
+
+            {/* Legal & Compliance */}
+            <div className="space-y-2">
+              <span className="font-bold text-slate-900 uppercase text-[10px] tracking-wider block">
+                Governance &amp; Trust
+              </span>
+              <ul className="space-y-1.5 text-xs text-slate-600">
+                <li><Link href="/privacy" className="hover:text-teal-600">DPDP Consent Register</Link></li>
+                <li><Link href="/privacy-policy" className="hover:text-teal-600">Privacy Policy</Link></li>
+                <li><Link href="/terms" className="hover:text-teal-600">Terms of Service</Link></li>
+                <li><Link href="/model-report" className="hover:text-teal-600">ML Rigour &amp; Audit Card</Link></li>
+              </ul>
             </div>
           </div>
 
-          {/* Stakeholder Portals */}
-          <div className="space-y-2">
-            <span className="font-bold text-slate-900 uppercase text-[10px] tracking-wider block">
-              Stakeholder Portals
-            </span>
-            <ul className="space-y-1.5 text-xs text-slate-600">
-              <li><Link href="/login?role=owner" className="hover:text-teal-600">Institute Owner Portal</Link></li>
-              <li><Link href="/login?role=teacher" className="hover:text-teal-600">Teacher Workspace</Link></li>
-              <li><Link href="/login?role=student" className="hover:text-teal-600">Student Growth View</Link></li>
-              <li><Link href="/login?role=parent" className="hover:text-teal-600">Parent Bilingual Digest</Link></li>
-            </ul>
+          <div className="pt-6 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-center text-[11px] text-slate-400 gap-2">
+            <span>&copy; {new Date().getFullYear()} Intelliprivart • All Rights Reserved.</span>
+            <div className="flex items-center space-x-3">
+              <span>Nextute × Finance Club, IIT Patna 2026</span>
+              <span>•</span>
+              <span className="text-teal-600 font-semibold">2PL IRT + BKT + Conformal GBDT</span>
+            </div>
           </div>
-
-          {/* Academic Modules */}
-          <div className="space-y-2">
-            <span className="font-bold text-slate-900 uppercase text-[10px] tracking-wider block">
-              Intelligence Modules
-            </span>
-            <ul className="space-y-1.5 text-xs text-slate-600">
-              <li><Link href="/mastery" className="hover:text-teal-600">2PL IRT Topic Mastery</Link></li>
-              <li><Link href="/risk" className="hover:text-teal-600">Early-Warning Retention</Link></li>
-              <li><Link href="/ai-assistant" className="hover:text-teal-600">AI Teaching Copilot</Link></li>
-              <li><Link href="/upload" className="hover:text-teal-600">Camera OMR Ingestion</Link></li>
-              <li><Link href="/login?role=owner" className="hover:text-teal-600">Executive ROI Model</Link></li>
-            </ul>
-          </div>
-
-          {/* Legal & Compliance */}
-          <div className="space-y-2">
-            <span className="font-bold text-slate-900 uppercase text-[10px] tracking-wider block">
-              Governance &amp; Trust
-            </span>
-            <ul className="space-y-1.5 text-xs text-slate-600">
-              <li><Link href="/privacy" className="hover:text-teal-600">DPDP Consent Register</Link></li>
-              <li><Link href="/privacy-policy" className="hover:text-teal-600">Privacy Policy</Link></li>
-              <li><Link href="/terms" className="hover:text-teal-600">Terms of Service</Link></li>
-              <li><Link href="/model-report" className="hover:text-teal-600">ML Rigour &amp; Audit Card</Link></li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="pt-6 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-center text-[11px] text-slate-400 gap-2">
-          <span>&copy; {new Date().getFullYear()} Intelliprivart • All Rights Reserved.</span>
-          <div className="flex items-center space-x-3">
-            <span>Nextute × Finance Club, IIT Patna 2026</span>
-            <span>•</span>
-            <span className="text-teal-600 font-semibold">2PL IRT + BKT + Conformal GBDT</span>
-          </div>
-        </div>
-      </footer>
+        </footer>
+      </div>
 
       {/* Floating "Ask DataMoat" Widget (Civitas Style, Available Across Page) */}
-      <div className="fixed bottom-5 right-5 z-50">
+      <div className="fixed bottom-5 right-5 z-[90]">
         {!showFloatingChat ? (
           <button
             onClick={() => setShowFloatingChat(true)}
