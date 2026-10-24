@@ -166,6 +166,343 @@ export default function HomePage() {
       </section>
 
 
+      {/* 1.5 ELIMINATE THE GAPS THAT HOLD STUDENTS BACK (CIVITAS IMPACT PLATFORM) */}
+      <section id="eliminate-gaps" className="space-y-12 scroll-mt-20">
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto space-y-3">
+          <div className="inline-flex items-center space-x-2 bg-rose-50 text-rose-700 border border-rose-200 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide">
+            <AlertTriangle className="w-3.5 h-3.5 text-rose-600" />
+            <span>The Institutional Problem • Why Student Success Fails</span>
+          </div>
+
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight">
+            Eliminate the Gaps That Hold Students Back
+          </h2>
+
+          <p className="text-base sm:text-lg text-slate-600 leading-relaxed font-normal">
+            Student success efforts rarely fail for lack of care. They fail because teams work in silos, act too late, and cannot see what is working. <strong>DataMoat connects data, insight, and action so teams coordinate support and act in time.</strong>
+          </p>
+        </div>
+
+        {/* The 4 Core Gaps Holding Institutes Back */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {/* Gap 1: Fragmented systems and siloed data */}
+          <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs hover:border-teal-500 hover:shadow-md transition space-y-3.5 flex flex-col justify-between">
+            <div className="space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center font-bold">
+                <Database className="w-5 h-5 text-rose-600" />
+              </div>
+              <h3 className="text-base font-bold text-slate-900 leading-snug">
+                Fragmented Systems and Siloed Data
+              </h3>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                OMR tests, biometric attendance logs, LMS portals, and fee registers sit in isolated silos. No team member has the complete longitudinal picture of student struggle.
+              </p>
+            </div>
+            <div className="pt-3 border-t border-slate-100 space-y-1">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-teal-700 block">
+                DataMoat Solution
+              </span>
+              <p className="text-[11px] font-medium text-slate-700">
+                Unified data pipeline syncing smartphone camera OMR, registers, and test marks in real time.
+              </p>
+            </div>
+          </div>
+
+          {/* Gap 2: Limited visibility into what's working */}
+          <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs hover:border-teal-500 hover:shadow-md transition space-y-3.5 flex flex-col justify-between">
+            <div className="space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
+                <Activity className="w-5 h-5 text-amber-600" />
+              </div>
+              <h3 className="text-base font-bold text-slate-900 leading-snug">
+                Limited Visibility into What’s Working
+              </h3>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Raw scores mislead. Institutes repeat generic lectures without knowing whether slumps stem from test difficulty or true student latent concept deficits.
+              </p>
+            </div>
+            <div className="pt-3 border-t border-slate-100 space-y-1">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-teal-700 block">
+                DataMoat Solution
+              </span>
+              <p className="text-[11px] font-medium text-slate-700">
+                2PL IRT + BKT psychometrics isolating item difficulty ($b$) from true latent ability ($\theta$).
+              </p>
+            </div>
+          </div>
+
+          {/* Gap 3: Inconsistent, reactive engagement */}
+          <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs hover:border-teal-500 hover:shadow-md transition space-y-3.5 flex flex-col justify-between">
+            <div className="space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+                <Clock className="w-5 h-5 text-blue-600" />
+              </div>
+              <h3 className="text-base font-bold text-slate-900 leading-snug">
+                Inconsistent, Reactive Engagement
+              </h3>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Assistance arrives 6 weeks too late—after a student has failed milestone examinations, lost self-confidence, or quietly stopped attending classes.
+              </p>
+            </div>
+            <div className="pt-3 border-t border-slate-100 space-y-1">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-teal-700 block">
+                DataMoat Solution
+              </span>
+              <p className="text-[11px] font-medium text-slate-700">
+                Proactive early-warning triggers alert faculty 4–6 weeks ahead, generating instant 15-minute remedials.
+              </p>
+            </div>
+          </div>
+
+          {/* Gap 4: Difficulty measuring ROI */}
+          <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs hover:border-teal-500 hover:shadow-md transition space-y-3.5 flex flex-col justify-between">
+            <div className="space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
+                <TrendingUp className="w-5 h-5 text-emerald-600" />
+              </div>
+              <h3 className="text-base font-bold text-slate-900 leading-snug">
+                Difficulty Measuring ROI
+              </h3>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Directors struggle to prove which academic programs actually retain at-risk students, safeguard tuition fees, or boost final exam selections.
+              </p>
+            </div>
+            <div className="pt-3 border-t border-slate-100 space-y-1">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-teal-700 block">
+                DataMoat Solution
+              </span>
+              <p className="text-[11px] font-medium text-slate-700">
+                Executive retention ledger verifying ₹28.50L protected fee revenue and an auditable 18.3x net ROI.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* The Institutional Impact Platform Architecture */}
+        <div className="bg-gradient-to-br from-[#08172c] via-[#0B1F3A] to-[#040D1A] text-white rounded-3xl p-6 sm:p-10 md:p-12 border border-blue-900/80 shadow-2xl space-y-8">
+          <div className="max-w-3xl space-y-2">
+            <div className="inline-flex items-center space-x-2 bg-teal-500/20 text-teal-300 border border-teal-500/40 px-3.5 py-1.5 rounded-full text-xs font-bold">
+              <Sparkles className="w-3.5 h-3.5 text-teal-400" />
+              <span>The Institutional Impact Platform</span>
+            </div>
+            <h3 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight">
+              Equip Everyone to Impact Any Student Outcome
+            </h3>
+            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+              When data, insight, and action are coordinated seamlessly across institutional leaders, faculty, and students, your coaching center transitions from reactive damage control to proactive student success.
+            </p>
+          </div>
+
+          {/* 3 Core Impact Tiers: Leaders, Student-Facing Staff, Students */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* 1. Leaders */}
+            <div className="rounded-2xl bg-slate-900/90 border border-blue-900/70 p-6 space-y-5 hover:border-teal-500/50 transition flex flex-col justify-between">
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3 pb-3 border-b border-blue-900/60">
+                  <div className="w-10 h-10 rounded-xl bg-blue-500/20 text-teal-300 flex items-center justify-center font-bold">
+                    <Building2 className="w-5 h-5 text-teal-400" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-white text-base">Leaders</h4>
+                    <span className="text-[10px] text-teal-300 font-medium">Owners, Directors &amp; Academic Deans</span>
+                  </div>
+                </div>
+
+                <ul className="space-y-3 text-xs text-slate-300">
+                  <li className="flex items-start space-x-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-white block">Student Outcome Analytics</strong>
+                      <span className="text-[11px] text-slate-400">Multi-batch milestone test performance radar &amp; percentile trends.</span>
+                    </div>
+                  </li>
+                  <li className="flex items-start space-x-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-white block">Predictive Factors of Success</strong>
+                      <span className="text-[11px] text-slate-400">Early dropout risk factors &amp; longitudinal latent ability tracking.</span>
+                    </div>
+                  </li>
+                  <li className="flex items-start space-x-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-white block">Initiative Analytics</strong>
+                      <span className="text-[11px] text-slate-400">Measuring empirical recovery rates from faculty remedial interventions.</span>
+                    </div>
+                  </li>
+                  <li className="flex items-start space-x-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-white block">Course Insights</strong>
+                      <span className="text-[11px] text-slate-400">Deep-dive subject mastery across Physics, Chemistry, and Mathematics.</span>
+                    </div>
+                  </li>
+                  <li className="flex items-start space-x-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-white block">Course Demand Analytics</strong>
+                      <span className="text-[11px] text-slate-400">Batch enrollment capacity forecasting &amp; executive fee protection ROI.</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="pt-4 border-t border-blue-900/60">
+                <Link
+                  href="/owner"
+                  className="w-full py-2.5 rounded-xl bg-blue-900/80 hover:bg-blue-800 text-white font-bold text-xs flex items-center justify-center space-x-1.5 transition border border-blue-700/60"
+                >
+                  <span>Explore Leadership Analytics</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+
+            {/* 2. Student-Facing Staff */}
+            <div className="rounded-2xl bg-slate-900/90 border border-teal-900/70 p-6 space-y-5 hover:border-teal-500/50 transition flex flex-col justify-between">
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3 pb-3 border-b border-teal-900/60">
+                  <div className="w-10 h-10 rounded-xl bg-teal-500/20 text-teal-300 flex items-center justify-center font-bold">
+                    <Layers className="w-5 h-5 text-teal-400" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-white text-base">Student-Facing Staff</h4>
+                    <span className="text-[10px] text-teal-300 font-medium">Teachers, Mentors &amp; Counselors</span>
+                  </div>
+                </div>
+
+                <ul className="space-y-3 text-xs text-slate-300">
+                  <li className="flex items-start space-x-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-white block">Advising CRM with Case Management</strong>
+                      <span className="text-[11px] text-slate-400">Actionable intervention triage ledger with closed-loop recovery tracking.</span>
+                    </div>
+                  </li>
+                  <li className="flex items-start space-x-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-white block">Unified Student Profile</strong>
+                      <span className="text-[11px] text-slate-400">Micro-topic mastery heatmap, latent ability ($\theta$), &amp; attendance history.</span>
+                    </div>
+                  </li>
+                  <li className="flex items-start space-x-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-white block">Shared Notes &amp; Observations</strong>
+                      <span className="text-[11px] text-slate-400">Cross-faculty notes on student conceptual blockers and engagement.</span>
+                    </div>
+                  </li>
+                  <li className="flex items-start space-x-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-white block">Academic Alerts</strong>
+                      <span className="text-[11px] text-slate-400">Automated alerts triggered on 2 consecutive milestone test slumps.</span>
+                    </div>
+                  </li>
+                  <li className="flex items-start space-x-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-white block">Dynamic Student Lists</strong>
+                      <span className="text-[11px] text-slate-400">Auto-filter students needing specific remedials (e.g., Rotational Dynamics).</span>
+                    </div>
+                  </li>
+                  <li className="flex items-start space-x-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-white block">SMS, WhatsApp &amp; Email Outreach</strong>
+                      <span className="text-[11px] text-slate-400">Instant dispatch of bilingual weekly progress digests directly to parents.</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="pt-4 border-t border-teal-900/60">
+                <Link
+                  href="/interventions"
+                  className="w-full py-2.5 rounded-xl bg-teal-700 hover:bg-teal-600 text-white font-bold text-xs flex items-center justify-center space-x-1.5 transition border border-teal-500/60"
+                >
+                  <span>Open Faculty Advising CRM</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+
+            {/* 3. Students */}
+            <div className="rounded-2xl bg-slate-900/90 border border-emerald-900/70 p-6 space-y-5 hover:border-teal-500/50 transition flex flex-col justify-between">
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3 pb-3 border-b border-emerald-900/60">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center font-bold">
+                    <GraduationCap className="w-5 h-5 text-emerald-400" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-white text-base">Students</h4>
+                    <span className="text-[10px] text-emerald-300 font-medium">Aspirants &amp; Family Guardians</span>
+                  </div>
+                </div>
+
+                <ul className="space-y-3 text-xs text-slate-300">
+                  <li className="flex items-start space-x-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-white block">Collaborative Degree &amp; Rank Planning</strong>
+                      <span className="text-[11px] text-slate-400">Calibrated target planning with conformal $[P_{10}, P_{90}]$ percentile ranges.</span>
+                    </div>
+                  </li>
+                  <li className="flex items-start space-x-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-white block">Smart Class Schedule Builder</strong>
+                      <span className="text-[11px] text-slate-400">Daily practice drill schedules prioritized by individual weak sub-topics.</span>
+                    </div>
+                  </li>
+                  <li className="flex items-start space-x-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-white block">Registration &amp; Test Enrollment</strong>
+                      <span className="text-[11px] text-slate-400">Smooth enrollment for upcoming JEE/NEET mock milestones and drills.</span>
+                    </div>
+                  </li>
+                  <li className="flex items-start space-x-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-white block">Appointment Calendaring</strong>
+                      <span className="text-[11px] text-slate-400">1-click booking for 1-on-1 mentor guidance and doubt sessions.</span>
+                    </div>
+                  </li>
+                  <li className="flex items-start space-x-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-white block">Asynchronous Guidance &amp; AI Doubt Tutor</strong>
+                      <span className="text-[11px] text-slate-400">24/7 step-by-step problem resolution with mathematical LaTeX formatting.</span>
+                    </div>
+                  </li>
+                  <li className="flex items-start space-x-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-white block">Inspire Native Mobile App Experience</strong>
+                      <span className="text-[11px] text-slate-400">Mobile OMR submissions, learning streak badges, &amp; Hindi parent digests.</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="pt-4 border-t border-emerald-900/60">
+                <Link
+                  href="/student"
+                  className="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center space-x-1.5 transition border border-emerald-400/60"
+                >
+                  <span>View Student Experience</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
       {/* 2. TEACHMINT-STYLE "ONE CONNECTED PLATFORM, EVERY STAKEHOLDER" */}
       <section id="stakeholder-ecosystem" className="space-y-8 scroll-mt-20">
         <div className="text-center max-w-3xl mx-auto space-y-2">

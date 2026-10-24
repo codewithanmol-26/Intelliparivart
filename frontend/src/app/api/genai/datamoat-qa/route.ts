@@ -19,6 +19,29 @@ interface KnowledgeEntry {
 
 const DETERMINISTIC_KNOWLEDGE: KnowledgeEntry[] = [
   {
+    patterns: ['eliminate the gaps', 'gaps', 'silos', 'siloed', 'civitas', 'impact platform', 'institutional impact', 'equip everyone', 'hold students back', 'why students fail', 'reactive engagement'],
+    answer: `**Eliminate the Gaps That Hold Students Back:**
+
+Student success efforts rarely fail for lack of care. They fail because teams work in silos, act too late, and cannot see what is working. DataMoat connects data, insight, and action so coaching institutes coordinate support and act in time.
+
+**The 4 Core Gaps Holding Institutes Back:**
+1. **Fragmented systems and siloed data:** Bubble sheets, attendance registers, LMS portals, and fee ledgers sit in disconnected spreadsheets without a unified student view.
+2. **Limited visibility into what's working:** Raw test percentages obscure whether poor marks stem from question difficulty or true concept gaps.
+3. **Inconsistent, reactive engagement:** Interventions happen 6 weeks too late—after milestone tests crash or students drop out.
+4. **Difficulty measuring ROI:** Leadership cannot measure which academic interventions retain fees or increase JEE/NEET selections.
+
+**The Institutional Impact Platform — Equip Everyone to Impact Any Student Outcome:**
+• **Leaders (Owners & Directors):** Student Outcome Analytics, Predictive Factors of Success, Initiative Analytics, Course Insights, and Course Demand Analytics.
+• **Student-Facing Staff (Teachers & Mentors):** Advising CRM with Case Management, Unified Student Profile, Shared Notes, Academic Alerts, Dynamic Student Lists, and SMS/WhatsApp Parent Outreach.
+• **Students & Families:** Collaborative Target Planning, Smart Schedule Builder, 15-Minute Remedial Worksheets, Appointment Calendaring, Asynchronous AI Guidance, and Bilingual Progress Digests.`,
+    sources: [
+      { title: 'The Institutional Impact Platform', href: '/#eliminate-gaps' },
+      { title: 'Executive ROI Model', href: '/owner' },
+      { title: 'Remedial Triage Ledger', href: '/interventions' },
+      { title: 'Student Growth View', href: '/student' }
+    ]
+  },
+  {
     patterns: ['predictive model', 'algorithm', '2pl', 'irt', 'bkt', 'conformal', 'how do your predictive'],
     answer: `Intelliprivart employs a three-tier psychometric and predictive architecture designed specifically for competitive exam coaching (IIT Patna Case B):
 
