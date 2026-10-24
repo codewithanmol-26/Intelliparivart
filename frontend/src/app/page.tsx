@@ -89,40 +89,54 @@ export default function HomePage() {
         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           {/* Left Column: Headline, Trust Pill & Metrics */}
           <div className="lg:col-span-7 space-y-6">
-            {/* Badge Pill */}
-            <div className="inline-flex items-center space-x-2 bg-teal-500/15 text-teal-300 border border-teal-500/30 px-3.5 py-1.5 rounded-full text-xs font-semibold backdrop-blur-md shadow-inner">
-              <Sparkles className="w-3.5 h-3.5 text-teal-400" />
-              <span>The All-In-One AI Operating System for Coaching Institutes</span>
+            {/* Eyebrow & Category Breadcrumbs (Civitas Enterprise Pattern) */}
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="inline-flex items-center space-x-1.5 text-xs text-slate-400 font-medium">
+                <Link href="/" className="hover:text-slate-200 transition">Home</Link>
+                <span>/</span>
+                <span className="hover:text-slate-200 transition">Solutions</span>
+                <span>/</span>
+              </div>
+              <div className="inline-flex items-center space-x-1.5 bg-sky-500/15 text-[#38BDF8] border border-sky-500/30 px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase backdrop-blur-md">
+                <Sparkles className="w-3.5 h-3.5 text-[#38BDF8]" />
+                <span>Institutional Impact Platform</span>
+              </div>
             </div>
 
-            {/* Headline */}
-            <h1 className="text-3xl sm:text-5xl md:text-5xl lg:text-6xl font-black tracking-tight leading-[1.12]">
-              Turn Fragmented Coaching Data Into{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-300 via-teal-200 to-emerald-400">
-                Measurable Student Success.
+            {/* Triad Headline: [Scope] + [Compatibility] + [Proof] */}
+            <h1 className="text-3xl sm:text-5xl md:text-5xl lg:text-6xl font-black tracking-tight leading-[1.10] text-white">
+              One platform. Every system you run.{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-300 via-emerald-300 to-teal-200 block sm:inline">
+                Outcomes you can prove.
               </span>
             </h1>
 
-            {/* Subtitle */}
-            <p className="text-sm sm:text-base md:text-lg text-slate-300 leading-relaxed font-normal">
-              Connect smartphone OMR tests, daily attendance, 2PL IRT topic mastery, early dropout prevention,
-              and automated parent digests in one enterprise-grade platform built for JEE &amp; NEET excellence.
+            {/* Subtitle: 4-Step Action Flywheel (Unify -> Surface -> Act -> Measure) */}
+            <p className="text-sm sm:text-base md:text-lg text-slate-300 leading-relaxed font-normal max-w-2xl">
+              Unify coaching data, surface hidden student risk, act in time — and measure every retention outcome against an empirical comparison group.
             </p>
 
-            {/* Primary Action Buttons */}
+            {/* Primary Action Buttons (Pill Design with High Contrast) */}
             <div className="pt-2 flex flex-wrap gap-3 sm:gap-4 items-center">
               <Link
                 href="/login"
-                className="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-teal-500 text-white font-bold text-xs sm:text-sm hover:bg-teal-400 transition shadow-lg shadow-teal-500/25 group"
+                className="inline-flex items-center justify-center px-6 py-3.5 rounded-full bg-[#FF5722] hover:bg-[#F4511E] text-white font-bold text-xs sm:text-sm transition shadow-lg shadow-orange-500/25 group"
               >
                 <LogIn className="w-4 h-4 mr-2" />
-                <span>Sign In to Portal</span>
+                <span>Explore Live Demo</span>
                 <ArrowRight className="w-4 h-4 ml-1.5 group-hover:translate-x-0.5 transition" />
               </Link>
 
+              <a
+                href="#roi-calculator"
+                className="inline-flex items-center justify-center px-6 py-3.5 rounded-full bg-white/5 hover:bg-white/10 text-white transition font-semibold text-xs sm:text-sm border border-slate-500 hover:border-slate-300"
+              >
+                <span>Run the Numbers (ROI)</span>
+              </a>
+
               <Link
                 href="/register"
-                className="inline-flex items-center justify-center px-4 py-3 rounded-xl bg-white/10 text-white hover:bg-white/20 transition font-semibold text-xs sm:text-sm border border-white/20"
+                className="inline-flex items-center justify-center px-5 py-3.5 rounded-full bg-white/10 text-white hover:bg-white/20 transition font-semibold text-xs sm:text-sm border border-white/20"
               >
                 <Building2 className="w-4 h-4 mr-2 text-teal-300" />
                 <span>Register Institute</span>

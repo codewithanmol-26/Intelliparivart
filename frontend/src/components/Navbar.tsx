@@ -211,6 +211,14 @@ export default function Navbar() {
               </span>
             </div>
 
+            {/* Quick Action Pill: Run the numbers (Civitas Header Pattern) */}
+            <Link
+              href="/#roi-calculator"
+              className="hidden 2xl:inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold text-slate-200 hover:text-white border border-slate-600 hover:border-slate-400 transition"
+            >
+              <span>Run the numbers</span>
+            </Link>
+
             {/* User Profile Picture & Popover Window */}
             <UserProfileMenu align="right" />
           </div>
