@@ -29,8 +29,6 @@ interface AppContextType {
 
 export const INITIAL_INSTITUTES: InstituteInfo[] = [
   { id: 'INST_PATNA_01', name: 'Apex JEE & Medical Academy, Patna', city: 'Patna, Bihar' },
-  { id: 'INST_KOTA_02', name: 'Chaitanya Science Forum, Kota', city: 'Kota, Rajasthan' },
-  { id: 'INST_LUCKNOW_03', name: 'Drona Medical Institute, Lucknow', city: 'Lucknow, UP' },
 ];
 
 const AppContext = createContext<AppContextType | undefined>(undefined);

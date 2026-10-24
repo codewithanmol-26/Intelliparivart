@@ -1,0 +1,5 @@
+id,tenant_id,name,class_level,target_exam,faculty_lead
+BATCH_TOP30,INST_PATNA_01,Achievers JEE Advanced Top-30,12th Grade,JEE Advanced,Prof. R. K. Verma
+BATCH_NEET12,INST_PATNA_01,Target NEET Achievers PCB,12th / Droppers,NEET-UG,Dr. Sunita Mishra
+BATCH_ELEV12,INST_PATNA_01,Elevate JEE 12th Batch B,12th Grade,JEE Main,Prof. Manoj Trivedi
+BATCH_FND11,INST_PATNA_01,Foundation JEE & NEET 11th,11th Grade,Foundation (11th),Er. Vikram Tiwari

@@ -61,6 +61,7 @@ class Student(Base):
     parent_contact_consent = Column(Boolean, default=True) # DPDP Act Section 9
     guardian_name = Column(String(150), nullable=True, default="Parent / Guardian")
     guardian_phone = Column(String(30), nullable=True) # e.g. +919876543210
+    latent_ability_theta = Column(Float, default=0.0)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
     institute = relationship("Institute", back_populates="students")
