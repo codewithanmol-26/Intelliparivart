@@ -62,11 +62,16 @@ import {
   LineChart,
   Line
 } from 'recharts';
+import CivitasActionableAnalytics from '../../components/CivitasActionableAnalytics';
+import CivitasConnectedWorkflows from '../../components/CivitasConnectedWorkflows';
 
 export default function OverviewPage() {
   const { tenantId, role, setRole, recomputeVersion, selectedStudentId, setSelectedStudentId, notifyRecomputed } = useApp();
   const [data, setData] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
+
+  // Civitas View Mode: Actionable Analytics, Connected Workflows, or Role Perspectives
+  const [overviewMode, setOverviewMode] = useState<'analytics' | 'workflows' | 'roles'>('analytics');
 
   // Teacher Workspace State (when role === 'teacher')
   const [teacherSubject, setTeacherSubject] = useState<string>('All');
@@ -176,6 +181,85 @@ export default function OverviewPage() {
 
   return (
     <div className="space-y-6">
+      {/* ============================================================== */}
+      {/* CIVITAS PLATFORM ARCHITECTURE & WORKFLOW SELECTOR              */}
+      {/* ============================================================== */}
+      <div className="bg-gradient-to-r from-[#08172c] via-[#0F2744] to-[#0B1F3A] text-white p-4 sm:p-5 rounded-3xl border border-blue-900/80 shadow-xl flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div className="space-y-1">
+          <div className="flex items-center space-x-2 text-[10px] font-bold uppercase tracking-wider text-teal-400">
+            <Sparkles className="w-3.5 h-3.5 text-teal-400" />
+            <span>Civitas Learning Platform Architecture • Enterprise Coaching Intelligence</span>
+          </div>
+          <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+            Institutional Impact &amp; Connected Workflows Console
+          </h1>
+          <p className="text-xs text-slate-300">
+            Spot risk, forecast course demand, and measure initiative impact from one dataset with coordinated AI workflows.
+          </p>
+        </div>
+
+        {/* 3 Primary View Mode Buttons */}
+        <div className="flex flex-wrap items-center gap-1.5 p-1 bg-slate-900/80 rounded-2xl border border-blue-900/70 self-start md:self-auto text-xs font-bold">
+          <button
+            onClick={() => setOverviewMode('analytics')}
+            className={`px-3.5 py-2 rounded-xl transition flex items-center space-x-1.5 cursor-pointer ${
+              overviewMode === 'analytics'
+                ? 'bg-teal-500 text-slate-950 font-black shadow-sm'
+                : 'text-slate-300 hover:text-white hover:bg-white/10'
+            }`}
+          >
+            <TrendingUp className="w-3.5 h-3.5" />
+            <span>1. Actionable Analytics</span>
+          </button>
+
+          <button
+            onClick={() => setOverviewMode('workflows')}
+            className={`px-3.5 py-2 rounded-xl transition flex items-center space-x-1.5 cursor-pointer ${
+              overviewMode === 'workflows'
+                ? 'bg-teal-500 text-slate-950 font-black shadow-sm'
+                : 'text-slate-300 hover:text-white hover:bg-white/10'
+            }`}
+          >
+            <Users className="w-3.5 h-3.5" />
+            <span>2. Connected Workflows</span>
+          </button>
+
+          <button
+            onClick={() => setOverviewMode('roles')}
+            className={`px-3.5 py-2 rounded-xl transition flex items-center space-x-1.5 cursor-pointer ${
+              overviewMode === 'roles'
+                ? 'bg-teal-500 text-slate-950 font-black shadow-sm'
+                : 'text-slate-300 hover:text-white hover:bg-white/10'
+            }`}
+          >
+            <Building2 className="w-3.5 h-3.5" />
+            <span>3. Role Perspectives</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Render Mode 1: Civitas Actionable Analytics */}
+      {overviewMode === 'analytics' && (
+        <CivitasActionableAnalytics
+          onSelectStudent={(stId) => {
+            setSelectedStudentId(stId);
+            setOverviewMode('workflows');
+          }}
+          onSwitchToWorkflows={() => setOverviewMode('workflows')}
+        />
+      )}
+
+      {/* Render Mode 2: Civitas Connected Workflows */}
+      {overviewMode === 'workflows' && (
+        <CivitasConnectedWorkflows
+          studentId={selectedStudentId || 'STD_PAT_001'}
+          onBackToAnalytics={() => setOverviewMode('analytics')}
+        />
+      )}
+
+      {/* Render Mode 3: Traditional Role Workspaces */}
+      {overviewMode === 'roles' && (
+        <div className="space-y-6">
       {/* ============================================================== */}
       {/* MASTER ROLE-SPECIFIC DASHBOARD SWITCHER                        */}
       {/* ============================================================== */}
@@ -1118,6 +1202,8 @@ export default function OverviewPage() {
             </button>
           </div>
         </div>
+      )}
+      </div>
       )}
     </div>
   );
