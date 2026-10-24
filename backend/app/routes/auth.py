@@ -271,8 +271,13 @@ def get_demo_users(db: Session = Depends(get_db)):
 @router.post("/login", response_model=LoginResponse)
 def login(req: LoginRequest, db: Session = Depends(get_db)):
     """Authenticates user credentials and issues a 24-hour JWT token."""
+    req_email = req.email.strip().lower()
+    if req_email in ("teacher@apex.edu", "faculty@apex.edu"):
+        req_email = "verma.physics@apex.edu"
+    elif req_email in ("parent@apex.edu", "guardian@apex.edu"):
+        req_email = "parent_001@apex.edu"
     # 1. Check if it matches pre-seeded demo user fallback immediately
-    demo_match = next((p for p in DEMO_PERSONAS if p["email"].lower() == req.email.strip().lower()), None)
+    demo_match = next((p for p in DEMO_PERSONAS if p["email"].lower() == req_email), None)
     if demo_match and req.password.strip() in [demo_match["password"], "password", "demo123", "123456"]:
         token = create_access_token({
             "sub": demo_match["id"],

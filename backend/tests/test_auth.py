@@ -34,7 +34,7 @@ def test_successful_login():
 def test_auth_me_endpoint():
     # 1. Login to get token
     login_res = client.post("/auth/login", json={
-        "email": "teacher@apex.edu",
+        "email": "verma.physics@apex.edu",
         "password": "teacher"
     })
     assert login_res.status_code == 200
@@ -45,7 +45,7 @@ def test_auth_me_endpoint():
     assert me_res.status_code == 200
     me_data = me_res.json()
     assert me_data["role"] == "teacher"
-    assert me_data["email"] == "teacher@apex.edu"
+    assert me_data["email"] == "verma.physics@apex.edu"
 
 def test_invalid_login_rejection():
     res = client.post("/auth/login", json={

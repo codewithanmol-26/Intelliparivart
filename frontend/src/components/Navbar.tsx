@@ -65,6 +65,7 @@ export default function Navbar() {
       case 'owner':
         return [
           { href: '/overview', label: 'Owner Dashboard', icon: LineChart },
+          { href: '/directory', label: 'Faculty & Students', icon: Users },
           { href: '/owner', label: 'Executive ROI & Cohort', icon: LineChart },
           { href: '/risk', label: 'Early-Warning Dropouts', icon: ShieldAlert },
           { href: '/mastery', label: 'Batch Mastery Heatmap', icon: Layers },

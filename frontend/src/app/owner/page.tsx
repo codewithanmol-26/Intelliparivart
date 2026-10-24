@@ -120,6 +120,16 @@ export default function OwnerPage() {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
+          {/* Direct Link to Faculty & Student Directory */}
+          <Link
+            href="/directory"
+            className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs transition shadow-xs"
+            title="Inspect all 100 students, 100 parents, and 5 faculty members"
+          >
+            <Users className="w-3.5 h-3.5" />
+            <span>Students & Faculty (100)</span>
+          </Link>
+
           {/* Direct Excel Workbook Download */}
           <a
             href="/2_Excel_Nextute_Case_B_Financial_Model.xlsx"
