@@ -52,8 +52,12 @@ class LoginResponse(BaseModel):
     token_type: str = "Bearer"
     user: UserResponse
 
-# Pre-seeded Demo Personas
+# Pre-seeded Demo Personas (1 Owner per Institute, Multiple Teachers, Multiple Students, Multiple Parents)
 DEMO_PERSONAS = [
+    # -------------------------------------------------------------------------
+    # 1. APEX JEE & MEDICAL ACADEMY, PATNA (INST_PATNA_01)
+    # -------------------------------------------------------------------------
+    # Strictly 1 Owner
     {
         "id": "USR_OWNER_01",
         "email": "owner@apex.edu",
@@ -63,8 +67,9 @@ DEMO_PERSONAS = [
         "tenant_id": "INST_PATNA_01",
         "institute_name": "Apex JEE & Medical Academy, Patna",
         "student_id": None,
-        "description": "Institute Managing Director & Financial Decision Maker",
+        "description": "Sole Institute Owner & Managing Director (1 per institute)",
     },
+    # Multiple Teachers
     {
         "id": "USR_TEACHER_01",
         "email": "teacher@apex.edu",
@@ -77,27 +82,122 @@ DEMO_PERSONAS = [
         "description": "Senior Physics Faculty & Academic Lead",
     },
     {
+        "id": "USR_TEACHER_01_B",
+        "email": "sen.chem@apex.edu",
+        "password": "teacher",
+        "full_name": "Dr. Ananya Sen",
+        "role": "teacher",
+        "tenant_id": "INST_PATNA_01",
+        "institute_name": "Apex JEE & Medical Academy, Patna",
+        "student_id": None,
+        "description": "HOD Chemistry & Physical Chemistry Lead",
+    },
+    {
+        "id": "USR_TEACHER_01_C",
+        "email": "trivedi.math@apex.edu",
+        "password": "teacher",
+        "full_name": "Prof. Manoj Trivedi",
+        "role": "teacher",
+        "tenant_id": "INST_PATNA_01",
+        "institute_name": "Apex JEE & Medical Academy, Patna",
+        "student_id": None,
+        "description": "JEE Advanced Mathematics Lead",
+    },
+    # Multiple Students
+    {
         "id": "USR_STUDENT_01",
         "email": "student@apex.edu",
         "password": "student",
-        "full_name": "Ishaan Prasad",
+        "full_name": "Aarav Sharma",
         "role": "student",
         "tenant_id": "INST_PATNA_01",
         "institute_name": "Apex JEE & Medical Academy, Patna",
-        "student_id": "STD_NA_01_001",
-        "description": "JEE Advanced Aspirant (Zero-Shaming Growth View)",
+        "student_id": "STD_PAT_001",
+        "description": "JEE Advanced Top-30 Aspirant",
     },
+    {
+        "id": "USR_STUDENT_01_B",
+        "email": "priya@apex.edu",
+        "password": "student",
+        "full_name": "Priya Patel",
+        "role": "student",
+        "tenant_id": "INST_PATNA_01",
+        "institute_name": "Apex JEE & Medical Academy, Patna",
+        "student_id": "STD_PAT_002",
+        "description": "Target NEET Achievers Aspirant",
+    },
+    {
+        "id": "USR_STUDENT_01_C",
+        "email": "rohan@apex.edu",
+        "password": "student",
+        "full_name": "Rohan Keshri",
+        "role": "student",
+        "tenant_id": "INST_PATNA_01",
+        "institute_name": "Apex JEE & Medical Academy, Patna",
+        "student_id": "STD_PAT_003",
+        "description": "JEE Foundation Class 11 Aspirant",
+    },
+    {
+        "id": "USR_STUDENT_01_D",
+        "email": "ananya@apex.edu",
+        "password": "student",
+        "full_name": "Ananya Singh",
+        "role": "student",
+        "tenant_id": "INST_PATNA_01",
+        "institute_name": "Apex JEE & Medical Academy, Patna",
+        "student_id": "STD_PAT_004",
+        "description": "NEET Pinnacle Droppers Aspirant",
+    },
+    # Multiple Parents
     {
         "id": "USR_PARENT_01",
         "email": "parent@apex.edu",
         "password": "parent",
-        "full_name": "Mahesh Prasad (Guardian)",
+        "full_name": "Mr. Rajesh Sharma (Guardian)",
         "role": "parent",
         "tenant_id": "INST_PATNA_01",
         "institute_name": "Apex JEE & Medical Academy, Patna",
-        "student_id": "STD_NA_01_001",
-        "description": "Parent of Ishaan Prasad (Bilingual Weekly Digest View)",
+        "student_id": "STD_PAT_001",
+        "description": "Parent of Aarav Sharma (Achievers Top-30)",
     },
+    {
+        "id": "USR_PARENT_01_B",
+        "email": "patel.guardian@apex.edu",
+        "password": "parent",
+        "full_name": "Dr. Naresh Patel (Guardian)",
+        "role": "parent",
+        "tenant_id": "INST_PATNA_01",
+        "institute_name": "Apex JEE & Medical Academy, Patna",
+        "student_id": "STD_PAT_002",
+        "description": "Parent of Priya Patel (Target NEET)",
+    },
+    {
+        "id": "USR_PARENT_01_C",
+        "email": "keshri.guardian@apex.edu",
+        "password": "parent",
+        "full_name": "Mr. Alok Keshri (Guardian)",
+        "role": "parent",
+        "tenant_id": "INST_PATNA_01",
+        "institute_name": "Apex JEE & Medical Academy, Patna",
+        "student_id": "STD_PAT_003",
+        "description": "Parent of Rohan Keshri (Foundation 11)",
+    },
+    {
+        "id": "USR_PARENT_01_D",
+        "email": "singh.guardian@apex.edu",
+        "password": "parent",
+        "full_name": "Mrs. Sunita Singh (Guardian)",
+        "role": "parent",
+        "tenant_id": "INST_PATNA_01",
+        "institute_name": "Apex JEE & Medical Academy, Patna",
+        "student_id": "STD_PAT_004",
+        "description": "Parent of Ananya Singh (NEET Pinnacle)",
+    },
+
+    # -------------------------------------------------------------------------
+    # 2. CHAITANYA SCIENCE FORUM, KOTA (INST_KOTA_02)
+    # -------------------------------------------------------------------------
+    # Strictly 1 Owner
     {
         "id": "USR_OWNER_02",
         "email": "owner@chaitanya.edu",
@@ -107,8 +207,82 @@ DEMO_PERSONAS = [
         "tenant_id": "INST_KOTA_02",
         "institute_name": "Chaitanya Science Forum, Kota",
         "student_id": None,
-        "description": "Institute Director, Kota Campus",
+        "description": "Sole Institute Director, Kota Campus (1 per institute)",
     },
+    # Multiple Teachers
+    {
+        "id": "USR_TEACHER_02",
+        "email": "rawat.phys@chaitanya.edu",
+        "password": "teacher",
+        "full_name": "Prof. H. S. Rawat",
+        "role": "teacher",
+        "tenant_id": "INST_KOTA_02",
+        "institute_name": "Chaitanya Science Forum, Kota",
+        "student_id": None,
+        "description": "Physics Department Head, Kota",
+    },
+    {
+        "id": "USR_TEACHER_02_B",
+        "email": "bansal.math@chaitanya.edu",
+        "password": "teacher",
+        "full_name": "Dr. P. K. Bansal",
+        "role": "teacher",
+        "tenant_id": "INST_KOTA_02",
+        "institute_name": "Chaitanya Science Forum, Kota",
+        "student_id": None,
+        "description": "Senior Mathematics Lead, Kota",
+    },
+    # Multiple Students
+    {
+        "id": "USR_STUDENT_02",
+        "email": "kabir@chaitanya.edu",
+        "password": "student",
+        "full_name": "Kabir Mehta",
+        "role": "student",
+        "tenant_id": "INST_KOTA_02",
+        "institute_name": "Chaitanya Science Forum, Kota",
+        "student_id": "STD_KOTA_001",
+        "description": "JEE Advanced Rankers Batch Aspirant",
+    },
+    {
+        "id": "USR_STUDENT_02_B",
+        "email": "simran@chaitanya.edu",
+        "password": "student",
+        "full_name": "Simran Kaur",
+        "role": "student",
+        "tenant_id": "INST_KOTA_02",
+        "institute_name": "Chaitanya Science Forum, Kota",
+        "student_id": "STD_KOTA_002",
+        "description": "JEE Main Super-60 Aspirant",
+    },
+    # Multiple Parents
+    {
+        "id": "USR_PARENT_02",
+        "email": "mehta.parent@chaitanya.edu",
+        "password": "parent",
+        "full_name": "Mr. Suresh Mehta (Guardian)",
+        "role": "parent",
+        "tenant_id": "INST_KOTA_02",
+        "institute_name": "Chaitanya Science Forum, Kota",
+        "student_id": "STD_KOTA_001",
+        "description": "Parent of Kabir Mehta (Kota Campus)",
+    },
+    {
+        "id": "USR_PARENT_02_B",
+        "email": "kaur.parent@chaitanya.edu",
+        "password": "parent",
+        "full_name": "Mrs. Harpreet Kaur (Guardian)",
+        "role": "parent",
+        "tenant_id": "INST_KOTA_02",
+        "institute_name": "Chaitanya Science Forum, Kota",
+        "student_id": "STD_KOTA_002",
+        "description": "Parent of Simran Kaur (Kota Campus)",
+    },
+
+    # -------------------------------------------------------------------------
+    # 3. DRONA MEDICAL INSTITUTE, LUCKNOW (INST_LUCKNOW_03)
+    # -------------------------------------------------------------------------
+    # Strictly 1 Owner
     {
         "id": "USR_OWNER_03",
         "email": "owner@drona.edu",
@@ -118,7 +292,76 @@ DEMO_PERSONAS = [
         "tenant_id": "INST_LUCKNOW_03",
         "institute_name": "Drona Medical Institute, Lucknow",
         "student_id": None,
-        "description": "Director, Lucknow Medical Wing",
+        "description": "Sole Director, Lucknow Medical Wing (1 per institute)",
+    },
+    # Multiple Teachers
+    {
+        "id": "USR_TEACHER_03",
+        "email": "trivedi.zoo@drona.edu",
+        "password": "teacher",
+        "full_name": "Dr. K. L. Trivedi",
+        "role": "teacher",
+        "tenant_id": "INST_LUCKNOW_03",
+        "institute_name": "Drona Medical Institute, Lucknow",
+        "student_id": None,
+        "description": "Zoology & Anatomy HOD, Lucknow",
+    },
+    {
+        "id": "USR_TEACHER_03_B",
+        "email": "nambiar.bot@drona.edu",
+        "password": "teacher",
+        "full_name": "Dr. Meera Nambiar",
+        "role": "teacher",
+        "tenant_id": "INST_LUCKNOW_03",
+        "institute_name": "Drona Medical Institute, Lucknow",
+        "student_id": None,
+        "description": "Botany & Genetics Lead, Lucknow",
+    },
+    # Multiple Students
+    {
+        "id": "USR_STUDENT_03",
+        "email": "tanvi@drona.edu",
+        "password": "student",
+        "full_name": "Tanvi Mishra",
+        "role": "student",
+        "tenant_id": "INST_LUCKNOW_03",
+        "institute_name": "Drona Medical Institute, Lucknow",
+        "student_id": "STD_LKO_001",
+        "description": "NEET Medical Aspirant (Score 650+)",
+    },
+    {
+        "id": "USR_STUDENT_03_B",
+        "email": "aryan@drona.edu",
+        "password": "student",
+        "full_name": "Aryan Srivastava",
+        "role": "student",
+        "tenant_id": "INST_LUCKNOW_03",
+        "institute_name": "Drona Medical Institute, Lucknow",
+        "student_id": "STD_LKO_002",
+        "description": "NEET Medical Aspirant",
+    },
+    # Multiple Parents
+    {
+        "id": "USR_PARENT_03",
+        "email": "mishra.parent@drona.edu",
+        "password": "parent",
+        "full_name": "Mr. Alok Mishra (Guardian)",
+        "role": "parent",
+        "tenant_id": "INST_LUCKNOW_03",
+        "institute_name": "Drona Medical Institute, Lucknow",
+        "student_id": "STD_LKO_001",
+        "description": "Parent of Tanvi Mishra (NEET Aspirant)",
+    },
+    {
+        "id": "USR_PARENT_03_B",
+        "email": "srivastava.parent@drona.edu",
+        "password": "parent",
+        "full_name": "Mrs. Rekha Srivastava (Guardian)",
+        "role": "parent",
+        "tenant_id": "INST_LUCKNOW_03",
+        "institute_name": "Drona Medical Institute, Lucknow",
+        "student_id": "STD_LKO_002",
+        "description": "Parent of Aryan Srivastava (NEET Aspirant)",
     },
 ]
 
@@ -166,6 +409,7 @@ def get_demo_users(db: Session = Depends(get_db)):
             "role": p["role"],
             "tenant_id": p["tenant_id"],
             "institute_name": p["institute_name"],
+            "student_id": p.get("student_id"),
             "description": p["description"],
         }
         for p in DEMO_PERSONAS
@@ -247,6 +491,16 @@ def register(req: RegisterRequest, db: Session = Depends(get_db)):
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="An account with this official email address already exists. Please sign in."
             )
+
+        # Enforce 1 Owner per Institute rule
+        existing_inst = db.query(Institute).filter(Institute.name.ilike(req.institute_name.strip())).first()
+        if existing_inst:
+            existing_owner = db.query(User).filter(User.tenant_id == existing_inst.id, User.role == "owner").first()
+            if existing_owner:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=f"The coaching institute '{existing_inst.name}' already has a registered Owner ({existing_owner.full_name}). Each institute can have strictly ONE Owner. Teachers, students, and parents must sign in with their respective portal accounts or be invited by the Owner."
+                )
 
         # Generate a unique Institute ID slug
         clean_name = "".join(c for c in req.institute_name.upper() if c.isalnum())[:10] or "INST"

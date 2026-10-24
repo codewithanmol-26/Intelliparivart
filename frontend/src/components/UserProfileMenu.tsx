@@ -196,11 +196,18 @@ export default function UserProfileMenu({ align = 'right', className = '' }: Use
                   {currentInstitute.name}
                 </span>
               </div>
-              {user.student_id && (
-                <div className="text-[10px] text-teal-300 font-mono pl-5">
-                  ID: {user.student_id}
-                </div>
-              )}
+              <div className="flex items-center justify-between text-[10px] text-teal-300 font-medium pl-5">
+                <span>
+                  {user.role === 'owner'
+                    ? 'Sole Institute Owner (1 per institute)'
+                    : user.role === 'teacher'
+                    ? 'Faculty Member (Multiple in institute)'
+                    : user.role === 'student'
+                    ? 'Enrolled Student (Multiple in institute)'
+                    : 'Parent / Guardian (Multiple in institute)'}
+                </span>
+                {user.student_id && <span className="font-mono">ID: {user.student_id}</span>}
+              </div>
             </div>
           </div>
 

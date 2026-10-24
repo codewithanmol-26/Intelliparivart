@@ -74,6 +74,7 @@ export default function OverviewPage() {
   const [overviewMode, setOverviewMode] = useState<'analytics' | 'workflows' | 'roles'>('analytics');
 
   // Teacher Workspace State (when role === 'teacher')
+  const [selectedFaculty, setSelectedFaculty] = useState<'verma' | 'sen' | 'trivedi'>('verma');
   const [teacherSubject, setTeacherSubject] = useState<string>('All');
   const [teacherBatch, setTeacherBatch] = useState<string>('BATCH_TOP30');
   const [teacherTopic, setTeacherTopic] = useState<string>('Rotational Dynamics');
@@ -382,6 +383,44 @@ export default function OverviewPage() {
             </div>
           </div>
 
+          {/* Multi-Stakeholder Institute Hierarchy Bar */}
+          <div className="bg-gradient-to-r from-blue-900 via-[#0B1F3A] to-slate-900 p-4 rounded-2xl text-white text-xs shadow-md border border-blue-800/60">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+              <div className="flex items-center space-x-2.5">
+                <div className="w-8 h-8 rounded-lg bg-teal-500/20 border border-teal-400/40 flex items-center justify-center font-bold text-teal-300">
+                  <Building2 className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="font-extrabold text-white text-sm block">
+                    Institute Stakeholder Governance
+                  </span>
+                  <span className="text-[11px] text-slate-300">
+                    Multi-Tenant Hierarchy: 1 Owner (Sole Authority) • Multiple Faculty, Students &amp; Parents
+                  </span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-[11px]">
+                <div className="bg-white/10 px-3 py-1.5 rounded-lg border border-white/10">
+                  <span className="text-teal-300 font-extrabold block text-xs">1 Sole Owner</span>
+                  <span className="text-[10px] text-slate-300">Dr. S. K. Narayan</span>
+                </div>
+                <div className="bg-white/10 px-3 py-1.5 rounded-lg border border-white/10">
+                  <span className="text-teal-300 font-extrabold block text-xs">3 Teachers</span>
+                  <span className="text-[10px] text-slate-300">Physics, Chem, Math</span>
+                </div>
+                <div className="bg-white/10 px-3 py-1.5 rounded-lg border border-white/10">
+                  <span className="text-teal-300 font-extrabold block text-xs">400 Students</span>
+                  <span className="text-[10px] text-slate-300">4 Enrolled Batches</span>
+                </div>
+                <div className="bg-white/10 px-3 py-1.5 rounded-lg border border-white/10">
+                  <span className="text-teal-300 font-extrabold block text-xs">400 Parents</span>
+                  <span className="text-[10px] text-slate-300">DPDP Consent Linked</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* 5 Top Summary KPI Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
             <Link
@@ -597,14 +636,36 @@ export default function OverviewPage() {
           <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <div className="flex items-center space-x-2 text-xs font-bold text-teal-600 uppercase tracking-wider mb-1">
-                <Layers className="w-4 h-4" />
-                <span>Teacher & Academic Head Workspace</span>
+                <Users className="w-4 h-4" />
+                <span>Teacher Workspace • Multiple Faculty per Institute</span>
+              </div>
+              <div className="mt-1 mb-2">
+                <label className="text-[10px] font-bold uppercase text-slate-400 block mb-1">Active Faculty Lead:</label>
+                <select
+                  value={selectedFaculty}
+                  onChange={(e) => {
+                    const val = e.target.value as 'verma' | 'sen' | 'trivedi';
+                    setSelectedFaculty(val);
+                    if (val === 'verma') setTeacherTopic('Rotational Dynamics');
+                    else if (val === 'sen') setTeacherTopic('Ionic Equilibrium');
+                    else setTeacherTopic('Integral Calculus');
+                  }}
+                  className="text-base sm:text-lg font-bold text-slate-900 bg-slate-50 border border-slate-300 rounded-xl px-2.5 py-1.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-teal-500"
+                >
+                  <option value="verma">Prof. R. K. Verma • Senior Physics Faculty &amp; Academic Lead</option>
+                  <option value="sen">Dr. Ananya Sen • HOD Chemistry &amp; Concept Lead</option>
+                  <option value="trivedi">Prof. Manoj Trivedi • JEE Advanced Mathematics Lead</option>
+                </select>
               </div>
               <h2 className="text-2xl font-black text-slate-900 tracking-tight">
-                Er. R. K. Verma • Senior Physics Faculty
+                {selectedFaculty === 'verma' && 'Prof. R. K. Verma • Senior Physics Faculty'}
+                {selectedFaculty === 'sen' && 'Dr. Ananya Sen • HOD Chemistry'}
+                {selectedFaculty === 'trivedi' && 'Prof. Manoj Trivedi • Senior Mathematics Lead'}
               </h2>
               <p className="text-xs text-slate-500 mt-1">
-                Lead Mentor: Achievers JEE Advanced Top-30 & Foundation 11th Batch
+                {selectedFaculty === 'verma' && 'Lead Mentor: Achievers JEE Advanced Top-30 & Foundation 11th Batch'}
+                {selectedFaculty === 'sen' && 'Lead Mentor: Physical & Organic Chemistry Concept Triage'}
+                {selectedFaculty === 'trivedi' && 'Lead Mentor: Integral Calculus & Coordinate Geometry'}
               </p>
             </div>
 

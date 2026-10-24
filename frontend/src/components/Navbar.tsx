@@ -187,20 +187,28 @@ export default function Navbar() {
             </button>
 
             {/* Institute Switcher */}
-            <div className="flex items-center bg-blue-950/70 border border-blue-800/60 rounded-md px-2.5 py-1 text-xs">
-              <Building2 className="w-3.5 h-3.5 text-slate-400 mr-1.5 shrink-0" />
-              <select
-                aria-label="Select Institute Tenant"
-                value={tenantId}
-                onChange={(e) => setTenantId(e.target.value)}
-                className="bg-transparent text-white font-medium focus:outline-none cursor-pointer max-w-[190px] truncate"
+            <div className="flex items-center space-x-2">
+              <div className="flex items-center bg-blue-950/70 border border-blue-800/60 rounded-md px-2.5 py-1 text-xs">
+                <Building2 className="w-3.5 h-3.5 text-slate-400 mr-1.5 shrink-0" />
+                <select
+                  aria-label="Select Institute Tenant"
+                  value={tenantId}
+                  onChange={(e) => setTenantId(e.target.value)}
+                  className="bg-transparent text-white font-medium focus:outline-none cursor-pointer max-w-[190px] truncate"
+                >
+                  {institutes.map((inst) => (
+                    <option key={inst.id} value={inst.id} className="bg-[#0B1F3A] text-white">
+                      {inst.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <span
+                className="hidden xl:inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-semibold bg-blue-950/90 text-teal-300 border border-teal-500/30"
+                title="Architecture: 1 Owner per institute, multiple faculty and students"
               >
-                {institutes.map((inst) => (
-                  <option key={inst.id} value={inst.id} className="bg-[#0B1F3A] text-white">
-                    {inst.name}
-                  </option>
-                ))}
-              </select>
+                1 Owner • Multi-Faculty &amp; Students
+              </span>
             </div>
 
             {/* User Profile Picture & Popover Window */}
