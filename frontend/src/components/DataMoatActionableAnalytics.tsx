@@ -39,15 +39,15 @@ import {
   CartesianGrid
 } from 'recharts';
 
-interface CivitasActionableAnalyticsProps {
+interface DataMoatActionableAnalyticsProps {
   onSelectStudent?: (studentId: string) => void;
   onSwitchToWorkflows?: () => void;
 }
 
-export default function CivitasActionableAnalytics({
+export default function DataMoatActionableAnalytics({
   onSelectStudent,
   onSwitchToWorkflows
-}: CivitasActionableAnalyticsProps) {
+}: DataMoatActionableAnalyticsProps) {
   // Filter state
   const [activeCampus, setActiveCampus] = useState<string>('Boring Road (Main)');
   const [activeFilterTag, setActiveFilterTag] = useState<string | null>('Northwest Campus');
@@ -177,7 +177,7 @@ export default function CivitasActionableAnalytics({
   return (
     <div className="bg-white rounded-3xl border border-slate-200/90 shadow-xl overflow-hidden font-sans text-slate-800">
       
-      {/* 1. TOP CIVITAS-STYLE APP BAR */}
+      {/* 1. TOP EXECUTIVE APP BAR */}
       <div className="bg-white px-5 sm:px-8 py-3.5 border-b border-slate-200 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
         {/* Brand & Search */}
         <div className="flex items-center space-x-4 flex-1">
@@ -477,15 +477,15 @@ export default function CivitasActionableAnalytics({
 
           </div>
 
-          {/* RIGHT 4 COLS: CIVITAS INSIGHTS + SUGGESTED ACTIONS + ASK CIVCHAT PANEL */}
+          {/* RIGHT 4 COLS: DATAMOAT INSIGHTS + SUGGESTED ACTIONS + ASK COPILOT PANEL */}
           <div className="lg:col-span-4 bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-5">
             
-            {/* Section A: Civitas / DataMoat Insights */}
+            {/* Section A: DataMoat Tactical Insights */}
             <div className="space-y-3">
               <div className="flex items-center justify-between pb-1 border-b border-slate-200">
                 <div className="flex items-center space-x-1.5 text-xs font-bold text-slate-800">
                   <CompassIcon className="w-4 h-4 text-teal-600" />
-                  <span>Civitas Insights</span>
+                  <span>DataMoat Insights</span>
                 </div>
                 <button className="text-[10px] text-teal-700 font-semibold hover:underline">
                   See more
@@ -687,7 +687,7 @@ export default function CivitasActionableAnalytics({
                 ⚡ Category Differentiation
               </span>
               <span className="font-bold text-sm text-white">
-                Features That Civitas Learning &amp; US College Software Lack
+                Proprietary Pedagogical Intelligence Beyond Traditional ERPs
               </span>
             </div>
             <span className="text-[10px] text-teal-300 font-mono">
@@ -702,7 +702,7 @@ export default function CivitasActionableAnalytics({
                 <span>1. 2PL IRT Latent Ability ($\theta$)</span>
               </div>
               <p className="text-[11px] text-slate-300 leading-snug">
-                Civitas relies on raw GPA. DataMoat separates question difficulty ($b$) from true student mastery using psychometric item curves.
+                Traditional software relies on raw percentages. DataMoat separates question difficulty ($b$) from true student mastery using psychometric item curves.
               </p>
             </div>
 
@@ -722,7 +722,7 @@ export default function CivitasActionableAnalytics({
                 <span>3. 15-Min 3-Tier AI Remedials</span>
               </div>
               <p className="text-[11px] text-slate-300 leading-snug">
-                Civitas only advises outreach. DataMoat compiles tailored 3-tier remedial practice worksheets with voice explanations on the exact failed concept.
+                Standard platforms only advise generic outreach. DataMoat compiles tailored 3-tier remedial practice worksheets with voice explanations on the exact failed concept.
               </p>
             </div>
 

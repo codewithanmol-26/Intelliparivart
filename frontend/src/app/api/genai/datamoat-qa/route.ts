@@ -19,7 +19,7 @@ interface KnowledgeEntry {
 
 const DETERMINISTIC_KNOWLEDGE: KnowledgeEntry[] = [
   {
-    patterns: ['eliminate the gaps', 'gaps', 'silos', 'siloed', 'civitas', 'impact platform', 'institutional impact', 'equip everyone', 'hold students back', 'why students fail', 'reactive engagement'],
+    patterns: ['eliminate the gaps', 'gaps', 'silos', 'siloed', 'DataMoat', 'impact platform', 'institutional impact', 'equip everyone', 'hold students back', 'why students fail', 'reactive engagement'],
     answer: `**Eliminate the Gaps That Hold Students Back:**
 
 Student success efforts rarely fail for lack of care. They fail because teams work in silos, act too late, and cannot see what is working. DataMoat connects data, insight, and action so coaching institutes coordinate support and act in time.

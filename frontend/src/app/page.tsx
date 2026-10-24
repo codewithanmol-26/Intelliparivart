@@ -70,13 +70,13 @@ export default function HomePage() {
     platformAnnualCost > 0 ? (revenueProtected / platformAnnualCost).toFixed(2) : '1.94';
   const breakevenThreshold = (platformAnnualCost / lostFeePerDropout).toFixed(1);
 
-  // Parent demo language toggle (Teachmint-inspired bilingual feature)
+  // Parent demo language toggle (bilingual bilingual feature)
   const [parentPreviewLang, setParentPreviewLang] = useState<'en' | 'hi'>('hi');
 
   return (
     <div className="space-y-12 lg:space-y-16 pb-16 font-sans selection:bg-teal-500 selection:text-white">
 
-      {/* 1. TEACHMINT & CIVITAS INSPIRED HERO SECTION */}
+      {/* 1. DataMoat & DataMoat INSPIRED HERO SECTION */}
       <section
         id="hero"
         className="stacked-card-dark relative overflow-hidden rounded-3xl bg-[#08172c] text-white p-6 sm:p-10 md:p-14 border border-blue-900/60 shadow-2xl"
@@ -223,7 +223,7 @@ export default function HomePage() {
       </section>
 
 
-      {/* 1.5 ELIMINATE THE GAPS THAT HOLD STUDENTS BACK (CIVITAS IMPACT PLATFORM) */}
+      {/* 1.5 ELIMINATE THE GAPS THAT HOLD STUDENTS BACK (DataMoat IMPACT PLATFORM) */}
       <section
         id="eliminate-gaps"
         className="stacked-card bg-slate-50 p-6 sm:p-10 md:p-12 rounded-3xl border border-slate-200/90 shadow-2xl space-y-8 scroll-mt-24"
@@ -342,7 +342,7 @@ export default function HomePage() {
       </section>
 
 
-      {/* 1.6 BUILT FOR EVERY TEAM (CIVITAS-STYLE 3-CARD SHOWCASE) */}
+      {/* 1.6 BUILT FOR EVERY TEAM (connected 3-CARD SHOWCASE) */}
       <section
         id="built-for-teams"
         className="stacked-card bg-white p-6 sm:p-10 md:p-12 rounded-3xl border border-slate-200/90 shadow-2xl space-y-6 scroll-mt-24"
@@ -360,7 +360,7 @@ export default function HomePage() {
           </p>
         </div>
 
-          {/* 3 Civitas-Style Cards: For Data-Informed Leaders, For Student-Facing Teams, For Students */}
+          {/* 3 connected Cards: For Data-Informed Leaders, For Student-Facing Teams, For Students */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-stretch">
             
             {/* Card 1: For Data-Informed Leaders */}
@@ -537,7 +537,7 @@ export default function HomePage() {
       </section>
 
 
-      {/* 2. TEACHMINT-STYLE "ONE CONNECTED PLATFORM, EVERY STAKEHOLDER" */}
+      {/* 2. unified "ONE CONNECTED PLATFORM, EVERY STAKEHOLDER" */}
       <section
         id="stakeholder-ecosystem"
         className="stacked-card bg-slate-50 p-6 sm:p-10 md:p-12 rounded-3xl border border-slate-200 shadow-2xl space-y-8 scroll-mt-24"
@@ -556,7 +556,7 @@ export default function HomePage() {
           </p>
         </div>
 
-        {/* Interactive Teachmint Role Switcher Tabs */}
+        {/* Interactive DataMoat Role Switcher Tabs */}
         <div className="max-w-3xl mx-auto">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 p-1.5 bg-slate-100 rounded-2xl border border-slate-200 text-xs font-bold">
             <button
@@ -609,7 +609,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Tab Content Cards (Teachmint-Style Side-by-Side Presentation) */}
+        {/* Tab Content Cards (unified Side-by-Side Presentation) */}
         <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-md">
           {/* OWNER TAB */}
           {activeRoleTab === 'owner' && (
@@ -1112,7 +1112,7 @@ export default function HomePage() {
       </section>
 
 
-      {/* 3. SIX PILLARS OF INTELLIPRIVART (TEACHMINT CONNECTED SUITE CARDS) */}
+      {/* 3. SIX PILLARS OF INTELLIPRIVART (DataMoat CONNECTED SUITE CARDS) */}
       <section
         id="capabilities"
         className="stacked-card bg-slate-50 p-6 sm:p-10 md:p-12 rounded-3xl border border-slate-200 shadow-2xl space-y-8 scroll-mt-24"
@@ -1230,7 +1230,7 @@ export default function HomePage() {
       </section>
 
 
-      {/* 4. TEACHMINT-STYLE COMPARISON MATRIX: "WHY INSTITUTES CHOOSE US OVER TRADITIONAL ERPS" */}
+      {/* 4. unified COMPARISON MATRIX: "WHY INSTITUTES CHOOSE US OVER TRADITIONAL ERPS" */}
       <section
         id="comparison"
         className="stacked-card bg-slate-50 rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-2xl space-y-6 scroll-mt-24"
@@ -1294,7 +1294,7 @@ export default function HomePage() {
       </section>
 
 
-      {/* 5. INTERACTIVE FINANCIAL ROI CALCULATOR (TEACHMINT VALUE PROVING SECTION) */}
+      {/* 5. INTERACTIVE FINANCIAL ROI CALCULATOR (DataMoat VALUE PROVING SECTION) */}
       <section
         id="roi-calculator"
         className="stacked-card-dark bg-[#0B1F3A] text-white rounded-3xl p-6 sm:p-12 border border-blue-900/80 shadow-2xl space-y-8 scroll-mt-24"
@@ -1433,7 +1433,7 @@ export default function HomePage() {
         className="stacked-card space-y-12 bg-white rounded-3xl p-6 sm:p-10 md:p-12 border border-slate-200 shadow-2xl scroll-mt-24"
         style={{ '--stack-top': '104px', '--stack-z': 70 } as React.CSSProperties}
       >
-        {/* 6. TEACHMINT-STYLE CLOSING CALL TO ACTION BANNER */}
+        {/* 6. unified CLOSING CALL TO ACTION BANNER */}
         <section className="bg-gradient-to-r from-teal-600 via-teal-700 to-blue-900 rounded-2xl p-8 sm:p-12 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="max-w-xl space-y-2 text-center md:text-left">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight">
@@ -1463,7 +1463,7 @@ export default function HomePage() {
         </section>
 
 
-        {/* 7. COMPREHENSIVE TEACHMINT-INSPIRED FOOTER */}
+        {/* 7. COMPREHENSIVE bilingual FOOTER */}
         <footer className="pt-6 border-t border-slate-200 text-xs text-slate-500 space-y-8">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
             {/* Brand Info */}
@@ -1536,7 +1536,7 @@ export default function HomePage() {
         </footer>
       </div>
 
-      {/* Floating "Ask DataMoat" Widget (Civitas Style, Available Across Page) */}
+      {/* Floating "Ask DataMoat" Widget (DataMoat style, Available Across Page) */}
       <div className="fixed bottom-5 right-5 z-[90]">
         {!showFloatingChat ? (
           <button

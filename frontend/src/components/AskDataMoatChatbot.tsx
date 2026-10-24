@@ -193,7 +193,7 @@ export default function AskDataMoatChatbot({
         isMinimized ? 'h-14' : 'h-[530px] sm:h-[570px]'
       }`}
     >
-      {/* 1. Header Bar (Civitas Style) */}
+      {/* 1. Header Bar (DataMoat style) */}
       <div className="px-4 py-3 bg-[#0a1e3d] border-b border-blue-800/80 flex items-center justify-between shrink-0">
         <div className="flex items-center space-x-2">
           <div className="w-6 h-6 rounded-lg bg-teal-500/20 text-teal-300 border border-teal-500/30 flex items-center justify-center">
@@ -241,7 +241,7 @@ export default function AskDataMoatChatbot({
         <>
           {/* 2. Chat Scroll Area */}
           <div className="flex-1 overflow-y-auto p-4 space-y-4 text-xs scrollbar-thin scrollbar-thumb-blue-800">
-            {/* Initial Assistant Disclaimer Bubble (Exact Civitas Style) */}
+            {/* Initial Assistant Disclaimer Bubble (Exact DataMoat style) */}
             <div className="p-3.5 bg-white text-slate-800 rounded-2xl rounded-tl-sm shadow-sm leading-relaxed text-xs border border-slate-200">
               I answer from what is published on this platform and IIT Patna Case B documentation, and
               I show you the pages I used. If the system does not say it, I will tell you that instead of
@@ -265,7 +265,7 @@ export default function AskDataMoatChatbot({
                   ))}
                 </div>
 
-                {/* Persona Tailoring (Civitas Exact Pattern) */}
+                {/* Persona Tailoring (clean modern pattern) */}
                 <div className="pt-2 border-t border-blue-900/60 space-y-2">
                   <div className="text-[10px] text-blue-300 font-semibold uppercase tracking-wider">
                     Or tell me who you are and I will tailor the answers:
@@ -394,7 +394,7 @@ export default function AskDataMoatChatbot({
               </div>
             </form>
 
-            {/* Bottom Footer Line (Civitas Exact Match) */}
+            {/* Bottom Footer Line (clean modern match) */}
             <div className="flex items-center justify-between text-[10px] text-blue-200/70 px-1">
               <span>Answers come from this site, with sources</span>
               <button

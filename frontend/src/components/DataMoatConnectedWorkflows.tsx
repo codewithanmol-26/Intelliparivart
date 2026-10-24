@@ -48,16 +48,16 @@ import {
   CartesianGrid
 } from 'recharts';
 
-interface CivitasConnectedWorkflowsProps {
+interface DataMoatConnectedWorkflowsProps {
   studentId?: string;
   onBackToAnalytics?: () => void;
 }
 
-export default function CivitasConnectedWorkflows({
+export default function DataMoatConnectedWorkflows({
   studentId = 'STD_PAT_001',
   onBackToAnalytics
-}: CivitasConnectedWorkflowsProps) {
-  // Student persona toggle (Anna Williams from Civitas screenshot OR Aarav Sharma from DataMoat)
+}: DataMoatConnectedWorkflowsProps) {
+  // Student persona toggle (Anna Williams benchmark profile OR Aarav Sharma active profile)
   const [selectedPersona, setSelectedPersona] = useState<'anna' | 'aarav'>('anna');
 
   // Active top tab
@@ -159,7 +159,7 @@ export default function CivitasConnectedWorkflows({
   return (
     <div className="bg-white rounded-3xl border border-slate-200/90 shadow-xl overflow-hidden font-sans text-slate-800">
       
-      {/* 1. TOP HEADER & SEARCH BAR (Matching Civitas Setup) */}
+      {/* 1. TOP HEADER & SEARCH BAR */}
       <div className="bg-white px-5 sm:px-8 py-3.5 border-b border-slate-200 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
         <div className="flex items-center space-x-4 flex-1">
           <div className="flex items-center space-x-2.5 shrink-0">
@@ -206,13 +206,13 @@ export default function CivitasConnectedWorkflows({
               onClick={() => setSelectedPersona('anna')}
               className={`px-2 py-1 rounded transition ${selectedPersona === 'anna' ? 'bg-[#0F2744] text-white' : 'text-slate-600'}`}
             >
-              Anna Williams (Civitas)
+              Anna Williams (Benchmark Cohort)
             </button>
             <button
               onClick={() => setSelectedPersona('aarav')}
               className={`px-2 py-1 rounded transition ${selectedPersona === 'aarav' ? 'bg-teal-700 text-white' : 'text-slate-600'}`}
             >
-              Aarav Sharma (DataMoat)
+              Aarav Sharma (Active Cohort)
             </button>
           </div>
 
@@ -876,13 +876,13 @@ export default function CivitasConnectedWorkflows({
               </div>
             )}
 
-            {/* TAB: LIBRARY / REMEDIALS (What Civitas Lacks: Generates 15-Min Remedial Worksheets) */}
+            {/* TAB: LIBRARY / REMEDIALS (Generates 15-Min Remedial Worksheets) */}
             {activeTab === 'library' && (
               <div className="space-y-6 max-w-3xl">
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-base font-bold text-slate-900">
-                      15-Minute 3-Tier Remedial Worksheets (What Civitas Lacks)
+                      15-Minute 3-Tier Remedial Worksheets (Automated Closed-Loop Generation)
                     </h3>
                     <p className="text-xs text-slate-500">
                       Unlike generic software that only logs notes, DataMoat automatically generates the exact pedagogical questions needed for concept recovery.

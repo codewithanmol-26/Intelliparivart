@@ -62,15 +62,15 @@ import {
   LineChart,
   Line
 } from 'recharts';
-import CivitasActionableAnalytics from '../../components/CivitasActionableAnalytics';
-import CivitasConnectedWorkflows from '../../components/CivitasConnectedWorkflows';
+import DataMoatActionableAnalytics from '../../components/DataMoatActionableAnalytics';
+import DataMoatConnectedWorkflows from '../../components/DataMoatConnectedWorkflows';
 
 export default function OverviewPage() {
   const { tenantId, role, setRole, recomputeVersion, selectedStudentId, setSelectedStudentId, notifyRecomputed } = useApp();
   const [data, setData] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Civitas View Mode: Actionable Analytics, Connected Workflows, or Role Perspectives
+  // DataMoat View Mode: Actionable Analytics, Connected Workflows, or Role Perspectives
   const [overviewMode, setOverviewMode] = useState<'analytics' | 'workflows' | 'roles'>('analytics');
 
   // Teacher Workspace State (when role === 'teacher')
@@ -183,13 +183,13 @@ export default function OverviewPage() {
   return (
     <div className="space-y-6">
       {/* ============================================================== */}
-      {/* CIVITAS PLATFORM ARCHITECTURE & WORKFLOW SELECTOR              */}
+      {/* DataMoat PLATFORM ARCHITECTURE & WORKFLOW SELECTOR              */}
       {/* ============================================================== */}
       <div className="bg-gradient-to-r from-[#08172c] via-[#0F2744] to-[#0B1F3A] text-white p-4 sm:p-5 rounded-3xl border border-blue-900/80 shadow-xl flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div className="space-y-1">
           <div className="flex items-center space-x-2 text-[10px] font-bold uppercase tracking-wider text-teal-400">
             <Sparkles className="w-3.5 h-3.5 text-teal-400" />
-            <span>Civitas Learning Platform Architecture • Enterprise Coaching Intelligence</span>
+            <span>DataMoat Connected Intelligence Architecture • Enterprise Coaching Intelligence</span>
           </div>
           <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight">
             Institutional Impact &amp; Connected Workflows Console
@@ -239,9 +239,9 @@ export default function OverviewPage() {
         </div>
       </div>
 
-      {/* Render Mode 1: Civitas Actionable Analytics */}
+      {/* Render Mode 1: DataMoat Actionable Analytics */}
       {overviewMode === 'analytics' && (
-        <CivitasActionableAnalytics
+        <DataMoatActionableAnalytics
           onSelectStudent={(stId) => {
             setSelectedStudentId(stId);
             setOverviewMode('workflows');
@@ -250,9 +250,9 @@ export default function OverviewPage() {
         />
       )}
 
-      {/* Render Mode 2: Civitas Connected Workflows */}
+      {/* Render Mode 2: DataMoat Connected Workflows */}
       {overviewMode === 'workflows' && (
-        <CivitasConnectedWorkflows
+        <DataMoatConnectedWorkflows
           studentId={selectedStudentId || 'STD_PAT_001'}
           onBackToAnalytics={() => setOverviewMode('analytics')}
         />
