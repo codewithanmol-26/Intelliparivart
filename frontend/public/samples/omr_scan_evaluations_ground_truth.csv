@@ -1,0 +1,21 @@
+scan_id,student_id,student_name,test_id,question_no,master_official_key,opencv_detected_option,bubble_fill_density,confidence_score,evaluation_status,marks_awarded,subject,associated_microtopic
+SCAN_PAT_2026_001,STD_PAT_001,Aarav Sharma,TEST_JEE_M03,1,A,A,0.88,0.94,CORRECT (+4),4,Physics,Rotational Dynamics
+SCAN_PAT_2026_001,STD_PAT_001,Aarav Sharma,TEST_JEE_M03,2,B,B,0.88,0.94,CORRECT (+4),4,Physics,Rotational Dynamics
+SCAN_PAT_2026_001,STD_PAT_001,Aarav Sharma,TEST_JEE_M03,3,A,A,0.88,0.94,CORRECT (+4),4,Physics,Standard Core
+SCAN_PAT_2026_001,STD_PAT_001,Aarav Sharma,TEST_JEE_M03,4,B,C,0.88,0.94,INCORRECT (-1),-1,Physics,Standard Core
+SCAN_PAT_2026_001,STD_PAT_001,Aarav Sharma,TEST_JEE_M03,5,A,A,0.88,0.94,CORRECT (+4),4,Physics,Standard Core
+SCAN_PAT_2026_001,STD_PAT_001,Aarav Sharma,TEST_JEE_M03,6,B,C,0.88,0.94,INCORRECT (-1),-1,Chemistry,Thermodynamics
+SCAN_PAT_2026_001,STD_PAT_001,Aarav Sharma,TEST_JEE_M03,7,A,A,0.88,0.94,CORRECT (+4),4,Chemistry,Thermodynamics
+SCAN_PAT_2026_001,STD_PAT_001,Aarav Sharma,TEST_JEE_M03,8,B,BLANK,0.04,0.99,UNATTEMPTED (0),0,Chemistry,Standard Core
+SCAN_PAT_2026_001,STD_PAT_001,Aarav Sharma,TEST_JEE_M03,9,A,A,0.88,0.94,CORRECT (+4),4,Chemistry,Standard Core
+SCAN_PAT_2026_001,STD_PAT_001,Aarav Sharma,TEST_JEE_M03,10,B,BLANK,0.04,0.99,UNATTEMPTED (0),0,Chemistry,Standard Core
+SCAN_PAT_2026_001,STD_PAT_001,Aarav Sharma,TEST_JEE_M03,11,A,A,0.88,0.94,CORRECT (+4),4,Mathematics,Standard Core
+SCAN_PAT_2026_001,STD_PAT_001,Aarav Sharma,TEST_JEE_M03,12,B,BLANK,0.04,0.99,UNATTEMPTED (0),0,Mathematics,Standard Core
+SCAN_PAT_2026_001,STD_PAT_001,Aarav Sharma,TEST_JEE_M03,13,A,BLANK,0.04,0.99,UNATTEMPTED (0),0,Mathematics,Standard Core
+SCAN_PAT_2026_001,STD_PAT_001,Aarav Sharma,TEST_JEE_M03,14,B,BLANK,0.04,0.99,UNATTEMPTED (0),0,Mathematics,Standard Core
+SCAN_PAT_2026_001,STD_PAT_001,Aarav Sharma,TEST_JEE_M03,15,A,BLANK,0.04,0.99,UNATTEMPTED (0),0,Mathematics,Standard Core
+SCAN_PAT_2026_001,STD_PAT_001,Aarav Sharma,TEST_JEE_M03,16,B,BLANK,0.04,0.99,UNATTEMPTED (0),0,Physics,Rotational Dynamics
+SCAN_PAT_2026_001,STD_PAT_001,Aarav Sharma,TEST_JEE_M03,17,A,BLANK,0.04,0.99,UNATTEMPTED (0),0,Chemistry,Standard Core
+SCAN_PAT_2026_001,STD_PAT_001,Aarav Sharma,TEST_JEE_M03,18,B,BLANK,0.04,0.99,UNATTEMPTED (0),0,Mathematics,Standard Core
+SCAN_PAT_2026_001,STD_PAT_001,Aarav Sharma,TEST_JEE_M03,19,A,BLANK,0.04,0.99,UNATTEMPTED (0),0,Physics,Standard Core
+SCAN_PAT_2026_001,STD_PAT_001,Aarav Sharma,TEST_JEE_M03,20,B,BLANK,0.04,0.99,UNATTEMPTED (0),0,Chemistry,Standard Core

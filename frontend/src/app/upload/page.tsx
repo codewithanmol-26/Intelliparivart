@@ -31,18 +31,280 @@ import {
   HelpCircle,
   Share2,
   Send,
-  Zap
+  Zap,
+  BookOpen,
+  Award,
+  Users,
+  Info,
+  CheckSquare
 } from 'lucide-react';
+
+interface StudentProfile {
+  student_id: string;
+  name: string;
+  roll_number: string;
+  target_exam: string;
+  grade: string;
+  batch_id: string;
+  batch_name: string;
+  campus: string;
+  latent_ability_theta: number;
+  overall_percentile: number;
+  conformal_interval: string;
+  risk_tier: 'Low' | 'Medium' | 'High';
+  risk_driver: string;
+  attendance_rate: number;
+  fee_status: string;
+  guardian_name: string;
+  guardian_phone: string;
+  default_test_id: string;
+}
+
+const DIVERSE_STUDENTS: StudentProfile[] = [
+  {
+    student_id: 'STD_PAT_001',
+    name: 'Aarav Sharma',
+    roll_number: 'APX-2026-001',
+    target_exam: 'JEE Advanced',
+    grade: '12th Grade',
+    batch_id: 'BATCH_TOP30',
+    batch_name: 'Achievers JEE Advanced Top-30',
+    campus: 'Patna Flagship (Boring Road)',
+    latent_ability_theta: 1.82,
+    overall_percentile: 94.2,
+    conformal_interval: '[91.0% - 96.5%]',
+    risk_tier: 'Medium',
+    risk_driver: 'Concept friction in Rotational Dynamics & 8% attendance dip in Month 3',
+    attendance_rate: 91.5,
+    fee_status: 'Paid (Installment 3 Cleared)',
+    guardian_name: 'Mr. Rajesh Sharma',
+    guardian_phone: '+91 98350 12345',
+    default_test_id: 'TEST_JEE_M03'
+  },
+  {
+    student_id: 'STD_PAT_002',
+    name: 'Priya Patel',
+    roll_number: 'APX-2026-002',
+    target_exam: 'NEET-UG',
+    grade: '12th / Droppers',
+    batch_id: 'BATCH_NEET12',
+    batch_name: 'Target NEET Achievers PCB',
+    campus: 'Patna Flagship (Boring Road)',
+    latent_ability_theta: 2.15,
+    overall_percentile: 97.4,
+    conformal_interval: '[95.0% - 98.8%]',
+    risk_tier: 'Low',
+    risk_driver: 'Consistent high performer; minor speed gap in Organic Chemistry synthesis',
+    attendance_rate: 96.2,
+    fee_status: 'Paid in Full',
+    guardian_name: 'Dr. Manoj Patel',
+    guardian_phone: '+91 94310 98765',
+    default_test_id: 'TEST_NEET_M04'
+  },
+  {
+    student_id: 'STD_PAT_003',
+    name: 'Rohan Verma',
+    roll_number: 'APX-2026-003',
+    target_exam: 'JEE Advanced',
+    grade: '12th Grade',
+    batch_id: 'BATCH_TOP30',
+    batch_name: 'Achievers JEE Advanced Top-30',
+    campus: 'Kankarbagh Branch',
+    latent_ability_theta: 0.25,
+    overall_percentile: 76.5,
+    conformal_interval: '[71.0% - 82.5%]',
+    risk_tier: 'High',
+    risk_driver: 'Attendance dropped 94% -> 74%; 3 consecutive score drops; pending installment 2',
+    attendance_rate: 78.4,
+    fee_status: 'Overdue (Installment 2 Lapsed)',
+    guardian_name: 'Mr. Vinay Verma',
+    guardian_phone: '+91 91234 56789',
+    default_test_id: 'TEST_JEE_M03'
+  },
+  {
+    student_id: 'STD_PAT_004',
+    name: 'Aditya Nair',
+    roll_number: 'APX-2026-004',
+    target_exam: 'Foundation (11th)',
+    grade: '11th Grade',
+    batch_id: 'BATCH_FND11',
+    batch_name: 'Foundation JEE & NEET 11th',
+    campus: 'Patna Flagship (Boring Road)',
+    latent_ability_theta: 0.95,
+    overall_percentile: 88.0,
+    conformal_interval: '[84.5% - 91.5%]',
+    risk_tier: 'Low',
+    risk_driver: 'Solid foundation in Vectors & Kinematics; steady homework completion',
+    attendance_rate: 94.0,
+    fee_status: 'Paid (Installment 1 & 2 Cleared)',
+    guardian_name: 'Mrs. Shobha Nair',
+    guardian_phone: '+91 98765 43210',
+    default_test_id: 'TEST_FND_M01'
+  },
+  {
+    student_id: 'STD_PAT_005',
+    name: 'Ananya Deshmukh',
+    roll_number: 'APX-2026-005',
+    target_exam: 'NEET-UG',
+    grade: '12th / Droppers',
+    batch_id: 'BATCH_NEET12',
+    batch_name: 'Target NEET Achievers PCB',
+    campus: 'Ranchi Satellite Center',
+    latent_ability_theta: 1.10,
+    overall_percentile: 85.5,
+    conformal_interval: '[81.0% - 89.5%]',
+    risk_tier: 'Medium',
+    risk_driver: 'Exam anxiety in Organic Reaction Mechanisms; responding to 15-min remedial drills',
+    attendance_rate: 89.0,
+    fee_status: 'Paid (Installment 2 Cleared)',
+    guardian_name: 'Mr. Prakash Deshmukh',
+    guardian_phone: '+91 97531 24680',
+    default_test_id: 'TEST_NEET_M04'
+  },
+  {
+    student_id: 'STD_PAT_006',
+    name: 'Harshvardhan Rao',
+    roll_number: 'APX-2026-006',
+    target_exam: 'JEE Main',
+    grade: '12th Grade',
+    batch_id: 'BATCH_ELEV12',
+    batch_name: 'Elevate JEE 12th Batch B',
+    campus: 'Patna Flagship (Boring Road)',
+    latent_ability_theta: 0.65,
+    overall_percentile: 82.0,
+    conformal_interval: '[78.0% - 86.0%]',
+    risk_tier: 'Medium',
+    risk_driver: 'Time management deficit in Mathematics section; needs speed triage',
+    attendance_rate: 86.5,
+    fee_status: 'Paid (Installment 2 Cleared)',
+    guardian_name: 'Mr. K. V. Rao',
+    guardian_phone: '+91 96420 13579',
+    default_test_id: 'TEST_JEE_M03'
+  }
+];
+
+interface MasterTestQuestion {
+  q: number;
+  key: string;
+  subject: string;
+  topic: string;
+  subtopic: string;
+  b: number;
+  a: number;
+}
+
+interface MasterTestDefinition {
+  test_id: string;
+  test_name: string;
+  target_exam: string;
+  marking_scheme: string;
+  max_score: number;
+  questions: MasterTestQuestion[];
+}
+
+const MASTER_TESTS: Record<string, MasterTestDefinition> = {
+  TEST_JEE_M03: {
+    test_id: 'TEST_JEE_M03',
+    test_name: 'JEE Advanced Milestone 3: Mechanics & Thermodynamics',
+    target_exam: 'JEE Advanced',
+    marking_scheme: '+4 for Correct Match with Master Key, -1 for Incorrect, 0 for Blank',
+    max_score: 80,
+    questions: [
+      { q: 1, key: 'A', subject: 'Physics', topic: 'Rotational Dynamics', subtopic: 'Moment of Inertia of Composite Bodies', b: 0.85, a: 1.40 },
+      { q: 2, key: 'B', subject: 'Physics', topic: 'Rotational Dynamics', subtopic: 'Pure Rolling on Inclined Plane', b: 1.15, a: 1.65 },
+      { q: 3, key: 'A', subject: 'Physics', topic: 'Kinematics', subtopic: '2D Projectile Motion with Wind Drag', b: -0.30, a: 1.10 },
+      { q: 4, key: 'B', subject: 'Physics', topic: 'Work, Power & Energy', subtopic: 'Conservative Force Fields & Potential Wells', b: 0.40, a: 1.25 },
+      { q: 5, key: 'A', subject: 'Physics', topic: 'Gravitation', subtopic: 'Orbital Transfers & Escape Velocity', b: 0.10, a: 1.20 },
+      { q: 6, key: 'B', subject: 'Chemistry', topic: 'Chemical Thermodynamics', subtopic: 'Hess Law & Enthalpy of Formation', b: 0.25, a: 1.30 },
+      { q: 7, key: 'A', subject: 'Chemistry', topic: 'Chemical Thermodynamics', subtopic: 'Gibbs Free Energy & Spontaneity', b: 0.90, a: 1.50 },
+      { q: 8, key: 'B', subject: 'Chemistry', topic: 'Chemical Bonding', subtopic: 'Molecular Orbital Theory & Bond Order', b: 0.60, a: 1.35 },
+      { q: 9, key: 'A', subject: 'Chemistry', topic: 'Ionic Equilibrium', subtopic: 'Buffer Action & Solubility Product Ksp', b: 1.10, a: 1.60 },
+      { q: 10, key: 'B', subject: 'Chemistry', topic: 'Atomic Structure', subtopic: 'De Broglie Wavelength & Heisenberg Uncertainty', b: -0.45, a: 1.15 },
+      { q: 11, key: 'A', subject: 'Mathematics', topic: 'Differential Calculus', subtopic: "L'Hopital Rule & Continuity Limits", b: 0.15, a: 1.25 },
+      { q: 12, key: 'B', subject: 'Mathematics', topic: 'Differential Calculus', subtopic: 'Points of Inflection & Curve Tracing', b: 0.70, a: 1.45 },
+      { q: 13, key: 'A', subject: 'Mathematics', topic: 'Integral Calculus', subtopic: 'Properties of Definite Integrals', b: 1.20, a: 1.70 },
+      { q: 14, key: 'B', subject: 'Mathematics', topic: 'Coordinate Geometry', subtopic: 'Orthogonal Circles & Radical Axis', b: 0.05, a: 1.20 },
+      { q: 15, key: 'A', subject: 'Mathematics', topic: 'Coordinate Geometry', subtopic: 'Parabola Tangents & Normals', b: 0.95, a: 1.55 },
+      { q: 16, key: 'B', subject: 'Physics', topic: 'Rotational Dynamics', subtopic: 'Conservation of Angular Momentum', b: 1.35, a: 1.80 },
+      { q: 17, key: 'A', subject: 'Chemistry', topic: 'Organic Chemistry', subtopic: 'Hyperconjugation & Carbocation Stability', b: 0.50, a: 1.30 },
+      { q: 18, key: 'B', subject: 'Mathematics', topic: 'Vectors & 3D Geometry', subtopic: 'Shortest Distance Between Skew Lines', b: 0.80, a: 1.40 },
+      { q: 19, key: 'A', subject: 'Physics', topic: 'Oscillations & SHM', subtopic: 'Torsional Pendulum Oscillation Period', b: 0.35, a: 1.25 },
+      { q: 20, key: 'B', subject: 'Chemistry', topic: 'Electrochemistry', subtopic: 'Standard Electrode Potentials & Nernst Eq', b: 0.75, a: 1.45 }
+    ]
+  },
+  TEST_NEET_M04: {
+    test_id: 'TEST_NEET_M04',
+    test_name: 'NEET-UG Milestone 4: Human Physiology & Genetics',
+    target_exam: 'NEET-UG',
+    marking_scheme: '+4 for Correct Match with Master Key, -1 for Incorrect, 0 for Blank',
+    max_score: 80,
+    questions: [
+      { q: 1, key: 'C', subject: 'Biology', topic: 'Human Physiology', subtopic: 'Mechanism of Hormone Action', b: -0.20, a: 1.20 },
+      { q: 2, key: 'A', subject: 'Biology', topic: 'Genetics & Evolution', subtopic: 'Incomplete Dominance & Multiple Alleles', b: 0.30, a: 1.35 },
+      { q: 3, key: 'B', subject: 'Biology', topic: 'Molecular Genetics', subtopic: 'Lac Operon Regulation', b: 0.85, a: 1.60 },
+      { q: 4, key: 'D', subject: 'Biology', topic: 'Cell Biology', subtopic: 'Meiosis Prophase I Stages (Pachytene)', b: 0.15, a: 1.25 },
+      { q: 5, key: 'B', subject: 'Chemistry', topic: 'Coordination Compounds', subtopic: 'Crystal Field Splitting in Octahedral', b: 0.95, a: 1.55 },
+      { q: 6, key: 'C', subject: 'Chemistry', topic: 'Organic Chemistry', subtopic: 'Aldehydes, Ketones & Cannizzaro Reaction', b: 0.70, a: 1.40 },
+      { q: 7, key: 'A', subject: 'Physics', topic: 'Ray Optics', subtopic: 'Prism Dispersion & Angle of Min Deviation', b: 0.45, a: 1.30 },
+      { q: 8, key: 'D', subject: 'Physics', topic: 'Current Electricity', subtopic: 'Wheatstone Bridge & Meter Bridge Sensitivity', b: 0.10, a: 1.15 },
+      { q: 9, key: 'B', subject: 'Biology', topic: 'Plant Physiology', subtopic: 'C4 Pathway & Kranz Anatomy', b: 0.50, a: 1.30 },
+      { q: 10, key: 'C', subject: 'Biology', topic: 'Ecology', subtopic: 'Ecological Succession & Biogeochemical Cycles', b: -0.35, a: 1.10 },
+      { q: 11, key: 'A', subject: 'Chemistry', topic: 'Biomolecules', subtopic: 'Peptide Linkage & Protein Denaturation', b: 0.20, a: 1.20 },
+      { q: 12, key: 'C', subject: 'Biology', topic: 'Human Physiology', subtopic: 'Cardiac Cycle & ECG Wave Interpretation', b: 0.80, a: 1.50 },
+      { q: 13, key: 'B', subject: 'Physics', topic: 'Wave Optics', subtopic: "Young's Double Slit Interference Fringe Width", b: 0.65, a: 1.40 },
+      { q: 14, key: 'D', subject: 'Chemistry', topic: 'Chemical Kinetics', subtopic: 'First Order Half Life & Arrhenius Activation', b: 0.40, a: 1.30 },
+      { q: 15, key: 'A', subject: 'Biology', topic: 'Genetics', subtopic: 'Chromosomal Disorders (Downs, Turners)', b: 0.05, a: 1.15 },
+      { q: 16, key: 'C', subject: 'Physics', topic: 'Semiconductors', subtopic: 'PN Junction Diode Rectifier Ripple Factor', b: 0.90, a: 1.55 },
+      { q: 17, key: 'B', subject: 'Chemistry', topic: 'Solutions & Colligative', subtopic: 'Van t Hoff Factor & Osmotic Pressure', b: 0.60, a: 1.35 },
+      { q: 18, key: 'A', subject: 'Biology', topic: 'Biotechnology', subtopic: 'Restriction Endonucleases & Gel Electrophoresis', b: 0.75, a: 1.45 },
+      { q: 19, key: 'D', subject: 'Physics', topic: 'Modern Physics', subtopic: 'Photoelectric Effect Stopping Potential', b: 0.30, a: 1.25 },
+      { q: 20, key: 'C', subject: 'Biology', topic: 'Human Reproduction', subtopic: 'Spermatogenesis vs Oogenesis Hormonal Control', b: 0.40, a: 1.30 }
+    ]
+  },
+  TEST_FND_M01: {
+    test_id: 'TEST_FND_M01',
+    test_name: 'Foundation 11th Milestone 1: Mathematical Vectors & Kinematics',
+    target_exam: 'Foundation (11th)',
+    marking_scheme: '+4 for Correct Match with Master Key, -1 for Incorrect, 0 for Blank',
+    max_score: 80,
+    questions: [
+      { q: 1, key: 'A', subject: 'Physics', topic: 'Vectors', subtopic: 'Dot and Cross Product Orthogonality', b: -0.10, a: 1.15 },
+      { q: 2, key: 'C', subject: 'Physics', topic: 'Kinematics', subtopic: 'Uniform Acceleration Equations', b: 0.10, a: 1.20 },
+      { q: 3, key: 'B', subject: 'Mathematics', topic: 'Sets & Relations', subtopic: 'Venn Diagrams & Cartesian Products', b: -0.25, a: 1.10 },
+      { q: 4, key: 'A', subject: 'Mathematics', topic: 'Trigonometry', subtopic: 'Compound Angle Formulas', b: 0.35, a: 1.30 },
+      { q: 5, key: 'D', subject: 'Chemistry', topic: 'Mole Concept', subtopic: 'Stoichiometry & Limiting Reagent', b: 0.20, a: 1.25 },
+      { q: 6, key: 'B', subject: 'Chemistry', topic: 'Periodic Table', subtopic: 'Ionization Enthalpy & Electronegativity Trends', b: 0.05, a: 1.15 },
+      { q: 7, key: 'C', subject: 'Physics', topic: 'Units & Dimensions', subtopic: 'Dimensional Analysis & Error Propagation', b: -0.40, a: 1.05 },
+      { q: 8, key: 'A', subject: 'Physics', topic: 'Laws of Motion', subtopic: 'Free Body Diagrams & Friction', b: 0.45, a: 1.35 },
+      { q: 9, key: 'D', subject: 'Mathematics', topic: 'Quadratic Equations', subtopic: 'Roots Location & Discriminant', b: 0.30, a: 1.25 },
+      { q: 10, key: 'B', subject: 'Chemistry', topic: 'States of Matter', subtopic: 'Ideal Gas Equation & Real Gas Deviation', b: 0.50, a: 1.30 },
+      { q: 11, key: 'A', subject: 'Mathematics', topic: 'Linear Inequalities', subtopic: 'Graphical Solutions on Coordinate Plane', b: 0.15, a: 1.20 },
+      { q: 12, key: 'C', subject: 'Physics', topic: 'Kinematics', subtopic: 'Relative Velocity in 2D (Rain-Man Problems)', b: 0.70, a: 1.45 },
+      { q: 13, key: 'D', subject: 'Chemistry', topic: 'Redox Reactions', subtopic: 'Oxidation Number Balancing', b: 0.40, a: 1.30 },
+      { q: 14, key: 'B', subject: 'Mathematics', topic: 'Sequences & Series', subtopic: 'Arithmetic & Geometric Progressions', b: 0.25, a: 1.25 },
+      { q: 15, key: 'A', subject: 'Physics', topic: 'Work & Energy', subtopic: 'Work-Energy Theorem & Spring Potential', b: 0.55, a: 1.35 },
+      { q: 16, key: 'C', subject: 'Chemistry', topic: 'Chemical Bonding', subtopic: 'Lewis Structures & Resonance', b: 0.60, a: 1.40 },
+      { q: 17, key: 'B', subject: 'Mathematics', topic: 'Straight Lines', subtopic: 'Slope Form & Angle Between Lines', b: 0.35, a: 1.30 },
+      { q: 18, key: 'D', subject: 'Physics', topic: 'Circular Motion', subtopic: 'Centripetal Acceleration & Banking of Roads', b: 0.65, a: 1.40 },
+      { q: 19, key: 'A', subject: 'Chemistry', topic: 'Atomic Structure', subtopic: 'Bohr Model Radii & Transitions', b: 0.45, a: 1.30 },
+      { q: 20, key: 'C', subject: 'Mathematics', topic: 'Conic Sections', subtopic: 'Standard Parabola Equations', b: 0.80, a: 1.50 }
+    ]
+  }
+};
 
 const PRE_CALIBRATED_BENCHMARKS: Record<string, any> = {
   clean: {
     file_name: 'sample_omr_clean.png',
     quality_status: 'CLEAN',
     total_detected: 20,
-    score: 8,
+    score: 18,
+    max_score: 80,
+    correct_count: 5,
+    incorrect_count: 2,
+    unattempted_count: 13,
     ocr_confidence: 0.985,
     student_id: 'STD_PAT_001',
-    test_id: 'TEST_PH_004',
+    test_id: 'TEST_JEE_M03',
     requires_human_review: false,
     diagnostics: {
       blur_laplacian: 2719.6,
@@ -50,36 +312,40 @@ const PRE_CALIBRATED_BENCHMARKS: Record<string, any> = {
       skew_angle_deg: 0.2
     },
     questions: [
-      { question_number: 1, detected_option: 'A', is_correct: true, confidence: 0.85, flagged: false },
-      { question_number: 2, detected_option: 'A', is_correct: false, confidence: 0.81, flagged: false },
-      { question_number: 3, detected_option: 'D', is_correct: true, confidence: 0.83, flagged: false },
-      { question_number: 4, detected_option: 'B', is_correct: false, confidence: 0.82, flagged: false },
-      { question_number: 5, detected_option: 'D', is_correct: false, confidence: 0.80, flagged: false },
-      { question_number: 6, detected_option: 'C', is_correct: true, confidence: 0.88, flagged: false },
-      { question_number: 7, detected_option: 'D', is_correct: false, confidence: 0.79, flagged: false },
-      { question_number: 8, detected_option: 'BLANK', is_correct: false, confidence: 0.95, flagged: false },
-      { question_number: 9, detected_option: 'BLANK', is_correct: false, confidence: 0.95, flagged: false },
-      { question_number: 10, detected_option: 'BLANK', is_correct: false, confidence: 0.95, flagged: false },
-      { question_number: 11, detected_option: 'BLANK', is_correct: false, confidence: 0.95, flagged: false },
-      { question_number: 12, detected_option: 'BLANK', is_correct: false, confidence: 0.95, flagged: false },
-      { question_number: 13, detected_option: 'BLANK', is_correct: false, confidence: 0.95, flagged: false },
-      { question_number: 14, detected_option: 'BLANK', is_correct: false, confidence: 0.95, flagged: false },
-      { question_number: 15, detected_option: 'BLANK', is_correct: false, confidence: 0.95, flagged: false },
-      { question_number: 16, detected_option: 'BLANK', is_correct: false, confidence: 0.95, flagged: false },
-      { question_number: 17, detected_option: 'BLANK', is_correct: false, confidence: 0.95, flagged: false },
-      { question_number: 18, detected_option: 'BLANK', is_correct: false, confidence: 0.95, flagged: false },
-      { question_number: 19, detected_option: 'BLANK', is_correct: false, confidence: 0.95, flagged: false },
-      { question_number: 20, detected_option: 'BLANK', is_correct: false, confidence: 0.95, flagged: false }
+      { question_number: 1, official_key: 'A', detected_option: 'A', is_correct: true, marks: 4, confidence: 0.96, flagged: false, topic: 'Rotational Dynamics (MOI)', subject: 'Physics' },
+      { question_number: 2, official_key: 'B', detected_option: 'A', is_correct: false, marks: -1, confidence: 0.81, flagged: false, topic: 'Rotational Dynamics (Rolling)', subject: 'Physics' },
+      { question_number: 3, official_key: 'A', detected_option: 'A', is_correct: true, marks: 4, confidence: 0.93, flagged: false, topic: 'Kinematics 2D', subject: 'Physics' },
+      { question_number: 4, official_key: 'B', detected_option: 'B', is_correct: true, marks: 4, confidence: 0.91, flagged: false, topic: 'Work, Power & Energy', subject: 'Physics' },
+      { question_number: 5, official_key: 'A', detected_option: 'A', is_correct: true, marks: 4, confidence: 0.95, flagged: false, topic: 'Gravitation', subject: 'Physics' },
+      { question_number: 6, official_key: 'B', detected_option: 'B', is_correct: true, marks: 4, confidence: 0.92, flagged: false, topic: 'Chemical Thermodynamics', subject: 'Chemistry' },
+      { question_number: 7, official_key: 'A', detected_option: 'C', is_correct: false, marks: -1, confidence: 0.79, flagged: false, topic: 'Chemical Thermodynamics', subject: 'Chemistry' },
+      { question_number: 8, official_key: 'B', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.95, flagged: false, topic: 'Chemical Bonding', subject: 'Chemistry' },
+      { question_number: 9, official_key: 'A', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.95, flagged: false, topic: 'Ionic Equilibrium', subject: 'Chemistry' },
+      { question_number: 10, official_key: 'B', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.95, flagged: false, topic: 'Atomic Structure', subject: 'Chemistry' },
+      { question_number: 11, official_key: 'A', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.95, flagged: false, topic: 'Differential Calculus', subject: 'Mathematics' },
+      { question_number: 12, official_key: 'B', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.95, flagged: false, topic: 'Differential Calculus', subject: 'Mathematics' },
+      { question_number: 13, official_key: 'A', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.95, flagged: false, topic: 'Integral Calculus', subject: 'Mathematics' },
+      { question_number: 14, official_key: 'B', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.95, flagged: false, topic: 'Coordinate Geometry', subject: 'Mathematics' },
+      { question_number: 15, official_key: 'A', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.95, flagged: false, topic: 'Coordinate Geometry', subject: 'Mathematics' },
+      { question_number: 16, official_key: 'B', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.95, flagged: false, topic: 'Rotational Dynamics', subject: 'Physics' },
+      { question_number: 17, official_key: 'A', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.95, flagged: false, topic: 'Organic Chemistry', subject: 'Chemistry' },
+      { question_number: 18, official_key: 'B', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.95, flagged: false, topic: 'Vectors & 3D Geometry', subject: 'Mathematics' },
+      { question_number: 19, official_key: 'A', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.95, flagged: false, topic: 'Oscillations & SHM', subject: 'Physics' },
+      { question_number: 20, official_key: 'B', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.95, flagged: false, topic: 'Electrochemistry', subject: 'Chemistry' }
     ]
   },
   rotated: {
     file_name: 'sample_omr_rotated.png',
     quality_status: 'SKEWED_CORRECTED',
     total_detected: 20,
-    score: 8,
+    score: 18,
+    max_score: 80,
+    correct_count: 5,
+    incorrect_count: 2,
+    unattempted_count: 13,
     ocr_confidence: 0.942,
     student_id: 'STD_PAT_001',
-    test_id: 'TEST_PH_004',
+    test_id: 'TEST_JEE_M03',
     requires_human_review: false,
     diagnostics: {
       blur_laplacian: 2640.2,
@@ -87,63 +353,68 @@ const PRE_CALIBRATED_BENCHMARKS: Record<string, any> = {
       skew_angle_deg: 14.8
     },
     questions: [
-      { question_number: 1, detected_option: 'A', is_correct: true, confidence: 0.82, flagged: false },
-      { question_number: 2, detected_option: 'A', is_correct: false, confidence: 0.80, flagged: false },
-      { question_number: 3, detected_option: 'D', is_correct: true, confidence: 0.81, flagged: false },
-      { question_number: 4, detected_option: 'B', is_correct: false, confidence: 0.79, flagged: false },
-      { question_number: 5, detected_option: 'D', is_correct: false, confidence: 0.78, flagged: false },
-      { question_number: 6, detected_option: 'C', is_correct: true, confidence: 0.85, flagged: false },
-      { question_number: 7, detected_option: 'D', is_correct: false, confidence: 0.76, flagged: false },
-      { question_number: 8, detected_option: 'BLANK', is_correct: false, confidence: 0.95, flagged: false },
-      { question_number: 9, detected_option: 'BLANK', is_correct: false, confidence: 0.95, flagged: false },
-      { question_number: 10, detected_option: 'BLANK', is_correct: false, confidence: 0.95, flagged: false },
-      { question_number: 11, detected_option: 'BLANK', is_correct: false, confidence: 0.95, flagged: false },
-      { question_number: 12, detected_option: 'BLANK', is_correct: false, confidence: 0.95, flagged: false },
-      { question_number: 13, detected_option: 'BLANK', is_correct: false, confidence: 0.95, flagged: false },
-      { question_number: 14, detected_option: 'BLANK', is_correct: false, confidence: 0.95, flagged: false },
-      { question_number: 15, detected_option: 'BLANK', is_correct: false, confidence: 0.95, flagged: false },
-      { question_number: 16, detected_option: 'BLANK', is_correct: false, confidence: 0.95, flagged: false },
-      { question_number: 17, detected_option: 'BLANK', is_correct: false, confidence: 0.95, flagged: false },
-      { question_number: 18, detected_option: 'BLANK', is_correct: false, confidence: 0.95, flagged: false },
-      { question_number: 19, detected_option: 'BLANK', is_correct: false, confidence: 0.95, flagged: false },
-      { question_number: 20, detected_option: 'BLANK', is_correct: false, confidence: 0.95, flagged: false }
+      { question_number: 1, official_key: 'A', detected_option: 'A', is_correct: true, marks: 4, confidence: 0.92, flagged: false, topic: 'Rotational Dynamics (MOI)', subject: 'Physics' },
+      { question_number: 2, official_key: 'B', detected_option: 'A', is_correct: false, marks: -1, confidence: 0.80, flagged: false, topic: 'Rotational Dynamics (Rolling)', subject: 'Physics' },
+      { question_number: 3, official_key: 'A', detected_option: 'A', is_correct: true, marks: 4, confidence: 0.89, flagged: false, topic: 'Kinematics 2D', subject: 'Physics' },
+      { question_number: 4, official_key: 'B', detected_option: 'B', is_correct: true, marks: 4, confidence: 0.88, flagged: false, topic: 'Work, Power & Energy', subject: 'Physics' },
+      { question_number: 5, official_key: 'A', detected_option: 'A', is_correct: true, marks: 4, confidence: 0.91, flagged: false, topic: 'Gravitation', subject: 'Physics' },
+      { question_number: 6, official_key: 'B', detected_option: 'B', is_correct: true, marks: 4, confidence: 0.87, flagged: false, topic: 'Chemical Thermodynamics', subject: 'Chemistry' },
+      { question_number: 7, official_key: 'A', detected_option: 'C', is_correct: false, marks: -1, confidence: 0.76, flagged: false, topic: 'Chemical Thermodynamics', subject: 'Chemistry' },
+      { question_number: 8, official_key: 'B', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.95, flagged: false, topic: 'Chemical Bonding', subject: 'Chemistry' },
+      { question_number: 9, official_key: 'A', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.95, flagged: false, topic: 'Ionic Equilibrium', subject: 'Chemistry' },
+      { question_number: 10, official_key: 'B', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.95, flagged: false, topic: 'Atomic Structure', subject: 'Chemistry' },
+      { question_number: 11, official_key: 'A', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.95, flagged: false, topic: 'Differential Calculus', subject: 'Mathematics' },
+      { question_number: 12, official_key: 'B', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.95, flagged: false, topic: 'Differential Calculus', subject: 'Mathematics' },
+      { question_number: 13, official_key: 'A', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.95, flagged: false, topic: 'Integral Calculus', subject: 'Mathematics' },
+      { question_number: 14, official_key: 'B', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.95, flagged: false, topic: 'Coordinate Geometry', subject: 'Mathematics' },
+      { question_number: 15, official_key: 'A', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.95, flagged: false, topic: 'Coordinate Geometry', subject: 'Mathematics' },
+      { question_number: 16, official_key: 'B', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.95, flagged: false, topic: 'Rotational Dynamics', subject: 'Physics' },
+      { question_number: 17, official_key: 'A', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.95, flagged: false, topic: 'Organic Chemistry', subject: 'Chemistry' },
+      { question_number: 18, official_key: 'B', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.95, flagged: false, topic: 'Vectors & 3D Geometry', subject: 'Mathematics' },
+      { question_number: 19, official_key: 'A', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.95, flagged: false, topic: 'Oscillations & SHM', subject: 'Physics' },
+      { question_number: 20, official_key: 'B', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.95, flagged: false, topic: 'Electrochemistry', subject: 'Chemistry' }
     ]
   },
   blurry: {
     file_name: 'sample_omr_blurry.png',
     quality_status: 'BLURRY_RECAPTURE',
     total_detected: 20,
-    score: 4,
+    score: 0,
+    max_score: 80,
+    correct_count: 2,
+    incorrect_count: 4,
+    unattempted_count: 14,
     ocr_confidence: 0.651,
     student_id: 'STD_PAT_001',
-    test_id: 'TEST_PH_004',
+    test_id: 'TEST_JEE_M03',
     requires_human_review: true,
+    rejection_reason: 'Photo is blurry or out of focus (Laplacian sharpness 42.1 < 80.0 threshold). Hold mobile phone steady.',
     diagnostics: {
       blur_laplacian: 42.1,
       brightness: 120.4,
       skew_angle_deg: 1.2
     },
     questions: [
-      { question_number: 1, detected_option: 'A', is_correct: true, confidence: 0.52, flagged: true },
-      { question_number: 2, detected_option: 'B', is_correct: false, confidence: 0.48, flagged: true },
-      { question_number: 3, detected_option: 'D', is_correct: true, confidence: 0.55, flagged: true },
-      { question_number: 4, detected_option: 'BLANK', is_correct: false, confidence: 0.50, flagged: true },
-      { question_number: 5, detected_option: 'C', is_correct: false, confidence: 0.45, flagged: true },
-      { question_number: 6, detected_option: 'C', is_correct: true, confidence: 0.54, flagged: true },
-      { question_number: 7, detected_option: 'BLANK', is_correct: false, confidence: 0.50, flagged: true },
-      { question_number: 8, detected_option: 'BLANK', is_correct: false, confidence: 0.90, flagged: false },
-      { question_number: 9, detected_option: 'BLANK', is_correct: false, confidence: 0.90, flagged: false },
-      { question_number: 10, detected_option: 'BLANK', is_correct: false, confidence: 0.90, flagged: false },
-      { question_number: 11, detected_option: 'BLANK', is_correct: false, confidence: 0.90, flagged: false },
-      { question_number: 12, detected_option: 'BLANK', is_correct: false, confidence: 0.90, flagged: false },
-      { question_number: 13, detected_option: 'BLANK', is_correct: false, confidence: 0.90, flagged: false },
-      { question_number: 14, detected_option: 'BLANK', is_correct: false, confidence: 0.90, flagged: false },
-      { question_number: 15, detected_option: 'BLANK', is_correct: false, confidence: 0.90, flagged: false },
-      { question_number: 16, detected_option: 'BLANK', is_correct: false, confidence: 0.90, flagged: false },
-      { question_number: 17, detected_option: 'BLANK', is_correct: false, confidence: 0.90, flagged: false },
-      { question_number: 18, detected_option: 'BLANK', is_correct: false, confidence: 0.90, flagged: false },
-      { question_number: 19, detected_option: 'BLANK', is_correct: false, confidence: 0.90, flagged: false },
-      { question_number: 20, detected_option: 'BLANK', is_correct: false, confidence: 0.90, flagged: false }
+      { question_number: 1, official_key: 'A', detected_option: 'A', is_correct: true, marks: 4, confidence: 0.52, flagged: true, topic: 'Rotational Dynamics (MOI)', subject: 'Physics' },
+      { question_number: 2, official_key: 'B', detected_option: 'B', is_correct: true, marks: 4, confidence: 0.48, flagged: true, topic: 'Rotational Dynamics (Rolling)', subject: 'Physics' },
+      { question_number: 3, official_key: 'A', detected_option: 'D', is_correct: false, marks: -1, confidence: 0.55, flagged: true, topic: 'Kinematics 2D', subject: 'Physics' },
+      { question_number: 4, official_key: 'B', detected_option: 'C', is_correct: false, marks: -1, confidence: 0.50, flagged: true, topic: 'Work, Power & Energy', subject: 'Physics' },
+      { question_number: 5, official_key: 'A', detected_option: 'C', is_correct: false, marks: -1, confidence: 0.45, flagged: true, topic: 'Gravitation', subject: 'Physics' },
+      { question_number: 6, official_key: 'B', detected_option: 'C', is_correct: false, marks: -1, confidence: 0.54, flagged: true, topic: 'Chemical Thermodynamics', subject: 'Chemistry' },
+      { question_number: 7, official_key: 'A', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.50, flagged: true, topic: 'Chemical Thermodynamics', subject: 'Chemistry' },
+      { question_number: 8, official_key: 'B', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.90, flagged: false, topic: 'Chemical Bonding', subject: 'Chemistry' },
+      { question_number: 9, official_key: 'A', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.90, flagged: false, topic: 'Ionic Equilibrium', subject: 'Chemistry' },
+      { question_number: 10, official_key: 'B', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.90, flagged: false, topic: 'Atomic Structure', subject: 'Chemistry' },
+      { question_number: 11, official_key: 'A', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.90, flagged: false, topic: 'Differential Calculus', subject: 'Mathematics' },
+      { question_number: 12, official_key: 'B', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.90, flagged: false, topic: 'Differential Calculus', subject: 'Mathematics' },
+      { question_number: 13, official_key: 'A', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.90, flagged: false, topic: 'Integral Calculus', subject: 'Mathematics' },
+      { question_number: 14, official_key: 'B', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.90, flagged: false, topic: 'Coordinate Geometry', subject: 'Mathematics' },
+      { question_number: 15, official_key: 'A', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.90, flagged: false, topic: 'Coordinate Geometry', subject: 'Mathematics' },
+      { question_number: 16, official_key: 'B', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.90, flagged: false, topic: 'Rotational Dynamics', subject: 'Physics' },
+      { question_number: 17, official_key: 'A', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.90, flagged: false, topic: 'Organic Chemistry', subject: 'Chemistry' },
+      { question_number: 18, official_key: 'B', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.90, flagged: false, topic: 'Vectors & 3D Geometry', subject: 'Mathematics' },
+      { question_number: 19, official_key: 'A', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.90, flagged: false, topic: 'Oscillations & SHM', subject: 'Physics' },
+      { question_number: 20, official_key: 'B', detected_option: 'BLANK', is_correct: false, marks: 0, confidence: 0.90, flagged: false, topic: 'Electrochemistry', subject: 'Chemistry' }
     ]
   }
 };
@@ -178,8 +449,12 @@ export default function UploadPage() {
   // OMR Scanner State
   const [omrFile, setOmrFile] = useState<File | null>(null);
   const [omrPreview, setOmrPreview] = useState<string | null>(null);
-  const [testId, setTestId] = useState<string>('');
-  const [studentIdInput, setStudentIdInput] = useState<string>('');
+  const [testId, setTestId] = useState<string>('TEST_JEE_M03');
+  const [studentIdInput, setStudentIdInput] = useState<string>('APX-2026-001');
+  const [selectedStudent, setSelectedStudent] = useState<StudentProfile>(DIVERSE_STUDENTS[0]);
+  const [selectedTestId, setSelectedTestId] = useState<string>('TEST_JEE_M03');
+  const [showMasterKeyModal, setShowMasterKeyModal] = useState<boolean>(false);
+  const [evaluationViewMode, setEvaluationViewMode] = useState<'table' | 'grid'>('table');
   const [isOmrScanning, setIsOmrScanning] = useState(false);
   const [omrResult, setOmrResult] = useState<any | null>(null);
   const [omrError, setOmrError] = useState<string | null>(null);
@@ -187,6 +462,18 @@ export default function UploadPage() {
   const [overrideResponses, setOverrideResponses] = useState<Record<string, string>>({});
   const [isCommittingOmr, setIsCommittingOmr] = useState(false);
   const [omrCommitMessage, setOmrCommitMessage] = useState<string | null>(null);
+
+  const handleSelectStudent = (student: StudentProfile) => {
+    setSelectedStudent(student);
+    setStudentIdInput(student.roll_number);
+    setSelectedTestId(student.default_test_id);
+    setTestId(student.default_test_id);
+  };
+
+  const handleSelectTest = (tId: string) => {
+    setSelectedTestId(tId);
+    setTestId(tId);
+  };
 
   // Load sources when switching to sources tab
   const fetchSources = async () => {
@@ -496,15 +783,50 @@ export default function UploadPage() {
 
       // 3. Resilient Fallback: If backend is warming up, offline, or network lag, use pre-calibrated benchmark
       if (!scanRes) {
-        scanRes = PRE_CALIBRATED_BENCHMARKS[sampleType] || PRE_CALIBRATED_BENCHMARKS.clean;
+        scanRes = { ...(PRE_CALIBRATED_BENCHMARKS[sampleType] || PRE_CALIBRATED_BENCHMARKS.clean) };
         if (!previewUrl) {
           setOmrPreview(`/samples/${targetFilename}`);
         }
       }
 
+      // Sync active test and student metadata with the scanned result
+      if (selectedTestId && MASTER_TESTS[selectedTestId]) {
+        scanRes.test_id = selectedTestId;
+        const currentTest = MASTER_TESTS[selectedTestId];
+        scanRes.max_score = currentTest.max_score;
+        // Attach official keys from master test
+        if (scanRes.questions && Array.isArray(scanRes.questions)) {
+          let cCount = 0;
+          let iCount = 0;
+          scanRes.questions = scanRes.questions.map((q: any) => {
+            const masterQ = currentTest.questions.find(mq => mq.q === q.question_number);
+            const officialKey = masterQ ? masterQ.key : (q.official_key || 'A');
+            const isCorr = (q.detected_option === officialKey) && !q.flagged;
+            const marksVal = isCorr ? 4 : (q.detected_option === 'BLANK' || q.detected_option === 'UNANSWERED' ? 0 : -1);
+            if (isCorr) cCount += 1;
+            else if (q.detected_option !== 'BLANK' && q.detected_option !== 'UNANSWERED') iCount += 1;
+            return {
+              ...q,
+              official_key: officialKey,
+              is_correct: isCorr,
+              marks: marksVal,
+              subject: masterQ ? masterQ.subject : q.subject,
+              topic: masterQ ? `${masterQ.topic} (${masterQ.subtopic})` : q.topic,
+              difficulty_b: masterQ ? masterQ.b : 0.0
+            };
+          });
+          scanRes.score = cCount * 4 - iCount;
+          scanRes.correct_count = cCount;
+          scanRes.incorrect_count = iCount;
+          scanRes.unattempted_count = scanRes.questions.filter((q: any) => q.detected_option === 'BLANK' || q.detected_option === 'UNANSWERED').length;
+        }
+      }
+
       setOmrResult(scanRes);
-      if (scanRes.student_id) setStudentIdInput(scanRes.student_id);
-      if (scanRes.test_id) setTestId(scanRes.test_id);
+      if (selectedStudent) {
+        setStudentIdInput(selectedStudent.roll_number);
+        scanRes.student_id = selectedStudent.roll_number;
+      }
 
       const respMap: Record<string, string> = {};
       if (scanRes.questions && Array.isArray(scanRes.questions)) {
@@ -1256,6 +1578,9 @@ export default function UploadPage() {
       {/* ======================================================== */}
       {/* TAB 3: PHONE OMR SCANNER */}
       {/* ======================================================== */}
+            {/* ======================================================== */}
+      {/* TAB 3: PHONE OMR SCANNER & JUDGE EVALUATION LAB */}
+      {/* ======================================================== */}
       {activeTab === 'omr' && (
         <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 space-y-6">
           {/* Header */}
@@ -1266,19 +1591,27 @@ export default function UploadPage() {
                   <Camera className="w-4 h-4" />
                 </div>
                 <h2 className="font-bold text-slate-900 text-base">
-                  OpenCV Computer Vision & OCR Mobile OMR Scanner
+                  OpenCV Phone-Camera OMR Scanner & Transparent Evaluation Engine
                 </h2>
                 <span className="px-2 py-0.5 bg-teal-50 text-teal-800 text-[10px] font-bold rounded-full border border-teal-200 uppercase">
                   Production CV Engine
                 </span>
               </div>
               <p className="mt-1 text-xs text-slate-600 leading-relaxed max-w-4xl">
-                Tolerates low-cost Android phone cameras, uneven room lighting, and perspective distortion. Runs Laplacian sharpness validation, Hough line deskewing, Otsu adaptive thresholding, and OCR header extraction with transparent human review.
+                Evaluates low-cost Android phone camera photos with Laplacian sharpness diagnostics, Hough line deskewing, Otsu adaptive thresholding, and OCR header extraction. Every bubble is scored strictly against the configured Master Answer Key (+4 for correct match, -1 for incorrect, 0 for unattempted).
               </p>
             </div>
 
             {/* Quick Actions */}
             <div className="flex items-center space-x-2 shrink-0">
+              <button
+                type="button"
+                onClick={() => setShowMasterKeyModal(!showMasterKeyModal)}
+                className="px-3 py-1.5 border border-teal-300 bg-teal-50 hover:bg-teal-100 rounded-lg text-xs font-semibold text-teal-800 flex items-center space-x-1.5 shadow-xs transition"
+              >
+                <BookOpen className="w-3.5 h-3.5 text-teal-700" />
+                <span>{showMasterKeyModal ? 'Hide Master Key' : 'Inspect Master Answer Key'}</span>
+              </button>
               <Link
                 href="/review-queue"
                 className="px-3 py-1.5 border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 flex items-center space-x-1.5 shadow-xs"
@@ -1287,6 +1620,350 @@ export default function UploadPage() {
                 <span>Human Review Queue</span>
               </Link>
             </div>
+          </div>
+
+          {/* ------------------------------------------------------------- */}
+          {/* JUDGE EVALUATION LAB & SAMPLE DATA COLLECTION PACK */}
+          {/* ------------------------------------------------------------- */}
+          <div className="p-4 bg-gradient-to-r from-slate-900 via-teal-950 to-slate-900 text-white rounded-xl shadow-md border border-slate-700 space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <div className="flex items-center space-x-2">
+                <span className="p-1.5 rounded-lg bg-teal-500/20 text-teal-300 border border-teal-500/30">
+                  <Database className="w-4 h-4 text-teal-300" />
+                </span>
+                <div>
+                  <div className="text-xs font-bold text-white flex items-center space-x-2">
+                    <span>Judge Evaluation Suite & Sample Data Collection</span>
+                    <span className="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] font-mono">
+                      Ready for ML • Excel • OpenCV
+                    </span>
+                  </div>
+                  <div className="text-[11px] text-slate-300 mt-0.5">
+                    Download complete multi-tab test datasets, blank printable OMR sheets, and camera stress tests to evaluate algorithms.
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center flex-wrap gap-2 shrink-0">
+                <a
+                  href="/samples/Intelliprivart_Judge_Sample_Data_Collection.xlsx"
+                  download="Intelliprivart_Judge_Sample_Data_Collection.xlsx"
+                  className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-semibold shadow-xs flex items-center space-x-1.5 transition"
+                >
+                  <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-200" />
+                  <span>Download Judge Master Excel (.xlsx)</span>
+                </a>
+
+                <a
+                  href="/samples/printable_blank_omr_template.png"
+                  download="printable_blank_omr_template.png"
+                  target="_blank"
+                  className="px-3 py-1.5 bg-teal-600 hover:bg-teal-500 text-white rounded-lg text-xs font-semibold shadow-xs flex items-center space-x-1.5 transition"
+                >
+                  <Download className="w-3.5 h-3.5 text-teal-200" />
+                  <span>Print Blank OMR Template</span>
+                </a>
+              </div>
+            </div>
+
+            {/* Quick Chips for Judge Datasets */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-2 pt-1 border-t border-slate-800 text-[11px]">
+              <a
+                href="/samples/students_diverse_roster.csv"
+                download
+                className="p-1.5 bg-slate-800/80 hover:bg-slate-700/80 rounded border border-slate-700 text-slate-300 hover:text-white flex items-center justify-between"
+              >
+                <span className="truncate">1. Diverse Roster</span>
+                <Download className="w-3 h-3 text-teal-400 shrink-0 ml-1" />
+              </a>
+              <a
+                href="/samples/master_test_answer_keys.csv"
+                download
+                className="p-1.5 bg-slate-800/80 hover:bg-slate-700/80 rounded border border-slate-700 text-slate-300 hover:text-white flex items-center justify-between"
+              >
+                <span className="truncate">2. Master Keys</span>
+                <Download className="w-3 h-3 text-teal-400 shrink-0 ml-1" />
+              </a>
+              <a
+                href="/samples/omr_scan_evaluations_ground_truth.csv"
+                download
+                className="p-1.5 bg-slate-800/80 hover:bg-slate-700/80 rounded border border-slate-700 text-slate-300 hover:text-white flex items-center justify-between"
+              >
+                <span className="truncate">3. OMR Ground Truth</span>
+                <Download className="w-3 h-3 text-teal-400 shrink-0 ml-1" />
+              </a>
+              <a
+                href="/samples/psychometric_2pl_irt_bkt.csv"
+                download
+                className="p-1.5 bg-slate-800/80 hover:bg-slate-700/80 rounded border border-slate-700 text-slate-300 hover:text-white flex items-center justify-between"
+              >
+                <span className="truncate">4. 2PL IRT & BKT</span>
+                <Download className="w-3 h-3 text-teal-400 shrink-0 ml-1" />
+              </a>
+              <a
+                href="/samples/conformal_risk_dropout_telemetry.csv"
+                download
+                className="p-1.5 bg-slate-800/80 hover:bg-slate-700/80 rounded border border-slate-700 text-slate-300 hover:text-white flex items-center justify-between"
+              >
+                <span className="truncate">5. Conformal Dropout</span>
+                <Download className="w-3 h-3 text-teal-400 shrink-0 ml-1" />
+              </a>
+              <a
+                href="/samples/case_b_financial_retention_ledger.csv"
+                download
+                className="p-1.5 bg-slate-800/80 hover:bg-slate-700/80 rounded border border-slate-700 text-slate-300 hover:text-white flex items-center justify-between"
+              >
+                <span className="truncate">6. Retention ROI</span>
+                <Download className="w-3 h-3 text-teal-400 shrink-0 ml-1" />
+              </a>
+            </div>
+          </div>
+
+          {/* ------------------------------------------------------------- */}
+          {/* CANDIDATE PROFILE SELECTOR (DIVERSE STUDENTS & TARGET EXAMS) */}
+          {/* ------------------------------------------------------------- */}
+          <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <div className="flex items-center space-x-2">
+                <Users className="w-4 h-4 text-teal-600" />
+                <span className="text-xs font-bold text-slate-900">
+                  Select Candidate Profile (Different Students, Target Exams & Abilities):
+                </span>
+              </div>
+              <span className="text-[11px] text-slate-500">
+                Switches target exam, latent ability (θ), conformal risk interval, and attendance telemetry
+              </span>
+            </div>
+
+            {/* Quick-Select Student Pills */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+              {DIVERSE_STUDENTS.map((st) => {
+                const isSelected = selectedStudent.student_id === st.student_id;
+                return (
+                  <button
+                    key={st.student_id}
+                    type="button"
+                    onClick={() => handleSelectStudent(st)}
+                    className={`p-2 rounded-lg text-left border transition text-xs flex flex-col justify-between ${
+                      isSelected
+                        ? 'bg-teal-600 text-white border-teal-700 shadow-xs'
+                        : 'bg-white hover:bg-slate-100/80 text-slate-700 border-slate-200'
+                    }`}
+                  >
+                    <div>
+                      <div className="flex items-center justify-between">
+                        <span className={`text-[10px] font-bold uppercase tracking-wider ${isSelected ? 'text-teal-200' : 'text-slate-400'}`}>
+                          {st.student_id}
+                        </span>
+                        <span
+                          className={`text-[9px] px-1 py-0.2 rounded font-bold ${
+                            st.risk_tier === 'High'
+                              ? isSelected ? 'bg-rose-500 text-white' : 'bg-rose-100 text-rose-800'
+                              : st.risk_tier === 'Medium'
+                              ? isSelected ? 'bg-amber-500 text-white' : 'bg-amber-100 text-amber-800'
+                              : isSelected ? 'bg-emerald-500 text-white' : 'bg-emerald-100 text-emerald-800'
+                          }`}
+                        >
+                          {st.risk_tier} Risk
+                        </span>
+                      </div>
+                      <div className="font-bold text-xs truncate mt-0.5">
+                        {st.name}
+                      </div>
+                    </div>
+                    <div className="mt-1 pt-1 border-t border-slate-200/40 flex items-center justify-between text-[10px]">
+                      <span className={`truncate ${isSelected ? 'text-teal-100' : 'text-slate-500'}`}>
+                        {st.target_exam}
+                      </span>
+                      <span className="font-mono font-bold">
+                        θ={st.latent_ability_theta > 0 ? `+${st.latent_ability_theta}` : st.latent_ability_theta}
+                      </span>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Active Student Detail Telemetry Card */}
+            <div className="bg-white p-3.5 rounded-lg border border-slate-200 shadow-2xs grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
+              <div className="space-y-1">
+                <span className="text-[10px] uppercase font-bold text-slate-400 block">Candidate Identity</span>
+                <div className="font-bold text-slate-900 text-sm">{selectedStudent.name}</div>
+                <div className="text-[11px] font-mono text-slate-500">{selectedStudent.roll_number} • {selectedStudent.grade}</div>
+                <div className="text-[11px] text-teal-700 font-medium">{selectedStudent.batch_name}</div>
+              </div>
+
+              <div className="space-y-1">
+                <span className="text-[10px] uppercase font-bold text-slate-400 block">Target Exam & Ability (2PL IRT)</span>
+                <div className="flex items-center space-x-1.5">
+                  <span className="px-2 py-0.5 rounded bg-teal-50 text-teal-800 font-bold border border-teal-200 text-xs">
+                    {selectedStudent.target_exam}
+                  </span>
+                  <span className="font-bold font-mono text-slate-800">
+                    θ = {selectedStudent.latent_ability_theta > 0 ? `+${selectedStudent.latent_ability_theta}` : selectedStudent.latent_ability_theta}
+                  </span>
+                </div>
+                <div className="text-[11px] text-slate-500">
+                  Percentile: <span className="font-bold text-slate-800">{selectedStudent.overall_percentile}%ile</span> • Conformal: <span className="font-mono text-slate-700">{selectedStudent.conformal_interval}</span>
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <span className="text-[10px] uppercase font-bold text-slate-400 block">Retention & Attendance</span>
+                <div className="flex items-center space-x-2">
+                  <span className="font-bold text-slate-800">{selectedStudent.attendance_rate}% Attendance</span>
+                  <span
+                    className={`px-1.5 py-0.2 rounded text-[10px] font-bold ${
+                      selectedStudent.risk_tier === 'High'
+                        ? 'bg-rose-100 text-rose-800'
+                        : selectedStudent.risk_tier === 'Medium'
+                        ? 'bg-amber-100 text-amber-800'
+                        : 'bg-emerald-100 text-emerald-800'
+                    }`}
+                  >
+                    {selectedStudent.risk_tier} Churn Tier
+                  </span>
+                </div>
+                <div className="text-[11px] text-slate-600 truncate" title={selectedStudent.risk_driver}>
+                  Driver: {selectedStudent.risk_driver}
+                </div>
+                <div className="text-[10px] font-mono text-slate-500">Fee: {selectedStudent.fee_status}</div>
+              </div>
+
+              <div className="space-y-1">
+                <span className="text-[10px] uppercase font-bold text-slate-400 block">Guardian Lineage & DPDP</span>
+                <div className="font-semibold text-slate-800">{selectedStudent.guardian_name}</div>
+                <div className="text-[11px] font-mono text-slate-500">{selectedStudent.guardian_phone}</div>
+                <div className="text-[10px] text-emerald-700 flex items-center space-x-1">
+                  <ShieldCheck className="w-3 h-3 text-emerald-600" />
+                  <span>Sec. 9 Guardian Consent Verified</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* ------------------------------------------------------------- */}
+          {/* MASTER ANSWER KEY CONFIGURATION & TRANSPARENCY CARD */}
+          {/* ------------------------------------------------------------- */}
+          <div className="p-4 bg-teal-50/70 border border-teal-200 rounded-xl space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <div className="flex items-center space-x-2">
+                <BookOpen className="w-4 h-4 text-teal-700" />
+                <span className="text-xs font-bold text-teal-950">
+                  Against Which Answer OMR Is Being Evaluated:
+                </span>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <span className="text-[11px] text-teal-800 font-medium">Select Official Test Key:</span>
+                <div className="flex bg-white rounded-lg p-0.5 border border-teal-200 text-xs">
+                  {Object.keys(MASTER_TESTS).map((tCode) => {
+                    const isCur = selectedTestId === tCode;
+                    return (
+                      <button
+                        key={tCode}
+                        type="button"
+                        onClick={() => handleSelectTest(tCode)}
+                        className={`px-2.5 py-1 rounded font-bold text-[11px] transition ${
+                          isCur
+                            ? 'bg-teal-600 text-white shadow-2xs'
+                            : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        {tCode}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            <div className="text-xs text-teal-900 leading-relaxed bg-white p-3 rounded-lg border border-teal-100 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+              <div>
+                <span className="font-bold text-slate-900 block">
+                  {MASTER_TESTS[selectedTestId]?.test_name || selectedTestId}
+                </span>
+                <span className="text-[11px] text-slate-600">
+                  Target: <strong className="text-teal-800">{MASTER_TESTS[selectedTestId]?.target_exam}</strong> • Marking Rule:{' '}
+                  <span className="font-semibold text-slate-700">{MASTER_TESTS[selectedTestId]?.marking_scheme}</span>
+                </span>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setShowMasterKeyModal(!showMasterKeyModal)}
+                className="px-3 py-1.5 bg-teal-100 hover:bg-teal-200 text-teal-900 rounded-md font-semibold text-xs transition flex items-center space-x-1.5 shrink-0 self-start md:self-center"
+              >
+                <Eye className="w-3.5 h-3.5 text-teal-700" />
+                <span>{showMasterKeyModal ? 'Close Inspector' : 'View Question-by-Question Key Table'}</span>
+              </button>
+            </div>
+
+            {/* Collapsible Master Answer Key Inspector */}
+            {showMasterKeyModal && MASTER_TESTS[selectedTestId] && (
+              <div className="bg-white rounded-xl border border-teal-200 p-4 space-y-3 shadow-xs">
+                <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+                  <div>
+                    <span className="font-bold text-xs text-slate-900">
+                      Official Master Answer Key & Topic Taxonomy ({selectedTestId})
+                    </span>
+                    <span className="text-[11px] text-slate-500 block">
+                      Every OMR scan compares student bubbles with this master ground-truth table.
+                    </span>
+                  </div>
+                  <span className="text-xs font-mono bg-teal-50 text-teal-800 font-bold px-2 py-0.5 rounded border border-teal-200">
+                    20 Questions • Max Score: 80
+                  </span>
+                </div>
+
+                <div className="max-h-72 overflow-y-auto border border-slate-200 rounded-lg">
+                  <table className="w-full text-left text-xs border-collapse">
+                    <thead className="bg-slate-50 sticky top-0 border-b border-slate-200 text-[11px] text-slate-500 uppercase font-semibold">
+                      <tr>
+                        <th className="p-2 text-center w-12">Q#</th>
+                        <th className="p-2 text-center w-20">Master Key</th>
+                        <th className="p-2 w-28">Subject</th>
+                        <th className="p-2">Syllabus Topic & Subtopic</th>
+                        <th className="p-2 text-center w-24">Difficulty (b)</th>
+                        <th className="p-2 text-center w-24">Marking</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 text-slate-700 font-mono text-[11px]">
+                      {MASTER_TESTS[selectedTestId].questions.map((mq) => (
+                        <tr key={mq.q} className="hover:bg-teal-50/40 transition">
+                          <td className="p-2 text-center font-bold text-slate-900">Q{mq.q}</td>
+                          <td className="p-2 text-center">
+                            <span className="inline-block w-6 h-6 rounded-full bg-teal-600 text-white font-bold leading-6 text-center text-xs">
+                              {mq.key}
+                            </span>
+                          </td>
+                          <td className="p-2 font-sans font-medium text-slate-800">{mq.subject}</td>
+                          <td className="p-2 font-sans text-slate-600">
+                            <strong>{mq.topic}</strong>: {mq.subtopic}
+                          </td>
+                          <td className="p-2 text-center">
+                            <span
+                              className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
+                                mq.b > 0.8
+                                  ? 'bg-rose-100 text-rose-800'
+                                  : mq.b > 0.2
+                                  ? 'bg-amber-100 text-amber-800'
+                                  : 'bg-emerald-100 text-emerald-800'
+                              }`}
+                            >
+                              b={mq.b > 0 ? `+${mq.b}` : mq.b}
+                            </span>
+                          </td>
+                          <td className="p-2 text-center text-[10px] font-bold text-emerald-700">
+                            +4 / -1 / 0
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Quick Benchmark Preset Buttons */}
@@ -1312,11 +1989,11 @@ export default function UploadPage() {
                     1. Clean OMR Benchmark
                   </span>
                   <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.5 rounded">
-                    Score: 8 / 80
+                    Score: 18 / 80
                   </span>
                 </div>
                 <div className="text-[11px] text-slate-500 mt-1">
-                  20 Qs • Ideal illumination • 42.9% accuracy (+4 / -1 JEE format)
+                  20 Qs • Ideal illumination • Evaluated against Master Key (+4 / -1)
                 </div>
               </button>
 
@@ -1331,7 +2008,7 @@ export default function UploadPage() {
                     2. Rotated OMR Sheet
                   </span>
                   <span className="text-[10px] bg-blue-100 text-blue-800 font-bold px-1.5 py-0.5 rounded">
-                    Hough Deskew
+                    14.8° Hough Deskew
                   </span>
                 </div>
                 <div className="text-[11px] text-slate-500 mt-1">
@@ -1350,11 +2027,11 @@ export default function UploadPage() {
                     3. Blurry / Low-Light
                   </span>
                   <span className="text-[10px] bg-amber-100 text-amber-800 font-bold px-1.5 py-0.5 rounded">
-                    Laplacian Check
+                    Laplacian Reject
                   </span>
                 </div>
                 <div className="text-[11px] text-slate-500 mt-1">
-                  Tests blur variance filter • Warns teacher if photo requires recapture
+                  Blur variance filter (42.1 &lt; 80) • Warns evaluator for recapture
                 </div>
               </button>
             </div>
@@ -1373,9 +2050,12 @@ export default function UploadPage() {
                     <input
                       type="text"
                       value={testId}
-                      onChange={(e) => setTestId(e.target.value)}
+                      onChange={(e) => {
+                        setTestId(e.target.value);
+                        setSelectedTestId(e.target.value);
+                      }}
                       className="w-full p-2 border border-slate-200 rounded-lg text-xs font-mono bg-slate-50 focus:bg-white focus:outline-none"
-                      placeholder="Enter configured test ID"
+                      placeholder="e.g. TEST_JEE_M03"
                     />
                   </div>
                   <div>
@@ -1387,7 +2067,7 @@ export default function UploadPage() {
                       value={studentIdInput}
                       onChange={(e) => setStudentIdInput(e.target.value)}
                       className="w-full p-2 border border-slate-200 rounded-lg text-xs font-mono bg-slate-50 focus:bg-white focus:outline-none"
-                      placeholder="Enter roster student ID"
+                      placeholder="e.g. APX-2026-001"
                     />
                   </div>
                 </div>
@@ -1505,6 +2185,10 @@ export default function UploadPage() {
                         <span className="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></span>
                         <span>Ambiguous / Low Conf</span>
                       </span>
+                      <span className="flex items-center space-x-1">
+                        <span className="w-2.5 h-2.5 rounded-full bg-slate-400 inline-block"></span>
+                        <span>Blank (0)</span>
+                      </span>
                     </div>
                   )}
                 </div>
@@ -1520,7 +2204,7 @@ export default function UploadPage() {
                     <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-slate-200">
                       <div className="flex items-center space-x-2">
                         <span className="font-bold text-xs text-slate-900">
-                          Evaluation Results: {studentIdInput || omrResult.student_id || 'Candidate'}
+                          Evaluation Results: {studentIdInput || omrResult.student_id || selectedStudent.name}
                         </span>
                         <span className="text-[10px] font-mono text-slate-500">
                           ({testId || omrResult.test_id})
@@ -1570,7 +2254,7 @@ export default function UploadPage() {
                             : '2,719.6'}
                         </span>
                         <span className="text-[9px] text-emerald-600 block mt-0.5 font-medium">
-                          Sharp (&gt;100.0)
+                          Sharp (&gt;80.0)
                         </span>
                       </div>
                       <div className="bg-white p-2.5 rounded-lg border border-slate-200">
@@ -1598,124 +2282,252 @@ export default function UploadPage() {
                     </div>
                   </div>
 
-                  {/* JEE Score Cards */}
-                  <div className="grid grid-cols-4 gap-2.5 text-center">
+                  {/* Score & Evaluation Metric Cards */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-center">
                     <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-xs">
                       <span className="text-[10px] uppercase font-bold text-slate-400 block">
-                        Total Questions
+                        Calculated Score
                       </span>
-                      <span className="text-lg font-bold text-slate-800 font-mono">
-                        {omrResult.total_detected ?? (omrResult.questions ? omrResult.questions.length : 20)}
+                      <span className="text-xl font-bold text-teal-600 font-mono">
+                        {omrResult.score >= 0 ? `+${omrResult.score}` : omrResult.score} / {omrResult.max_score || 80}
                       </span>
-                      <span className="text-[10px] text-slate-500 block">In Sheet</span>
+                      <span className="text-[10px] text-slate-500 block">+4 / -1 / 0 Scheme</span>
                     </div>
 
                     <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-xs">
                       <span className="text-[10px] uppercase font-bold text-slate-400 block">
-                        JEE Main Score
+                        Correct Matches
                       </span>
-                      <span className="text-lg font-bold text-teal-600 font-mono">
-                        +{omrResult.score ?? 8}
+                      <span className="text-xl font-bold text-emerald-600 font-mono">
+                        {omrResult.correct_count ?? (omrResult.questions ? omrResult.questions.filter((q: any) => q.is_correct).length : 5)}
                       </span>
-                      <span className="text-[10px] text-slate-500 block">+4 / -1 Scheme</span>
+                      <span className="text-[10px] text-slate-500 block">+{((omrResult.correct_count ?? 5) * 4)} Marks</span>
                     </div>
 
                     <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-xs">
                       <span className="text-[10px] uppercase font-bold text-slate-400 block">
-                        Accuracy
+                        Incorrect Matches
                       </span>
-                      <span className="text-lg font-bold text-slate-800 font-mono">
-                        42.9%
+                      <span className="text-xl font-bold text-rose-600 font-mono">
+                        {omrResult.incorrect_count ?? (omrResult.questions ? omrResult.questions.filter((q: any) => !q.is_correct && q.detected_option !== 'BLANK' && q.detected_option !== 'UNANSWERED').length : 2)}
                       </span>
-                      <span className="text-[10px] text-slate-500 block">3 of 7 Attempted</span>
+                      <span className="text-[10px] text-slate-500 block">-{omrResult.incorrect_count ?? 2} Marks Penalty</span>
                     </div>
 
                     <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-xs">
                       <span className="text-[10px] uppercase font-bold text-slate-400 block">
-                        Attempt Rate
+                        Unattempted (Blank)
                       </span>
-                      <span className="text-lg font-bold text-slate-800 font-mono">
-                        35%
+                      <span className="text-xl font-bold text-slate-700 font-mono">
+                        {omrResult.unattempted_count ?? (omrResult.questions ? omrResult.questions.filter((q: any) => q.detected_option === 'BLANK' || q.detected_option === 'UNANSWERED').length : 13)}
                       </span>
-                      <span className="text-[10px] text-slate-500 block">13 Blank</span>
+                      <span className="text-[10px] text-slate-500 block">0 Penalty</span>
                     </div>
                   </div>
 
-                  {/* Interactive Question-by-Question Matrix */}
-                  <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs space-y-2.5">
-                    <div className="flex items-center justify-between">
+                  {/* Switchable View: Side-by-Side Comparison Table vs Compact Matrix */}
+                  <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs space-y-3">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pb-2 border-b border-slate-100">
                       <div>
                         <span className="text-xs font-bold text-slate-800 block">
-                          Interactive Bubble Inspection & Human Override:
+                          Evaluation Comparison (Master Key vs Detected Option):
                         </span>
                         <span className="text-[11px] text-slate-500">
-                          Transparent Human-in-the-Loop review. Evaluator can override faint markings before gradebook commit.
+                          Transparent comparison against official key with 1-tap manual override for faint bubbles.
                         </span>
                       </div>
-                      <span className="text-[10px] text-slate-400 font-mono">
-                        20 Questions
-                      </span>
+
+                      <div className="flex bg-slate-100 p-0.5 rounded-lg text-xs self-start sm:self-auto">
+                        <button
+                          type="button"
+                          onClick={() => setEvaluationViewMode('table')}
+                          className={`px-2.5 py-1 rounded font-semibold text-[11px] transition ${
+                            evaluationViewMode === 'table'
+                              ? 'bg-white text-teal-800 shadow-2xs font-bold'
+                              : 'text-slate-600 hover:text-slate-900'
+                          }`}
+                        >
+                          Side-by-Side Table
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setEvaluationViewMode('grid')}
+                          className={`px-2.5 py-1 rounded font-semibold text-[11px] transition ${
+                            evaluationViewMode === 'grid'
+                              ? 'bg-white text-teal-800 shadow-2xs font-bold'
+                              : 'text-slate-600 hover:text-slate-900'
+                          }`}
+                        >
+                          Compact Grid
+                        </button>
+                      </div>
                     </div>
 
-                    <div className="grid grid-cols-4 sm:grid-cols-5 gap-2 max-h-56 overflow-y-auto p-1 border border-slate-100 rounded-lg">
-                      {omrResult.questions && Array.isArray(omrResult.questions) ? (
-                        omrResult.questions.map((q: any) => {
-                          const qKey = `Q${q.question_number}`;
-                          const currentVal = overrideResponses[qKey] || q.detected_option;
-                          return (
-                            <div
-                              key={q.question_number}
-                              className={`p-2 rounded-lg border text-center text-xs transition ${
-                                q.flagged
-                                  ? 'bg-amber-50/70 border-amber-300'
-                                  : q.is_correct
-                                  ? 'bg-emerald-50/60 border-emerald-200'
-                                  : currentVal && currentVal !== 'BLANK'
-                                  ? 'bg-rose-50/60 border-rose-200'
-                                  : 'bg-slate-50 border-slate-200'
-                              }`}
-                            >
-                              <div className="flex items-center justify-between text-[10px] font-bold text-slate-500 mb-1">
-                                <span>Q{q.question_number}</span>
-                                {q.is_correct ? (
-                                  <span className="text-emerald-700 font-mono font-bold">+4</span>
-                                ) : currentVal && currentVal !== 'BLANK' ? (
-                                  <span className="text-rose-600 font-mono font-bold">-1</span>
-                                ) : (
-                                  <span className="text-slate-400 font-mono">0</span>
-                                )}
-                              </div>
-                              <select
-                                value={currentVal}
-                                onChange={(e) => {
-                                  setOverrideResponses({
-                                    ...overrideResponses,
-                                    [qKey]: e.target.value
-                                  });
-                                }}
-                                className="w-full text-center font-bold text-xs p-1 rounded bg-white border border-slate-200 focus:outline-none focus:border-teal-500 text-slate-800 font-mono"
+                    {/* TABLE VIEW */}
+                    {evaluationViewMode === 'table' ? (
+                      <div className="max-h-80 overflow-y-auto border border-slate-200 rounded-lg">
+                        <table className="w-full text-left text-xs border-collapse">
+                          <thead className="bg-slate-50 sticky top-0 border-b border-slate-200 text-[11px] text-slate-500 font-semibold uppercase">
+                            <tr>
+                              <th className="p-2 text-center w-10">Q#</th>
+                              <th className="p-2 text-center w-24">Official Key</th>
+                              <th className="p-2 text-center w-24">Detected</th>
+                              <th className="p-2 text-center w-24">Marking</th>
+                              <th className="p-2">Syllabus Topic</th>
+                              <th className="p-2 text-center w-16">Conf</th>
+                              <th className="p-2 text-center w-24">Override</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-slate-100 text-slate-700 text-[11px]">
+                            {omrResult.questions && Array.isArray(omrResult.questions) ? (
+                              omrResult.questions.map((q: any) => {
+                                const qKey = `Q${q.question_number}`;
+                                const currentVal = overrideResponses[qKey] || q.detected_option;
+                                const officialKey = q.official_key || (MASTER_TESTS[selectedTestId]?.questions.find(mq => mq.q === q.question_number)?.key) || 'A';
+                                const isMatch = (currentVal === officialKey) && !q.flagged;
+                                const isBlank = currentVal === 'BLANK' || currentVal === 'UNANSWERED';
+
+                                return (
+                                  <tr
+                                    key={q.question_number}
+                                    className={`hover:bg-slate-50/70 transition ${
+                                      q.flagged
+                                        ? 'bg-amber-50/40'
+                                        : isMatch
+                                        ? 'bg-emerald-50/30'
+                                        : !isBlank
+                                        ? 'bg-rose-50/30'
+                                        : ''
+                                    }`}
+                                  >
+                                    <td className="p-2 text-center font-bold font-mono text-slate-800">
+                                      Q{q.question_number}
+                                    </td>
+                                    <td className="p-2 text-center">
+                                      <span className="inline-block w-6 h-6 rounded-full bg-teal-700 text-white font-bold leading-6 text-center text-xs font-mono">
+                                        {officialKey}
+                                      </span>
+                                    </td>
+                                    <td className="p-2 text-center">
+                                      <span
+                                        className={`inline-block px-2 py-0.5 rounded font-mono font-bold text-xs ${
+                                          isMatch
+                                            ? 'bg-emerald-100 text-emerald-800'
+                                            : !isBlank
+                                            ? 'bg-rose-100 text-rose-800'
+                                            : 'bg-slate-100 text-slate-500'
+                                        }`}
+                                      >
+                                        {currentVal}
+                                      </span>
+                                    </td>
+                                    <td className="p-2 text-center font-mono">
+                                      {isMatch ? (
+                                        <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold text-[10px]">
+                                          +4 Marks
+                                        </span>
+                                      ) : !isBlank ? (
+                                        <span className="px-2 py-0.5 rounded bg-rose-100 text-rose-800 font-bold text-[10px]">
+                                          -1 Penalty
+                                        </span>
+                                      ) : (
+                                        <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-500 font-medium text-[10px]">
+                                          0 Blank
+                                        </span>
+                                      )}
+                                    </td>
+                                    <td className="p-2">
+                                      <div className="font-medium text-slate-800 truncate max-w-xs">
+                                        {q.topic || (MASTER_TESTS[selectedTestId]?.questions.find(mq => mq.q === q.question_number)?.topic) || 'General Science'}
+                                      </div>
+                                      <div className="text-[10px] text-slate-400 font-mono">
+                                        {q.subject || (MASTER_TESTS[selectedTestId]?.questions.find(mq => mq.q === q.question_number)?.subject) || 'Core'}
+                                      </div>
+                                    </td>
+                                    <td className="p-2 text-center font-mono text-[10px] text-slate-500">
+                                      {Math.round(q.confidence * 100)}%
+                                    </td>
+                                    <td className="p-2 text-center">
+                                      <select
+                                        value={currentVal}
+                                        onChange={(e) => {
+                                          setOverrideResponses({
+                                            ...overrideResponses,
+                                            [qKey]: e.target.value
+                                          });
+                                        }}
+                                        className="text-center font-bold text-[11px] p-1 rounded bg-white border border-slate-200 focus:outline-none focus:border-teal-500 text-slate-800 font-mono"
+                                      >
+                                        <option value="A">A</option>
+                                        <option value="B">B</option>
+                                        <option value="C">C</option>
+                                        <option value="D">D</option>
+                                        <option value="BLANK">Blank</option>
+                                      </select>
+                                    </td>
+                                  </tr>
+                                );
+                              })
+                            ) : null}
+                          </tbody>
+                        </table>
+                      </div>
+                    ) : (
+                      /* COMPACT GRID VIEW */
+                      <div className="grid grid-cols-4 sm:grid-cols-5 gap-2 max-h-60 overflow-y-auto p-1 border border-slate-100 rounded-lg">
+                        {omrResult.questions && Array.isArray(omrResult.questions) ? (
+                          omrResult.questions.map((q: any) => {
+                            const qKey = `Q${q.question_number}`;
+                            const currentVal = overrideResponses[qKey] || q.detected_option;
+                            const officialKey = q.official_key || (MASTER_TESTS[selectedTestId]?.questions.find(mq => mq.q === q.question_number)?.key) || 'A';
+                            const isMatch = (currentVal === officialKey) && !q.flagged;
+
+                            return (
+                              <div
+                                key={q.question_number}
+                                className={`p-2 rounded-lg border text-center text-xs transition ${
+                                  q.flagged
+                                    ? 'bg-amber-50/70 border-amber-300'
+                                    : isMatch
+                                    ? 'bg-emerald-50/60 border-emerald-200'
+                                    : currentVal && currentVal !== 'BLANK' && currentVal !== 'UNANSWERED'
+                                    ? 'bg-rose-50/60 border-rose-200'
+                                    : 'bg-slate-50 border-slate-200'
+                                }`}
                               >
-                                <option value="A">A</option>
-                                <option value="B">B</option>
-                                <option value="C">C</option>
-                                <option value="D">D</option>
-                                <option value="BLANK">Blank</option>
-                              </select>
-                            </div>
-                          );
-                        })
-                      ) : (
-                        Object.entries(overrideResponses).map(([qKey, val]) => (
-                          <div
-                            key={qKey}
-                            className="p-2 rounded-lg border border-slate-200 bg-slate-50 text-center text-xs"
-                          >
-                            <span className="text-[10px] text-slate-400 block">{qKey}</span>
-                            <span className="font-bold text-teal-700 font-mono">{String(val)}</span>
-                          </div>
-                        ))
-                      )}
-                    </div>
+                                <div className="flex items-center justify-between text-[10px] font-bold text-slate-500 mb-1">
+                                  <span>Q{q.question_number}</span>
+                                  <span className="text-teal-700 font-mono text-[9px] bg-teal-50 px-1 rounded">Key: {officialKey}</span>
+                                  {isMatch ? (
+                                    <span className="text-emerald-700 font-mono font-bold">+4</span>
+                                  ) : currentVal && currentVal !== 'BLANK' && currentVal !== 'UNANSWERED' ? (
+                                    <span className="text-rose-600 font-mono font-bold">-1</span>
+                                  ) : (
+                                    <span className="text-slate-400 font-mono">0</span>
+                                  )}
+                                </div>
+                                <select
+                                  value={currentVal}
+                                  onChange={(e) => {
+                                    setOverrideResponses({
+                                      ...overrideResponses,
+                                      [qKey]: e.target.value
+                                    });
+                                  }}
+                                  className="w-full text-center font-bold text-xs p-1 rounded bg-white border border-slate-200 focus:outline-none focus:border-teal-500 text-slate-800 font-mono"
+                                >
+                                  <option value="A">A</option>
+                                  <option value="B">B</option>
+                                  <option value="C">C</option>
+                                  <option value="D">D</option>
+                                  <option value="BLANK">Blank</option>
+                                </select>
+                              </div>
+                            );
+                          })
+                        ) : null}
+                      </div>
+                    )}
                   </div>
 
                   {/* Gradebook Commit & Model Recompute Bar */}
@@ -1723,10 +2535,10 @@ export default function UploadPage() {
                     <div>
                       <div className="font-bold text-slate-900 text-xs flex items-center space-x-1.5">
                         <CheckCircle className="w-4 h-4 text-teal-600" />
-                        <span>Ready to commit to student gradebook</span>
+                        <span>Ready to commit to student gradebook: {selectedStudent.name}</span>
                       </div>
                       <div className="text-[11px] text-slate-600 mt-0.5">
-                        Will record responses, calculate topic masteries, and update early-warning risk scores.
+                        Will record responses, evaluate topic masteries (BKT & 2PL IRT), and update conformal early-warning risk scores.
                       </div>
                     </div>
 

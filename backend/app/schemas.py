@@ -120,8 +120,10 @@ class ReviewResolveRequest(BaseModel):
 # OMR Result Schemas
 class OMRQuestionResult(BaseModel):
     question_number: int
+    official_key: Optional[str] = None
     detected_option: str
     is_correct: bool
+    marks: Optional[int] = None
     confidence: float
     flagged: bool
 
@@ -130,13 +132,19 @@ class OMRScanResult(BaseModel):
     quality_status: str # "CLEAN", "SKEWED_CORRECTED", "BLURRY_RECAPTURE"
     total_detected: int
     score: int
+    max_score: Optional[int] = None
+    correct_count: Optional[int] = None
+    incorrect_count: Optional[int] = None
+    unattempted_count: Optional[int] = None
     questions: List[OMRQuestionResult]
+    answer_key: Optional[Dict[str, str]] = None
     annotated_image_url: Optional[str] = None
     annotated_image: Optional[str] = None
     student_id: Optional[str] = None
     test_id: Optional[str] = None
     ocr_confidence: Optional[float] = None
     requires_human_review: Optional[bool] = None
+    rejection_reason: Optional[str] = None
     diagnostics: Optional[Dict[str, Any]] = None
 
 # ROI Calculator Schemas

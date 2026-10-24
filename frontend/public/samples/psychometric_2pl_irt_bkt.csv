@@ -1,0 +1,7 @@
+student_id,name,topic,latent_ability_theta,prior_mastery_pct,post_test_mastery_pct,slip_prob_s,guess_prob_g,transition_prob_T,mastery_status
+STD_PAT_001,Aarav Sharma,Kinematics & 2D Motion,1.82,92.4,94.1,0.08,0.15,0.22,SOLID_ANCHOR
+STD_PAT_001,Aarav Sharma,Rotational Dynamics,0.44,58.2,44.0,0.12,0.18,0.1,CONCEPT_SLUMP_ALERT
+STD_PAT_001,Aarav Sharma,Chemical Thermodynamics,1.45,86.0,88.5,0.09,0.14,0.18,SOLID_ANCHOR
+STD_PAT_002,Priya Patel,Human Physiology,2.3,96.0,98.2,0.05,0.12,0.25,SOLID_ANCHOR
+STD_PAT_002,Priya Patel,Electromagnetism,0.85,72.0,68.5,0.14,0.16,0.12,FOCUS_DRILL
+STD_PAT_003,Rohan Verma,Differential Calculus,-0.15,64.0,48.0,0.18,0.22,0.08,CRITICAL_DEFICIT

@@ -22,7 +22,7 @@ from backend.app.models import (
     Attendance, Fee, Engagement, ReviewQueueItem, AuditLog, UploadSource, RecomputeRun
 )
 from backend.app.schemas import ReviewQueueItemOut, ReviewResolveRequest, OMRScanResult
-from backend.app.services.omr_service import process_omr_sheet
+from backend.app.services.omr_service import process_omr_sheet, TEST_ANSWER_KEYS, DEFAULT_ANSWER_KEY
 from backend.app.services.ocr_service import run_ocr_on_omr_header
 from backend.app.services.recompute_service import recompute
 
@@ -504,14 +504,18 @@ async def ingest_omr(
     if file.content_type and not file.content_type.startswith("image/"):
         raise HTTPException(status_code=415, detail="Please upload a PNG or JPEG image.")
 
-    result = process_omr_sheet(contents)
-    if "error" in result:
-        raise HTTPException(status_code=400, detail=result["error"])
-
     # OCR metadata supplements explicit operator values; unrecognized IDs stay empty.
     ocr_res = run_ocr_on_omr_header(contents)
     resolved_student_id = (student_id or "").strip() or ocr_res.get("student_id")
-    resolved_test_id = (test_id or "").strip() or ocr_res.get("test_id")
+    resolved_test_id = (test_id or "").strip() or ocr_res.get("test_id") or "TEST_JEE_M03"
+
+    # Select the test answer key configured for this test
+    key_to_use = TEST_ANSWER_KEYS.get(resolved_test_id, DEFAULT_ANSWER_KEY)
+
+    result = process_omr_sheet(contents, answer_key=key_to_use)
+    if "error" in result:
+        raise HTTPException(status_code=400, detail=result["error"])
+
     result_questions = result.get("questions", [])
     requires_review = bool(ocr_res.get("requires_human_review")) or any(q.get("flagged") for q in result_questions)
     if result.get("quality_status") != "CLEAN":
@@ -566,7 +570,12 @@ async def ingest_omr(
         "quality_status": result["quality_status"],
         "total_detected": result["total_detected"],
         "score": result["score"],
+        "max_score": result.get("max_score", 80),
+        "correct_count": result.get("correct_count", 0),
+        "incorrect_count": result.get("incorrect_count", 0),
+        "unattempted_count": result.get("unattempted_count", 0),
         "questions": result["questions"],
+        "answer_key": result.get("answer_key"),
         "annotated_image": result.get("annotated_image"),
         "student_id": resolved_student_id,
         "test_id": resolved_test_id,
@@ -914,3 +923,36 @@ def get_recompute_status(
         "source_files": files,
         "computed_at": run.computed_at.isoformat() if run.computed_at else None
     }
+
+@router.get("/answer-keys")
+def get_master_answer_keys():
+    """
+    Returns available test answer keys with marking scheme for evaluation transparency.
+    """
+    tests_summary = [
+        {
+            "test_id": "TEST_JEE_M03",
+            "test_name": "JEE Advanced Milestone 3: Mechanics & Thermodynamics",
+            "target_exam": "JEE Advanced",
+            "total_questions": 20,
+            "marking_scheme": "+4 for Correct, -1 for Incorrect, 0 for Unattempted",
+            "answer_key": {str(k): v for k, v in TEST_ANSWER_KEYS["TEST_JEE_M03"].items()}
+        },
+        {
+            "test_id": "TEST_NEET_M04",
+            "test_name": "NEET-UG Milestone 4: Human Physiology & Genetics",
+            "target_exam": "NEET-UG",
+            "total_questions": 20,
+            "marking_scheme": "+4 for Correct, -1 for Incorrect, 0 for Unattempted",
+            "answer_key": {str(k): v for k, v in TEST_ANSWER_KEYS["TEST_NEET_M04"].items()}
+        },
+        {
+            "test_id": "TEST_FND_M01",
+            "test_name": "Foundation 11th Milestone 1: Mathematical Vectors & Kinematics",
+            "target_exam": "Foundation (11th)",
+            "total_questions": 20,
+            "marking_scheme": "+4 for Correct, -1 for Incorrect, 0 for Unattempted",
+            "answer_key": {str(k): v for k, v in TEST_ANSWER_KEYS["TEST_FND_M01"].items()}
+        }
+    ]
+    return {"status": "SUCCESS", "tests": tests_summary}

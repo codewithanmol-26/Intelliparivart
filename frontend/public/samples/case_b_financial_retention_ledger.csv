@@ -1,0 +1,13 @@
+cohort_parameter,value,notes
+Total Enrolled Benchmark Students,"1,200 Students","Across 3 flagship batches (JEE Adv, NEET, Foundation)"
+Annual Tuition Fee Per Student,"₹60,000 / year",Tier-2 Patna Flagship benchmark
+Baseline Industry Churn Rate (Months 3-6),12.8%,Industry average without proactive early-warning AI
+Expected Dropout Count Without Platform,154 Students,"1,200 * 12.8%"
+Lost Fee Revenue Per Dropout,"₹36,000","6 uncollected monthly installments @ ₹6,000/mo"
+Total Fee Revenue at Risk,₹55.44 Lakhs,"154 students * ₹36,000"
+DataMoat Early Intervention Retention Rate,51.3% Churn Prevented,4-6 weeks notice enables 15-min remedial recovery
+Students Successfully Retained,79 Students Saved,154 * 51.3%
+Direct Fee Revenue Protected,"₹28,50,000 (₹28.50 Lakhs)","79 retained students * ₹36,000 tuition"
+Annual DataMoat Software Cost,"₹1,55,988 / year","Enterprise Tier-2 Plan for 1,200 students"
+Net Financial Gain Protected,"₹26,94,012",₹28.50L protected - ₹1.56L platform cost
+Auditable Net ROI Ratio,18.3x Net ROI,₹28.50L / ₹1.56L (Every ₹1 spent returns ₹18.30 in tuition)

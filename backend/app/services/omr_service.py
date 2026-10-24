@@ -16,6 +16,27 @@ from typing import Dict, List, Tuple, Any
 
 DEFAULT_ANSWER_KEY = {i: "A" if i % 2 == 1 else "B" for i in range(1, 21)}
 
+TEST_ANSWER_KEYS = {
+    "TEST_JEE_M03": {
+        1: "A", 2: "B", 3: "A", 4: "B", 5: "A",
+        6: "B", 7: "A", 8: "B", 9: "A", 10: "B",
+        11: "A", 12: "B", 13: "A", 14: "B", 15: "A",
+        16: "B", 17: "A", 18: "B", 19: "A", 20: "B"
+    },
+    "TEST_NEET_M04": {
+        1: "C", 2: "A", 3: "B", 4: "D", 5: "B",
+        6: "C", 7: "A", 8: "D", 9: "B", 10: "C",
+        11: "A", 12: "C", 13: "B", 14: "D", 15: "A",
+        16: "C", 17: "B", 18: "A", 19: "D", 20: "C"
+    },
+    "TEST_FND_M01": {
+        1: "A", 2: "C", 3: "B", 4: "A", 5: "D",
+        6: "B", 7: "C", 8: "A", 9: "D", 10: "B",
+        11: "A", 12: "C", 13: "D", 14: "B", 15: "A",
+        16: "C", 17: "B", 18: "D", 19: "A", 20: "C"
+    }
+}
+
 def assess_image_quality(image: np.ndarray) -> Dict[str, Any]:
     """Evaluates blurriness, brightness, and resolution."""
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -167,16 +188,20 @@ def process_omr_sheet(
             # Amber circle for teacher review
             cv2.circle(annotated, (top_x, top_y), 15, (249, 115, 22), 2)
         else:
-            # Red circle for incorrect
-            cv2.circle(annotated, (top_x, top_y), 15, (239, 68, 68), 2)
+            # Slate gray circle for blank/unattempted
+            cv2.circle(annotated, (top_x, top_y), 15, (148, 163, 184), 2)
 
         # Confidence: separation between top density and runner up
         conf = float(np.clip((top_density - runner_up_density) / max(0.01, top_density), 0.10, 0.99))
+        detected_choice = "BLANK" if is_blank else (top_opt if not is_faint else "UNANSWERED")
+        marks = 4 if is_correct else (0 if detected_choice in ("BLANK", "UNANSWERED") else -1)
 
         questions_results.append({
             "question_number": q_idx,
-            "detected_option": "BLANK" if is_blank else (top_opt if not is_faint else "UNANSWERED"),
+            "official_key": correct_choice,
+            "detected_option": detected_choice,
             "is_correct": is_correct,
+            "marks": marks,
             "confidence": round(conf, 2),
             "flagged": is_flagged
         })
@@ -197,8 +222,13 @@ def process_omr_sheet(
         "quality_status": "SKEWED_CORRECTED" if abs(skew_angle) > 0.5 else "CLEAN",
         "total_detected": len(questions_results),
         "score": correct_count * 4 - incorrect_count,
+        "max_score": len(questions_results) * 4,
+        "correct_count": correct_count,
+        "incorrect_count": incorrect_count,
+        "unattempted_count": sum(1 for q in questions_results if q["detected_option"] in ("BLANK", "UNANSWERED")),
         "annotated_image": annotated_base64,
         "questions": questions_results,
+        "answer_key": {str(k): v for k, v in answer_key.items()},
         "diagnostics": {
             "blur_laplacian": quality.get("laplacian_var", 0),
             "brightness": quality.get("brightness", 0),

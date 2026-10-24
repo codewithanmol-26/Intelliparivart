@@ -1,0 +1,5 @@
+student_id,name,batch,target_exam,predicted_percentile_p10,predicted_percentile_p50,predicted_percentile_p90,confidence_coverage,dropout_risk_prob,risk_tier,early_warning_weeks,flagged_reason
+STD_PAT_001,Aarav Sharma,Achievers Top-30,JEE Advanced,91.0,94.2,96.5,90% Conformal,0.14,Medium,4.5,Rotational Dynamics slump + Attendance dip
+STD_PAT_002,Priya Patel,Target NEET Achievers,NEET-UG,95.0,97.4,98.8,90% Conformal,0.03,Low,0.0,On track for Govt Medical College selection
+STD_PAT_003,Rohan Verma,Achievers Top-30,JEE Advanced,71.0,76.5,82.5,90% Conformal,0.78,High,6.0,Attendance drop 94%->74% in M3; 3 score slumps; pending fee installment
+STD_PAT_008,Vikramaditya Roy,Achievers Top-30,JEE Advanced,62.0,68.4,74.5,90% Conformal,0.84,High,5.5,Consecutive test failure; disengagement notice generated
