@@ -244,6 +244,23 @@ export default function Navbar() {
                   </Link>
                 );
               })}
+
+              {/* Logout Option at Bottom of Mobile Menu */}
+              <div className="pt-2 mt-2 border-t border-blue-900/50">
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold text-rose-300 hover:bg-rose-950/60 hover:text-white border border-rose-900/40 transition cursor-pointer"
+                >
+                  <div className="flex items-center space-x-2.5">
+                    <LogOut className="w-4 h-4 text-rose-400" />
+                    <span>Logout &amp; Return to Home</span>
+                  </div>
+                  <span className="text-[10px] bg-rose-950 text-rose-300 border border-rose-800/80 px-1.5 py-0.5 rounded font-mono">
+                    Exit
+                  </span>
+                </button>
+              </div>
             </div>
           </div>
         )}

@@ -2,8 +2,9 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useApp } from '../context/AppContext';
+import { useAuth } from '../context/AuthContext';
 import { UserRole } from '../lib/types';
 import {
   LayoutDashboard,
@@ -28,7 +29,8 @@ import {
   X,
   HeartHandshake,
   UserCheck,
-  User
+  User,
+  LogOut
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -38,7 +40,15 @@ interface SidebarProps {
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
+  const { logout } = useAuth();
   const { tenantId, role, setRole, setSelectedStudentId, offlineQueueCount, isOnline } = useApp();
+
+  const handleLogout = () => {
+    onClose();
+    logout();
+    router.push('/');
+  };
 
   const getRoleNavItems = () => {
     switch (role) {
@@ -95,7 +105,6 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
   const secondaryNavItems = [
     { href: '/demo-tools', label: 'Scenario Simulator', icon: Sparkles },
-    { href: '/', label: 'Public Website', icon: Globe },
   ];
 
   return (
@@ -194,6 +203,27 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                 );
               })}
             </nav>
+          </div>
+
+          {/* Bottom Account & Exit / Logout Section */}
+          <div className="pt-3 border-t border-blue-900/40 space-y-1.5">
+            <span className="px-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+              Session Management
+            </span>
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-rose-300 hover:bg-rose-950/60 hover:text-white border border-rose-900/40 transition group cursor-pointer"
+              title="Logout from dashboard and return to public website (Auto Logout)"
+            >
+              <div className="flex items-center space-x-2.5">
+                <LogOut className="w-4 h-4 text-rose-400 group-hover:-translate-x-0.5 transition-transform" />
+                <span>Logout &amp; Return to Home</span>
+              </div>
+              <span className="text-[10px] bg-rose-950/90 text-rose-300 border border-rose-800/80 px-1.5 py-0.5 rounded font-mono">
+                Exit
+              </span>
+            </button>
           </div>
         </div>
 
