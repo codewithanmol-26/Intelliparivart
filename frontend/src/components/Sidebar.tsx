@@ -45,6 +45,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       case 'owner':
         return [
           { href: '/overview', label: 'Owner Dashboard', icon: LayoutDashboard },
+          { href: '/directory', label: 'Faculty & Students', icon: Users },
           { href: '/owner', label: 'Executive ROI Model', icon: FileSpreadsheet },
           { href: '/risk', label: 'Early-Warning Dropouts', icon: ShieldAlert },
           { href: '/interventions', label: 'Remedial Triage Ledger', icon: CheckCircle2 },
@@ -206,7 +207,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           </div>
           <div className="flex items-center justify-between text-[10px]">
             <span>System Mode</span>
-            <span className="text-teal-400 font-semibold">Demo (Sample Data)</span>
+            <span className="text-emerald-400 font-semibold">Institutional Active</span>
           </div>
           <div className="pt-1.5 border-t border-blue-900/40 flex items-center justify-between text-[10px] text-slate-500">
             <Link href="/privacy-policy" className="hover:text-teal-300 transition">Privacy Policy</Link>

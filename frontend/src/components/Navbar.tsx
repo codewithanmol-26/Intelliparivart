@@ -110,40 +110,6 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 bg-[#0B1F3A] text-white shadow-md">
-      {/* Top Banner: Synthetic Status & Live Lineage */}
-      <div className="bg-[#08172c] border-b border-blue-900/50 px-3 sm:px-4 py-1 text-[11px] sm:text-xs flex flex-wrap items-center justify-between text-blue-200 gap-1.5">
-        <div className="flex items-center space-x-2">
-          <span className="inline-block w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0"></span>
-          <span className="font-semibold text-amber-300 bg-amber-950/80 border border-amber-500/40 px-1.5 py-0.5 rounded text-[10px]">
-            SYNTHETIC BENCHMARK DATA
-          </span>
-          <span className="truncate max-w-[240px] sm:max-w-none text-slate-300">
-            Pipeline Validation Mode (1,200 Cohort) • Nextute × IIT Patna
-          </span>
-          {lastRunId && (
-            <span className="hidden md:inline-flex items-center px-1.5 py-0.2 bg-teal-950/80 border border-teal-500/40 rounded text-[10px] text-teal-300 font-mono">
-              <Database className="w-2.5 h-2.5 mr-1" />
-              {lastRunId.length > 20 ? `Run ${lastRunId.slice(-8)}` : lastRunId}
-            </span>
-          )}
-        </div>
-        <div className="flex items-center space-x-3 text-[11px]">
-          <span className="hidden sm:inline text-slate-400">DPDP Act 2023 Compliant</span>
-          <span className="hidden sm:inline text-slate-600">|</span>
-          <div className="flex items-center space-x-1">
-            {isOnline ? (
-              <span className="flex items-center text-emerald-400">
-                <Wifi className="w-3 h-3 mr-1" /> Live Connected
-              </span>
-            ) : (
-              <span className="flex items-center text-amber-400 font-bold">
-                <WifiOff className="w-3 h-3 mr-1" /> Offline ({offlineQueueCount} queued)
-              </span>
-            )}
-          </div>
-        </div>
-      </div>
-
       {/* Global Recompute Toast Notification Banner */}
       {recomputeNotification && (
         <div className="bg-teal-600 text-white px-4 py-1.5 text-xs flex items-center justify-between shadow-inner">
@@ -176,50 +142,6 @@ export default function Navbar() {
 
           {/* Desktop Right Controls (Laptop/Desktop View) */}
           <div className="hidden lg:flex items-center space-x-2.5">
-            {/* Quick Recompute Action */}
-            <button
-              onClick={handleManualRecompute}
-              disabled={isRecomputing || recomputingLocal}
-              title="Trigger Full Recompute Pipeline (2PL IRT + BKT + GBDT + Conformal)"
-              className="inline-flex items-center px-2.5 py-1 bg-teal-600/20 hover:bg-teal-600/40 border border-teal-500/40 rounded text-xs font-semibold text-teal-300 transition disabled:opacity-50"
-            >
-              <RotateCw className={`w-3.5 h-3.5 mr-1.5 ${isRecomputing || recomputingLocal ? 'animate-spin' : ''}`} />
-              <span>{isRecomputing || recomputingLocal ? 'Recomputing...' : 'Recompute'}</span>
-            </button>
-
-            {/* Institute Switcher */}
-            <div className="flex items-center space-x-2">
-              <div className="flex items-center bg-blue-950/70 border border-blue-800/60 rounded-md px-2.5 py-1 text-xs">
-                <Building2 className="w-3.5 h-3.5 text-slate-400 mr-1.5 shrink-0" />
-                <select
-                  aria-label="Select Institute Tenant"
-                  value={tenantId}
-                  onChange={(e) => setTenantId(e.target.value)}
-                  className="bg-transparent text-white font-medium focus:outline-none cursor-pointer max-w-[190px] truncate"
-                >
-                  {institutes.map((inst) => (
-                    <option key={inst.id} value={inst.id} className="bg-[#0B1F3A] text-white">
-                      {inst.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <span
-                className="hidden xl:inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-semibold bg-blue-950/90 text-teal-300 border border-teal-500/30"
-                title="Architecture: 1 Owner per institute, multiple faculty and students"
-              >
-                1 Owner • Multi-Faculty &amp; Students
-              </span>
-            </div>
-
-            {/* Quick Action Pill: Run the numbers (Civitas Header Pattern) */}
-            <Link
-              href="/#roi-calculator"
-              className="hidden 2xl:inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold text-slate-200 hover:text-white border border-slate-600 hover:border-slate-400 transition"
-            >
-              <span>Run the numbers</span>
-            </Link>
-
             {/* User Profile Picture & Popover Window */}
             <UserProfileMenu align="right" />
           </div>
@@ -296,24 +218,7 @@ export default function Navbar() {
               </div>
             )}
 
-            {/* Mobile Tenant Selector */}
-            <div className="bg-blue-950 p-2.5 rounded-lg border border-blue-800 text-xs">
-              <label className="text-[10px] text-slate-400 font-medium block mb-1">
-                Active Institute Tenant:
-              </label>
-              <select
-                aria-label="Select Institute Tenant"
-                value={tenantId}
-                onChange={(e) => setTenantId(e.target.value)}
-                className="w-full bg-transparent text-white font-medium focus:outline-none"
-              >
-                {institutes.map((inst) => (
-                  <option key={inst.id} value={inst.id} className="bg-[#0B1F3A] text-white">
-                    {inst.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+
 
             {/* Mobile Nav Links List */}
             <div className="space-y-1 pt-1">

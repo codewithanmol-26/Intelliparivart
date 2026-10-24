@@ -196,183 +196,6 @@ const COMPREHENSIVE_ROSTER: RosterMember[] = [
     description: 'MoE Well-Being Supportive Progress Digest • Bi-Weekly Sync'
   },
 
-  // ============================================================================
-  // 2. CHAITANYA SCIENCE FORUM, KOTA (INST_KOTA_02)
-  // ============================================================================
-  // Sole 1 Owner
-  {
-    id: 'USR_OWNER_02',
-    email: 'owner@chaitanya.edu',
-    password: 'owner',
-    full_name: 'Er. Arvind Joshi',
-    role: 'owner',
-    tenant_id: 'INST_KOTA_02',
-    institute_name: 'Chaitanya Science Forum, Kota',
-    designation: 'Sole Institute Director, Kota Campus',
-    description: 'Kota Campus Executive Oversight • 1 Owner per Institute Policy'
-  },
-  // Multiple Teachers
-  {
-    id: 'USR_TEACHER_02',
-    email: 'rawat.phys@chaitanya.edu',
-    password: 'teacher',
-    full_name: 'Prof. H. S. Rawat',
-    role: 'teacher',
-    tenant_id: 'INST_KOTA_02',
-    institute_name: 'Chaitanya Science Forum, Kota',
-    designation: 'Physics Department Head, Kota',
-    description: 'Advanced Electrostatics & Optics Lead Faculty'
-  },
-  {
-    id: 'USR_TEACHER_02_B',
-    email: 'bansal.math@chaitanya.edu',
-    password: 'teacher',
-    full_name: 'Dr. P. K. Bansal',
-    role: 'teacher',
-    tenant_id: 'INST_KOTA_02',
-    institute_name: 'Chaitanya Science Forum, Kota',
-    designation: 'Senior Mathematics Faculty, Kota',
-    description: 'Calculus, Vectors & Algebra Faculty Lead'
-  },
-  // Multiple Students
-  {
-    id: 'USR_STUDENT_02',
-    email: 'kabir@chaitanya.edu',
-    password: 'student',
-    full_name: 'Kabir Mehta',
-    role: 'student',
-    tenant_id: 'INST_KOTA_02',
-    institute_name: 'Chaitanya Science Forum, Kota',
-    student_id: 'STD_KOTA_001',
-    designation: 'JEE Advanced Rankers Batch (Kota)',
-    description: '96.1 Percentile • Kota Campus Benchmark Profile'
-  },
-  {
-    id: 'USR_STUDENT_02_B',
-    email: 'simran@chaitanya.edu',
-    password: 'student',
-    full_name: 'Simran Kaur',
-    role: 'student',
-    tenant_id: 'INST_KOTA_02',
-    institute_name: 'Chaitanya Science Forum, Kota',
-    student_id: 'STD_KOTA_002',
-    designation: 'JEE Main Super-60 Cohort',
-    description: '93.5 Percentile • Kota Foundation Lead'
-  },
-  // Multiple Parents
-  {
-    id: 'USR_PARENT_02',
-    email: 'mehta.parent@chaitanya.edu',
-    password: 'parent',
-    full_name: 'Mr. Suresh Mehta',
-    role: 'parent',
-    tenant_id: 'INST_KOTA_02',
-    institute_name: 'Chaitanya Science Forum, Kota',
-    student_id: 'STD_KOTA_001',
-    designation: 'Guardian of Kabir Mehta (Kota)',
-    description: 'Parent Portal Access • Weekly Hindi & English Digest'
-  },
-  {
-    id: 'USR_PARENT_02_B',
-    email: 'kaur.parent@chaitanya.edu',
-    password: 'parent',
-    full_name: 'Mrs. Harpreet Kaur',
-    role: 'parent',
-    tenant_id: 'INST_KOTA_02',
-    institute_name: 'Chaitanya Science Forum, Kota',
-    student_id: 'STD_KOTA_002',
-    designation: 'Guardian of Simran Kaur (Kota)',
-    description: 'Parent Portal Access • Attendance & Growth Tracking'
-  },
-
-  // ============================================================================
-  // 3. DRONA MEDICAL INSTITUTE, LUCKNOW (INST_LUCKNOW_03)
-  // ============================================================================
-  // Sole 1 Owner
-  {
-    id: 'USR_OWNER_03',
-    email: 'owner@drona.edu',
-    password: 'owner',
-    full_name: 'Dr. Vandana Saxena',
-    role: 'owner',
-    tenant_id: 'INST_LUCKNOW_03',
-    institute_name: 'Drona Medical Institute, Lucknow',
-    designation: 'Sole Director, Lucknow Medical Wing',
-    description: 'Executive Director • 1 Owner per Institute Policy'
-  },
-  // Multiple Teachers
-  {
-    id: 'USR_TEACHER_03',
-    email: 'trivedi.zoo@drona.edu',
-    password: 'teacher',
-    full_name: 'Dr. K. L. Trivedi',
-    role: 'teacher',
-    tenant_id: 'INST_LUCKNOW_03',
-    institute_name: 'Drona Medical Institute, Lucknow',
-    designation: 'Zoology & Anatomy HOD, Lucknow',
-    description: 'NEET Medical Lead Faculty & Diagnostic Specialist'
-  },
-  {
-    id: 'USR_TEACHER_03_B',
-    email: 'nambiar.bot@drona.edu',
-    password: 'teacher',
-    full_name: 'Dr. Meera Nambiar',
-    role: 'teacher',
-    tenant_id: 'INST_LUCKNOW_03',
-    institute_name: 'Drona Medical Institute, Lucknow',
-    designation: 'Botany & Genetics Lead Faculty',
-    description: 'Plant Physiology & Molecular Genetics Head'
-  },
-  // Multiple Students
-  {
-    id: 'USR_STUDENT_03',
-    email: 'tanvi@drona.edu',
-    password: 'student',
-    full_name: 'Tanvi Mishra',
-    role: 'student',
-    tenant_id: 'INST_LUCKNOW_03',
-    institute_name: 'Drona Medical Institute, Lucknow',
-    student_id: 'STD_LKO_001',
-    designation: 'NEET Medical Top Batch (Score 660+)',
-    description: 'Biology 355/360 • AIIMS Target Aspirant'
-  },
-  {
-    id: 'USR_STUDENT_03_B',
-    email: 'aryan@drona.edu',
-    password: 'student',
-    full_name: 'Aryan Srivastava',
-    role: 'student',
-    tenant_id: 'INST_LUCKNOW_03',
-    institute_name: 'Drona Medical Institute, Lucknow',
-    student_id: 'STD_LKO_002',
-    designation: 'NEET Medical Achievers Batch',
-    description: 'Organic Chemistry Focus • High Growth Trajectory'
-  },
-  // Multiple Parents
-  {
-    id: 'USR_PARENT_03',
-    email: 'mishra.parent@drona.edu',
-    password: 'parent',
-    full_name: 'Mr. Alok Mishra',
-    role: 'parent',
-    tenant_id: 'INST_LUCKNOW_03',
-    institute_name: 'Drona Medical Institute, Lucknow',
-    student_id: 'STD_LKO_001',
-    designation: 'Guardian of Tanvi Mishra (NEET Top)',
-    description: 'Parent Portal Access • Weekly Holistic Progress Report'
-  },
-  {
-    id: 'USR_PARENT_03_B',
-    email: 'srivastava.parent@drona.edu',
-    password: 'parent',
-    full_name: 'Mrs. Rekha Srivastava',
-    role: 'parent',
-    tenant_id: 'INST_LUCKNOW_03',
-    institute_name: 'Drona Medical Institute, Lucknow',
-    student_id: 'STD_LKO_002',
-    designation: 'Guardian of Aryan Srivastava (NEET)',
-    description: 'Parent Portal Access • Mentor Feedback & Counseling'
-  }
 ];
 
 function LoginFormContent() {
@@ -426,9 +249,7 @@ function LoginFormContent() {
       })
       .catch(() => {
         const fallback = [
-          { id: 'INST_PATNA_01', name: 'Apex JEE & Medical Academy, Patna', city: 'Patna' },
-          { id: 'INST_KOTA_02', name: 'Chaitanya Science Forum, Kota', city: 'Kota' },
-          { id: 'INST_LUCKNOW_03', name: 'Drona Medical Institute, Lucknow', city: 'Lucknow' }
+          { id: 'INST_PATNA_01', name: 'Apex JEE & Medical Academy, Patna', city: 'Patna' }
         ];
         if (isMounted) {
           setInstitutes(fallback);
@@ -812,7 +633,7 @@ function LoginFormContent() {
                 <input
                   type="text"
                   required
-                  placeholder="Search enrolled institute name (e.g. Apex, Chaitanya, Drona)..."
+                  placeholder="Search enrolled institute name (e.g. Apex JEE & Medical Academy)..."
                   value={instituteSearch}
                   onFocus={() => setShowInstituteDropdown(true)}
                   onChange={(e) => {

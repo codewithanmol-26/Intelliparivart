@@ -64,9 +64,7 @@ function getDemoFallback<T>(endpoint: string, tenantId: string, options?: Reques
   // Institutes
   if (ep === '/institutes' || ep.startsWith('/institutes')) {
     return [
-      { id: DEMO_INSTITUTE.id, name: DEMO_INSTITUTE.name, city: `${DEMO_INSTITUTE.city}, ${DEMO_INSTITUTE.state}` },
-      { id: 'INST_KOTA_02', name: 'Chaitanya Science Forum, Kota', city: 'Kota, Rajasthan' },
-      { id: 'INST_LUCKNOW_03', name: 'Drona Medical Institute, Lucknow', city: 'Lucknow, UP' },
+      { id: 'INST_PATNA_01', name: 'Apex JEE & Medical Academy, Patna', city: 'Patna, Bihar' },
     ] as unknown as T;
   }
 

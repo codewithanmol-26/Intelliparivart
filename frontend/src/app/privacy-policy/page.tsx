@@ -123,7 +123,7 @@ export default function PrivacyPolicyPage() {
                   Coaching Institute = Data Fiduciary
                 </span>
                 <p className="text-xs text-slate-600 leading-normal">
-                  The respective coaching institute (e.g., Apex JEE Academy, Chaitanya Forum) is the <strong>Data Fiduciary</strong> that determines the purpose, lawful grounds, and means of collecting student attendance and test results.
+                  The respective coaching institute (e.g., Apex JEE & Medical Academy) is the <strong>Data Fiduciary</strong> that determines the purpose, lawful grounds, and means of collecting student attendance and test results.
                 </p>
               </div>
               <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-2">

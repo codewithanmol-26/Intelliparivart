@@ -80,24 +80,8 @@ DEFAULT_INSTITUTES = [
         "name": "Apex JEE & Medical Academy, Patna",
         "city": "Patna",
         "city_tier": "Tier-2",
-        "exam_focus": "JEE Advanced",
-        "annual_fee_per_student": 75000
-    },
-    {
-        "id": "INST_KOTA_02",
-        "name": "Chaitanya Science Forum, Kota",
-        "city": "Kota",
-        "city_tier": "Tier-2",
-        "exam_focus": "JEE Main",
-        "annual_fee_per_student": 110000
-    },
-    {
-        "id": "INST_LUCKNOW_03",
-        "name": "Drona Medical Institute, Lucknow",
-        "city": "Lucknow",
-        "city_tier": "Tier-2",
-        "exam_focus": "NEET-UG",
-        "annual_fee_per_student": 68000
+        "exam_focus": "JEE/NEET",
+        "annual_fee_per_student": 60000.0
     }
 ]
 
