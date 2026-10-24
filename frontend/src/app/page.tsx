@@ -155,9 +155,62 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Right Column: "Ask DataMoat" Live AI Widget (Directly inspired by Civitas Learning) */}
+          {/* Right Column: Live Institutional Telemetry Console (Replaces redundant hero chatbot) */}
           <div className="lg:col-span-5 hidden lg:block">
-            <AskDataMoatChatbot />
+            <div className="bg-gradient-to-br from-[#0B1F3A]/90 to-[#040D1A]/95 p-6 rounded-2xl border border-teal-500/30 shadow-2xl space-y-4 backdrop-blur-md">
+              <div className="flex items-center justify-between pb-3 border-b border-blue-900/60">
+                <div className="flex items-center space-x-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="text-xs font-bold text-teal-300 uppercase tracking-wider">
+                    Live Telemetry Console
+                  </span>
+                </div>
+                <span className="text-[10px] bg-teal-950 text-teal-300 border border-teal-500/40 px-2 py-0.5 rounded font-mono">
+                  Apex Academy, Patna
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 text-xs">
+                <div className="p-3 bg-slate-900/80 rounded-xl border border-blue-900/50">
+                  <span className="text-slate-400 block text-[10px]">Fee Protected</span>
+                  <span className="text-xl font-black text-emerald-400 font-mono">₹28.50 L</span>
+                  <span className="text-[9px] text-slate-500 block">18.3x Net ROI</span>
+                </div>
+
+                <div className="p-3 bg-slate-900/80 rounded-xl border border-blue-900/50">
+                  <span className="text-slate-400 block text-[10px]">Dropout Churn</span>
+                  <span className="text-xl font-black text-teal-300 font-mono">12.8% &rarr; 5.7%</span>
+                  <span className="text-[9px] text-slate-500 block">4–6 wks early notice</span>
+                </div>
+
+                <div className="p-3 bg-slate-900/80 rounded-xl border border-blue-900/50">
+                  <span className="text-slate-400 block text-[10px]">Benchmark Cohort</span>
+                  <span className="text-lg font-bold text-white font-mono">1,200 Students</span>
+                  <span className="text-[9px] text-slate-500 block">Across 3 Core Batches</span>
+                </div>
+
+                <div className="p-3 bg-slate-900/80 rounded-xl border border-blue-900/50">
+                  <span className="text-slate-400 block text-[10px]">Camera OMR</span>
+                  <span className="text-lg font-bold text-teal-300 font-mono">10s Ingest</span>
+                  <span className="text-[9px] text-slate-500 block">OpenCV Perspective</span>
+                </div>
+              </div>
+
+              <div className="p-3 rounded-xl bg-blue-950/70 border border-blue-800/60 text-[11px] text-blue-200 flex items-start space-x-2">
+                <Sparkles className="w-3.5 h-3.5 text-teal-400 shrink-0 mt-0.5" />
+                <span><strong>Proactive Alert:</strong> 14 students flagged in 12th Achievers Top-30 for consecutive test slumps.</span>
+              </div>
+
+              <div className="pt-1 flex items-center justify-between text-xs border-t border-blue-900/60">
+                <span className="text-[10px] text-slate-400 font-mono">DPDP Act Sec 9 VPC</span>
+                <Link
+                  href="/overview"
+                  className="text-teal-300 hover:text-white font-bold transition flex items-center space-x-1"
+                >
+                  <span>Open Console &rarr;</span>
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
 
