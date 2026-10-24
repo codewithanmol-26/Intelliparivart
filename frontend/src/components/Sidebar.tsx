@@ -45,7 +45,6 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       case 'owner':
         return [
           { href: '/overview', label: 'Owner Dashboard', icon: LayoutDashboard },
-          { href: '/profile', label: 'Profile View', icon: User },
           { href: '/owner', label: 'Executive ROI Model', icon: FileSpreadsheet },
           { href: '/risk', label: 'Early-Warning Dropouts', icon: ShieldAlert },
           { href: '/interventions', label: 'Remedial Triage Ledger', icon: CheckCircle2 },
@@ -58,7 +57,6 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       case 'teacher':
         return [
           { href: '/overview', label: 'Teacher Workspace', icon: LayoutDashboard },
-          { href: '/profile', label: 'Profile View', icon: User },
           { href: '/mastery', label: 'Topic Mastery Heatmap', icon: Layers },
           { href: '/ai-assistant', label: 'AI Teaching Copilot', icon: Sparkles },
           { href: '/interventions', label: 'Remedial Triage & Worksheets', icon: CheckCircle2 },
@@ -71,7 +69,6 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       case 'student':
         return [
           { href: '/overview', label: 'My Growth Dashboard', icon: LayoutDashboard },
-          { href: '/profile', label: 'Profile View', icon: User },
           { href: '/student', label: 'Topic Mastery & Strengths', icon: Layers },
           { href: '/predict', label: 'Predicted Progress', icon: LineChart },
           { href: '/ai-assistant', label: 'AI Doubt Practice', icon: Sparkles },
@@ -80,14 +77,12 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       case 'parent':
         return [
           { href: '/overview', label: 'Parent Progress Digest', icon: LayoutDashboard },
-          { href: '/profile', label: 'Profile View', icon: User },
           { href: '/reports', label: 'Bilingual Report (EN/HI)', icon: GraduationCap },
           { href: '/privacy', label: 'Guardian Consent Register', icon: Lock },
         ];
       default:
         return [
           { href: '/overview', label: 'Overview', icon: LayoutDashboard },
-          { href: '/profile', label: 'Profile View', icon: User },
           { href: '/student', label: 'Student Analytics', icon: Users },
           { href: '/mastery', label: 'Topic Mastery', icon: Layers },
           { href: '/interventions', label: 'Intervention Tracker', icon: CheckCircle2 },

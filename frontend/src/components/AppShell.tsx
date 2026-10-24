@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import Sidebar from './Sidebar';
+import UserProfileMenu from './UserProfileMenu';
 import { useApp } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
 import { UserRole } from '../lib/types';
@@ -109,8 +110,8 @@ export default function AppShell({ children }: AppShellProps) {
               </div>
             </Link>
 
-            {/* Public Navigation */}
-            <nav className="hidden md:flex items-center space-x-5 text-xs font-semibold text-slate-200">
+            {/* Public Navigation (Clean product modules, no profile tab!) */}
+            <nav className="hidden md:flex items-center space-x-6 text-xs font-semibold text-slate-200">
               <Link href="/owner" className="text-teal-300 hover:text-white transition font-bold">
                 Revenue Model
               </Link>
@@ -127,49 +128,11 @@ export default function AppShell({ children }: AppShellProps) {
                 <Sparkles className="w-3.5 h-3.5 text-teal-400" />
                 <span>AI Copilot</span>
               </Link>
-              {user && (
-                <Link href="/profile" className="text-amber-300 hover:text-white transition font-bold flex items-center space-x-1">
-                  <User className="w-3.5 h-3.5 text-amber-400" />
-                  <span>Profile View</span>
-                </Link>
-              )}
             </nav>
 
-            {/* Action Buttons: Sign In & Register */}
-            <div className="hidden sm:flex items-center space-x-2.5 text-xs">
-              {user ? (
-                <>
-                  <Link
-                    href="/profile"
-                    className="px-3 py-1.5 rounded-lg bg-teal-600/30 hover:bg-teal-600/50 text-teal-300 font-bold border border-teal-500/40 transition flex items-center space-x-1.5"
-                  >
-                    <User className="w-3.5 h-3.5" />
-                    <span>Profile View</span>
-                  </Link>
-                  <button
-                    onClick={handleLogout}
-                    className="px-3 py-1.5 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 font-semibold border border-rose-500/30 transition flex items-center space-x-1"
-                  >
-                    <LogOut className="w-3.5 h-3.5" />
-                    <span>Sign Out</span>
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Link
-                    href="/login"
-                    className="px-3.5 py-1.5 rounded-lg bg-teal-500 hover:bg-teal-600 text-white font-bold transition shadow-sm"
-                  >
-                    Sign In
-                  </Link>
-                  <Link
-                    href="/register"
-                    className="px-3.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white font-semibold transition border border-white/20"
-                  >
-                    Register Institute
-                  </Link>
-                </>
-              )}
+            {/* Right Action: Professional User Profile Picture Dropdown */}
+            <div className="hidden sm:flex items-center text-xs">
+              <UserProfileMenu align="right" />
             </div>
 
             {/* Mobile Controls */}
@@ -195,12 +158,12 @@ export default function AppShell({ children }: AppShellProps) {
             <div className="sm:hidden bg-[#08172c] border-b border-blue-900/80 px-4 py-4 space-y-3 text-xs animate-fadeIn">
               <div className="grid grid-cols-2 gap-2 text-slate-200 font-semibold">
                 <Link
-                  href="/profile"
+                  href="/overview"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="p-2 rounded-lg bg-blue-950 border border-blue-800 flex items-center space-x-2 text-amber-300"
+                  className="p-2 rounded-lg bg-blue-950 border border-blue-800 flex items-center space-x-2 text-teal-300"
                 >
-                  <User className="w-4 h-4" />
-                  <span>Profile View</span>
+                  <Layers className="w-4 h-4" />
+                  <span>Dashboard</span>
                 </Link>
                 <Link
                   href="/ai-assistant"
@@ -358,40 +321,8 @@ export default function AppShell({ children }: AppShellProps) {
               </div>
             </div>
 
-            {/* Right: Authenticated User Pill (Profile View), Recompute & Auth */}
-            <div className="flex items-center space-x-2 text-xs">
-              {/* Authenticated User Badge & Profile View Link */}
-              {user ? (
-                <Link
-                  href="/profile"
-                  title="Open Profile View"
-                  className="flex items-center space-x-2 bg-blue-950/70 hover:bg-blue-900/70 border border-blue-800/60 rounded-lg px-2.5 py-1 text-slate-200 hover:text-white transition group"
-                >
-                  <div className="w-5 h-5 rounded-full bg-teal-600 flex items-center justify-center text-[10px] font-bold text-white shrink-0 group-hover:bg-teal-500">
-                    {user.full_name ? user.full_name.charAt(0) : <User className="w-3 h-3" />}
-                  </div>
-                  <div className="hidden sm:flex flex-col text-left leading-tight">
-                    <span className="text-slate-200 font-semibold text-xs truncate max-w-[130px] group-hover:text-teal-300">
-                      {user.full_name || 'Dr. S. K. Narayan'}
-                    </span>
-                    <span className="text-[10px] text-teal-300 font-medium capitalize">
-                      Profile View • {user.role === 'owner' ? 'Institute Owner' : user.role === 'teacher' ? 'Faculty Lead' : user.role === 'student' ? 'Student' : 'Parent'}
-                    </span>
-                  </div>
-                  <span className="sm:hidden text-teal-300 font-bold bg-teal-950/80 border border-teal-500/40 px-1.5 py-0.5 rounded text-[10px] uppercase">
-                    Profile
-                  </span>
-                </Link>
-              ) : (
-                <Link
-                  href="/profile"
-                  className="flex items-center space-x-1 px-2.5 py-1 rounded-lg bg-blue-950/70 text-slate-300 hover:text-white border border-blue-800/60 text-xs font-semibold"
-                >
-                  <User className="w-3.5 h-3.5" />
-                  <span>Profile View</span>
-                </Link>
-              )}
-
+            {/* Right: Recompute Pipeline & Professional Profile Picture Dropdown */}
+            <div className="flex items-center space-x-2.5 text-xs">
               {/* Recompute Action */}
               <button
                 onClick={handleManualRecompute}
@@ -403,24 +334,8 @@ export default function AppShell({ children }: AppShellProps) {
                 <span className="hidden sm:inline">{isRecomputing || recomputingLocal ? 'Recomputing...' : 'Recompute'}</span>
               </button>
 
-              {/* Auth Button */}
-              {user ? (
-                <button
-                  onClick={handleLogout}
-                  title="Sign Out (Redirect to Home)"
-                  className="p-1.5 hover:bg-blue-900/60 text-slate-300 hover:text-white rounded-lg transition"
-                >
-                  <LogOut className="w-4 h-4" />
-                </button>
-              ) : (
-                <Link
-                  href="/login"
-                  className="inline-flex items-center px-2.5 py-1 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-xs font-semibold"
-                >
-                  <LogIn className="w-3.5 h-3.5 mr-1" />
-                  <span>Login</span>
-                </Link>
-              )}
+              {/* User Avatar Picture with Clickable Profile Window */}
+              <UserProfileMenu align="right" />
             </div>
           </div>
         </header>

@@ -814,7 +814,7 @@ function LoginFormContent() {
         <div className="flex items-center space-x-4">
           <Link href="/" className="hover:text-teal-600 transition">Public Homepage</Link>
           <span>•</span>
-          <Link href="/profile" className="hover:text-teal-600 transition">Profile View</Link>
+          <Link href="/profile" className="hover:text-teal-600 transition">Account Profile</Link>
           <span>•</span>
           <Link href="/privacy-policy" className="hover:text-teal-600 transition">Privacy Policy (DPDP Act)</Link>
           <span>•</span>

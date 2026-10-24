@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import UserProfileMenu from './UserProfileMenu';
 import { useApp } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
 import { UserRole } from '../lib/types';
@@ -64,7 +65,6 @@ export default function Navbar() {
       case 'owner':
         return [
           { href: '/overview', label: 'Owner Dashboard', icon: LineChart },
-          { href: '/profile', label: 'Profile View', icon: User },
           { href: '/owner', label: 'Executive ROI & Cohort', icon: LineChart },
           { href: '/risk', label: 'Early-Warning Dropouts', icon: ShieldAlert },
           { href: '/mastery', label: 'Batch Mastery Heatmap', icon: Layers },
@@ -75,7 +75,6 @@ export default function Navbar() {
       case 'teacher':
         return [
           { href: '/overview', label: 'Teacher Workspace', icon: Layers },
-          { href: '/profile', label: 'Profile View', icon: User },
           { href: '/mastery', label: 'Topic Mastery Heatmap', icon: Layers },
           { href: '/ai-assistant', label: 'AI Teaching Copilot', icon: Sparkles },
           { href: '/interventions', label: 'Remedial Triage & Worksheets', icon: CheckCircle2 },
@@ -86,7 +85,6 @@ export default function Navbar() {
       case 'student':
         return [
           { href: '/overview', label: 'My Growth Dashboard', icon: Layers },
-          { href: '/profile', label: 'Profile View', icon: User },
           { href: '/student', label: 'My Learning & Mastery', icon: Layers },
           { href: '/predict', label: 'My Predicted Progress', icon: LineChart },
           { href: '/ai-assistant', label: 'AI Doubt Practice', icon: Sparkles },
@@ -95,7 +93,6 @@ export default function Navbar() {
       case 'parent':
         return [
           { href: '/overview', label: 'Parent Progress Digest', icon: GraduationCap },
-          { href: '/profile', label: 'Profile View', icon: User },
           { href: '/reports', label: 'Weekly Progress Digest', icon: GraduationCap },
           { href: '/privacy', label: 'Guardian Consent Register', icon: Lock },
         ];
@@ -212,52 +209,8 @@ export default function Navbar() {
               </select>
             </div>
 
-            {/* Profile View Pill / Logout */}
-            {user ? (
-              <div className="flex items-center space-x-2 pl-2 border-l border-blue-800/60">
-                <Link
-                  href="/profile"
-                  className="flex items-center space-x-2 p-1 rounded-md hover:bg-blue-900/50 transition group"
-                  title="Profile View"
-                >
-                  <div className="w-7 h-7 rounded-full bg-teal-600 flex items-center justify-center text-xs font-bold text-white shrink-0 group-hover:bg-teal-500">
-                    {user.full_name ? user.full_name.charAt(0) : <User className="w-3.5 h-3.5" />}
-                  </div>
-                  <div className="text-left text-[11px] leading-tight">
-                    <span className="font-semibold text-white block max-w-[110px] truncate group-hover:text-teal-300">
-                      {user.full_name}
-                    </span>
-                    <span className="text-teal-300 capitalize text-[10px] block">
-                      Profile View • {user.role}
-                    </span>
-                  </div>
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  title="Sign Out (Redirect to Home)"
-                  className="p-1.5 hover:bg-blue-900/60 text-slate-300 hover:text-white rounded-md transition"
-                >
-                  <LogOut className="w-4 h-4" />
-                </button>
-              </div>
-            ) : (
-              <div className="flex items-center space-x-2">
-                <Link
-                  href="/profile"
-                  className="inline-flex items-center space-x-1 px-2.5 py-1 bg-blue-950/70 hover:bg-blue-900 border border-blue-800/60 text-slate-200 rounded-md text-xs font-semibold"
-                >
-                  <User className="w-3.5 h-3.5 mr-1" />
-                  <span>Profile</span>
-                </Link>
-                <Link
-                  href="/login"
-                  className="inline-flex items-center space-x-1 px-3 py-1 bg-teal-600 hover:bg-teal-700 text-white rounded-md text-xs font-semibold shadow-xs"
-                >
-                  <LogIn className="w-3.5 h-3.5 mr-1" />
-                  <span>Sign In</span>
-                </Link>
-              </div>
-            )}
+            {/* User Profile Picture & Popover Window */}
+            <UserProfileMenu align="right" />
           </div>
 
           {/* Mobile Hamburger Toggle Button */}
@@ -299,7 +252,7 @@ export default function Navbar() {
                       {user.full_name}
                     </span>
                     <span className="text-[10px] text-teal-300 capitalize font-medium">
-                      Profile View • {user.role}
+                      {user.role} • {user.email}
                     </span>
                   </div>
                 </Link>
@@ -322,12 +275,12 @@ export default function Navbar() {
                   <span>Sign In</span>
                 </Link>
                 <Link
-                  href="/profile"
+                  href="/register"
                   onClick={() => setMobileMenuOpen(false)}
                   className="py-2 bg-blue-950 border border-blue-800 text-teal-300 rounded-lg text-xs font-semibold flex items-center justify-center space-x-1"
                 >
-                  <User className="w-3.5 h-3.5 mr-1" />
-                  <span>Profile View</span>
+                  <Building2 className="w-3.5 h-3.5 mr-1" />
+                  <span>Register</span>
                 </Link>
               </div>
             )}
