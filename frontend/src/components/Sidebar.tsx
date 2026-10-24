@@ -115,18 +115,12 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       >
         {/* Brand / Logo Area */}
         <div className="h-16 px-4 flex items-center justify-between border-b border-blue-900/50 bg-[#08172c]">
-          <Link href="/overview" onClick={onClose} className="flex items-center space-x-2.5">
-            <div className="w-8 h-8 rounded-lg bg-teal-500 flex items-center justify-center font-black text-white text-sm shadow-sm shrink-0">
-              IP
-            </div>
-            <div>
-              <span className="text-base font-bold tracking-tight text-white block leading-none">
-                INTELLIPRIVART
-              </span>
-              <span className="text-[9px] tracking-wider text-teal-300 uppercase block font-semibold mt-0.5">
-                Institute Intelligence Platform
-              </span>
-            </div>
+          <Link href="/overview" onClick={onClose} className="flex items-center group">
+            <img
+              src="/intelliprivart-logo-dark.png"
+              alt="Intelliprivart"
+              className="h-8 w-auto object-contain group-hover:opacity-90 transition"
+            />
           </Link>
 
           <button

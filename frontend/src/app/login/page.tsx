@@ -230,6 +230,13 @@ function LoginFormContent() {
     <div className="max-w-5xl mx-auto py-6 sm:py-10 px-4">
       {/* Title & Brand Header */}
       <div className="text-center max-w-2xl mx-auto mb-8">
+        <Link href="/" className="inline-block mb-3 group">
+          <img
+            src="/intelliprivart-logo-light.png"
+            alt="Intelliprivart"
+            className="h-10 sm:h-12 w-auto mx-auto object-contain group-hover:opacity-90 transition"
+          />
+        </Link>
         <div className="inline-flex items-center space-x-2 bg-teal-500/10 text-teal-700 border border-teal-500/20 px-3 py-1 rounded-full text-xs font-semibold mb-3">
           <ShieldCheck className="w-3.5 h-3.5 text-teal-600" />
           <span>DPDP Act 2023 Multi-Tenant Isolated Authentication</span>

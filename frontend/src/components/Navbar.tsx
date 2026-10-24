@@ -164,18 +164,12 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16 gap-3">
           {/* Logo */}
           <div className="flex items-center space-x-3 shrink-0">
-            <Link href="/" className="flex items-center space-x-2.5">
-              <div className="w-9 h-9 rounded-lg bg-teal-500 flex items-center justify-center font-black text-white text-base shadow-sm shrink-0">
-                IP
-              </div>
-              <div>
-                <span className="text-base sm:text-lg font-bold tracking-tight text-white block leading-none">
-                  INTELLIPRIVART
-                </span>
-                <span className="text-[9px] sm:text-[10px] tracking-wider text-teal-300 uppercase block font-medium">
-                  The Data Moat Platform
-                </span>
-              </div>
+            <Link href="/" className="flex items-center group">
+              <img
+                src="/intelliprivart-logo-dark.png"
+                alt="Intelliprivart"
+                className="h-8 sm:h-9 w-auto object-contain group-hover:opacity-90 transition"
+              />
             </Link>
           </div>
 

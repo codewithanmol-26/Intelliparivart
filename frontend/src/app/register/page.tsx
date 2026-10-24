@@ -99,10 +99,19 @@ export default function RegisterPage() {
       <div className="max-w-xl mx-auto w-full space-y-6">
         {/* Header Branding */}
         <div className="text-center space-y-2">
-          <Link href="/" className="inline-flex items-center space-x-2 text-teal-600 font-bold text-xs uppercase tracking-wider hover:text-teal-700 transition">
-            <Sparkles className="w-4 h-4 text-teal-600" />
-            <span>Intelliprivart • Nextute EdTech</span>
+          <Link href="/" className="inline-block mb-1 group">
+            <img
+              src="/intelliprivart-logo-light.png"
+              alt="Intelliprivart"
+              className="h-10 sm:h-12 w-auto mx-auto object-contain group-hover:opacity-90 transition"
+            />
           </Link>
+          <div>
+            <span className="inline-flex items-center space-x-1.5 text-teal-700 font-bold text-xs uppercase tracking-wider bg-teal-50 px-2.5 py-0.5 rounded-full border border-teal-200">
+              <Sparkles className="w-3.5 h-3.5 text-teal-600" />
+              <span>Nextute EdTech Partner Platform</span>
+            </span>
+          </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
             Register Your Coaching Institute
           </h1>

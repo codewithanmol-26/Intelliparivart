@@ -7,6 +7,10 @@ import AppShell from '../components/AppShell';
 export const metadata: Metadata = {
   title: 'Intelliprivart — AI-Powered Institute Intelligence Platform',
   description: 'The Data Moat Platform for JEE & NEET Coaching Institutes | Nextute × Finance Club, IIT Patna 2026',
+  icons: {
+    icon: '/intelliprivart-icon.png',
+    apple: '/intelliprivart-icon.png'
+  }
 };
 
 export default function RootLayout({

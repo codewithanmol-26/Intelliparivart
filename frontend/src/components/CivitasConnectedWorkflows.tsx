@@ -163,9 +163,11 @@ export default function CivitasConnectedWorkflows({
       <div className="bg-white px-5 sm:px-8 py-3.5 border-b border-slate-200 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
         <div className="flex items-center space-x-4 flex-1">
           <div className="flex items-center space-x-2.5 shrink-0">
-            <div className="w-8 h-8 rounded-lg bg-[#0F2744] text-white flex items-center justify-center font-black text-sm shadow-xs">
-              U
-            </div>
+            <img
+              src="/intelliprivart-icon.png"
+              alt="Intelliprivart Shield"
+              className="w-8 h-8 object-contain"
+            />
             <div className="leading-tight">
               <span className="font-extrabold text-slate-900 tracking-wider text-xs block uppercase">
                 COLLEGE STATE UNIVERSITY

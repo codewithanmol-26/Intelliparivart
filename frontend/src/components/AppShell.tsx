@@ -97,17 +97,12 @@ export default function AppShell({ children }: AppShellProps) {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             {/* Logo & Brand Wordmark */}
             <Link href="/" className="flex items-center space-x-3 group">
-              <div className="w-8 h-8 rounded-xl bg-teal-500 text-white font-black text-sm flex items-center justify-center shadow-md group-hover:bg-teal-400 transition">
-                IP
-              </div>
-              <div>
-                <span className="text-base font-extrabold tracking-tight text-white block leading-none">
-                  INTELLIPRIVART
-                </span>
-                <span className="text-[10px] text-teal-300 font-semibold tracking-wider uppercase block mt-0.5">
-                  Institute Intelligence Platform
-                </span>
-              </div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/intelliprivart-logo-dark.png"
+                alt="Intelliprivart"
+                className="h-8 sm:h-9 w-auto object-contain group-hover:opacity-90 transition"
+              />
             </Link>
 
             {/* Public Navigation (Clean product modules, no profile tab!) */}

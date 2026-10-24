@@ -1424,14 +1424,13 @@ export default function HomePage() {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
           {/* Brand Info */}
           <div className="col-span-2 space-y-3">
-            <div className="flex items-center space-x-2.5">
-              <div className="w-8 h-8 rounded-xl bg-teal-500 text-white flex items-center justify-center font-black text-sm shadow-sm">
-                IP
-              </div>
-              <span className="font-extrabold text-slate-900 tracking-tight text-base">
-                INTELLIPRIVART
-              </span>
-            </div>
+            <Link href="/" className="inline-block group">
+              <img
+                src="/intelliprivart-logo-light.png"
+                alt="Intelliprivart"
+                className="h-9 sm:h-10 w-auto object-contain group-hover:opacity-90 transition"
+              />
+            </Link>
             <p className="text-xs text-slate-500 leading-relaxed max-w-sm">
               The AI-Powered Connected Intelligence Platform for JEE &amp; NEET Coaching Institutes. Built for Case B: The Data Moat.
             </p>
