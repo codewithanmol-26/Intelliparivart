@@ -288,7 +288,7 @@ export default function AppShell({ children }: AppShellProps) {
                 DEMO MODE — SAMPLE DATA
               </span>
               <span className="truncate max-w-[240px] sm:max-w-none text-slate-300">
-                Apex JEE & Medical Academy, Patna (1,200 Cohort) • Synthetic Intelligence
+                Synthetic Intelligence • 1,200 Cohort Benchmark
               </span>
             </div>
 

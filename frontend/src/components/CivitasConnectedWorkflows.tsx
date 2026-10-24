@@ -170,7 +170,7 @@ export default function CivitasConnectedWorkflows({
             />
             <div className="leading-tight">
               <span className="font-extrabold text-slate-900 tracking-wider text-xs block uppercase">
-                COLLEGE STATE UNIVERSITY
+                Apex JEE &amp; Medical Academy
               </span>
               <span className="text-[10px] text-teal-700 font-semibold block">
                 Advising CRM &amp; Connected Workflows
